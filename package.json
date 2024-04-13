@@ -21,6 +21,7 @@
 	},
 
 	"lint-staged": {
-		"**/*.{js,ts,tsx}": ["biome check --apply"]
+		"**/*.{js,ts,tsx}": ["biome check --apply"],
+		"**/*": ["biome check --apply --files-ignore-unknown=true"]
 	}
 }

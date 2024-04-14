@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+  
+  dragonfly:
+    container_name: bit-dragonfly
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    ulimits:
+      memlock: -1
+    command:
+      - /bin/sh
+      - -c
+      - dragonfly --requirepass=root --port 6379
+    ports:
+      - "6379:6379"
+    # For better performance, consider `host` mode instead `port` to avoid docker NAT.
+    # `host` mode is NOT currently supported in Swarm Mode.
+    # https://docs.docker.com/compose/compose-file/compose-file-v3/#network_mode
+    # network_mode: "host"
+    volumes:
+      - dragonflydata:/data/caching
+
+volumes:
+  mongodb_data:
+  dragonflydata:

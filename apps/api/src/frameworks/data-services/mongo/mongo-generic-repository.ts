@@ -1,7 +1,9 @@
 import type { Model } from "mongoose";
 import type { IGenericRepository } from "src/core/abstracts/generic-repository.abstract";
 
-export class MongoDataRepository<Entity> implements IGenericRepository<Entity> {
+export class MongoGenericRepository<Entity>
+	implements IGenericRepository<Entity>
+{
 	private model: Model<Entity>;
 
 	constructor(model: Model<Entity>) {

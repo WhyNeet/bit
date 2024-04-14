@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { CreateUserDto } from "src/core/dtos/user.dto";
+import { CreateUserDto, UserDto } from "src/core/dtos/user.dto";
 import { User } from "src/core/entities/user.entity";
 
 @Injectable()
@@ -13,5 +13,18 @@ export class UserFactoryService {
 		user.name = createUserDto.name;
 
 		return user;
+	}
+
+	public createDto(user: User): UserDto {
+		const userDto = new UserDto();
+
+		userDto.id = user.id;
+		userDto.username = user.username;
+		userDto.email = user.email;
+		userDto.name = user.name;
+		userDto.createdAt = user.createdAt;
+		userDto.updatedAt = user.updatedAt;
+
+		return userDto;
 	}
 }

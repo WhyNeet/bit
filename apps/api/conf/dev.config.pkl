@@ -1,0 +1,18 @@
+import "DataServices.pkl"
+import "JWT.pkl"
+
+mongo = new DataServices.DbConnectionProperties {
+  host = "localhost"
+  port = 27017
+
+  auth = new DataServices.DbConnectionAuthProperties {
+    username = "root"
+    password = "root"
+  }
+}
+
+
+tokens = new JWT.Tokens {
+  accessToken = JWT.tokenPropertiesFactory.create("access_token_secret", 2.min)
+  refreshToken = JWT.tokenPropertiesFactory.create("refresh_token_secret", 120.d)
+}

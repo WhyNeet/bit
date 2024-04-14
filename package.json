@@ -7,7 +7,8 @@
 	"scripts": {
 		"api": "pnpm --filter api",
 		"biome:check": "biome check --apply .",
-		"prepare": "husky"
+		"prepare": "husky",
+		"pkl:eval": "pkl eval apps/api/conf/dev.config.pkl -f yaml -o apps/api/conf/dev.config.yaml"
 	},
 	"keywords": [],
 	"author": "",

@@ -1,0 +1,13 @@
+module dev.whyneet.bit.DataServices
+
+class DbConnectionProperties {
+  host: String
+  port: UInt16(isBetween(1024, 49151))
+
+  auth: DbConnectionAuthProperties
+}
+
+class DbConnectionAuthProperties {
+  username: String
+  password: String
+}

@@ -20,6 +20,16 @@ export class CreateUserDto {
 	name: string;
 }
 
+export class UserCredentialsDto {
+	@IsEmail({}, { message: ValidationError.InvalidEmail })
+	@IsString({ message: ValidationError.MustBeAString })
+	email: string;
+
+	@IsString({ message: ValidationError.MustBeAString })
+	@Length(8, 72, { message: ValidationError.BadPasswordLength })
+	password: string;
+}
+
 export class UserDto {
 	id: string;
 	email: string;

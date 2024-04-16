@@ -13,7 +13,7 @@ services:
       - mongodb_data:/data/db
   
   dragonfly:
-    container_name: bit-dragonfly
+    container_name: dragonfly
     image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
     ulimits:
       memlock: -1

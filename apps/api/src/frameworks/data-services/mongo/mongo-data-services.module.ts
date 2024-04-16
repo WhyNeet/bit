@@ -15,7 +15,7 @@ import { MongoDataServices } from "./mongo-data-services.service";
 					uri: `mongodb://${configService.get<string>(
 						"mongo.host",
 					)}:${configService.get<string>("mongo.port")}`,
-					dbName: "bit",
+					dbName: "primary",
 					auth: {
 						username: configService.get<string>("mongo.auth.username"),
 						password: configService.get<string>("mongo.auth.password"),

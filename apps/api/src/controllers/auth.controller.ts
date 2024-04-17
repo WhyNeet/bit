@@ -10,7 +10,9 @@ import * as bcrypt from "bcrypt";
 import { Response } from "express";
 import { CreateUserDto, UserCredentialsDto } from "src/core/dtos/user.dto";
 import { AuthService } from "src/features/auth/auth.service";
+import { TokenEncryptionService } from "src/features/token/token-encryption.service";
 import { TokenFactoryService } from "src/features/token/token-factory.service";
+import { TokenRepositoryService } from "src/features/token/token-repository.service";
 import { UserFactoryService } from "src/features/user/user-factory.service";
 import { UserRepositoryService } from "src/features/user/user-repository.service";
 
@@ -21,6 +23,8 @@ export class AuthController {
 		private userFactoryService: UserFactoryService,
 		private tokenFactoryService: TokenFactoryService,
 		private userRepositoryService: UserRepositoryService,
+		private tokenRepositoryService: TokenRepositoryService,
+		private tokenEncryptionService: TokenEncryptionService,
 	) {}
 
 	@HttpCode(200)
@@ -31,11 +35,16 @@ export class AuthController {
 	) {
 		const user = await this.authService.registerUser(createUserDto);
 
-		const accessToken = await this.tokenFactoryService.issueAccessToken(
+		const tokenEntity = this.tokenFactoryService.createTokenEntity();
+		const token = await this.tokenRepositoryService.createToken(tokenEntity);
+
+		const accessToken = await this.tokenEncryptionService.issueAccessToken(
 			user.id,
+			token.id,
 		);
-		const refreshToken = await this.tokenFactoryService.issueRefreshToken(
+		const refreshToken = await this.tokenEncryptionService.issueRefreshToken(
 			user.id,
+			token.id,
 		);
 
 		response.cookie("access_token", accessToken);
@@ -64,11 +73,16 @@ export class AuthController {
 			throw new BadRequestException("Invalid password");
 		}
 
-		const accessToken = await this.tokenFactoryService.issueAccessToken(
+		const tokenEntity = this.tokenFactoryService.createTokenEntity();
+		const token = await this.tokenRepositoryService.createToken(tokenEntity);
+
+		const accessToken = await this.tokenEncryptionService.issueAccessToken(
 			user.id,
+			token.id,
 		);
-		const refreshToken = await this.tokenFactoryService.issueRefreshToken(
+		const refreshToken = await this.tokenEncryptionService.issueRefreshToken(
 			user.id,
+			token.id,
 		);
 
 		response.cookie("access_token", accessToken);

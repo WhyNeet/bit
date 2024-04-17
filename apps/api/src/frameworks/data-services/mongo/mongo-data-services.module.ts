@@ -2,7 +2,8 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
-import { User, UserSchema } from "./model/user";
+import { Token, TokenSchema } from "./model/token.model";
+import { User, UserSchema } from "./model/user.model";
 import { MongoDataServices } from "./mongo-data-services.service";
 
 @Module({
@@ -23,7 +24,10 @@ import { MongoDataServices } from "./mongo-data-services.service";
 				};
 			},
 		}),
-		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+		MongooseModule.forFeature([
+			{ name: User.name, schema: UserSchema },
+			{ name: Token.name, schema: TokenSchema },
+		]),
 	],
 	providers: [
 		{

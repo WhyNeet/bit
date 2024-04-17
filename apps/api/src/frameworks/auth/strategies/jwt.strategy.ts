@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy, WithSecretOrKey } from "passport-jwt";
 import { TokenType } from "src/core/entities/token.entity";
+import { TokenRepositoryService } from "src/features/token/token-repository.service";
 import { CookiesExtractorService } from "../extractors/cookies-extractor.service";
 import { JwtPayload } from "../jwt/types/payload.interface";
 
@@ -11,6 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 	constructor(
 		private configService: ConfigService,
 		private cookiesExtractorService: CookiesExtractorService,
+		private tokenRepositoryService: TokenRepositoryService,
 	) {
 		const options: WithSecretOrKey = {
 			jwtFromRequest: ExtractJwt.fromExtractors([
@@ -24,6 +26,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 	}
 
 	public async validate(payload: JwtPayload): Promise<JwtPayload> {
+		const token = await this.tokenRepositoryService.getTokenById(payload.jti);
+		if (!token) throw new BadRequestException("Revoked token provided.");
+
 		return { sub: payload.sub, jti: payload.jti, exp: payload.exp };
 	}
 }

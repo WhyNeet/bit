@@ -4,11 +4,13 @@ import {
 	Controller,
 	HttpCode,
 	Post,
+	Req,
 	Res,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CreateUserDto, UserCredentialsDto } from "src/core/dtos/user.dto";
+import { TokenType } from "src/core/entities/token.entity";
 import { AuthService } from "src/features/auth/auth.service";
 import { TokenEncryptionService } from "src/features/token/token-encryption.service";
 import { TokenFactoryService } from "src/features/token/token-factory.service";
@@ -47,8 +49,8 @@ export class AuthController {
 			token.id,
 		);
 
-		response.cookie("access_token", accessToken);
-		response.cookie("refresh_token", refreshToken);
+		response.cookie(TokenType.AccessToken, accessToken);
+		response.cookie(TokenType.RefreshToken, refreshToken);
 
 		return {
 			data: this.userFactoryService.createDto(user),
@@ -85,11 +87,27 @@ export class AuthController {
 			token.id,
 		);
 
-		response.cookie("access_token", accessToken);
-		response.cookie("refresh_token", refreshToken);
+		response.cookie(TokenType.AccessToken, accessToken);
+		response.cookie(TokenType.RefreshToken, refreshToken);
 
 		return {
 			data: this.userFactoryService.createDto(user),
 		};
+	}
+
+	@HttpCode(200)
+	@Post("/logout")
+	public async logout(
+		@Req() request: Request,
+		@Res({ passthrough: true }) response: Response,
+	) {
+		const token = await this.tokenEncryptionService.decodeRefreshToken(
+			request.cookies[TokenType.RefreshToken],
+		);
+
+		await this.tokenRepositoryService.deleteToken(token.jti);
+
+		response.clearCookie(TokenType.AccessToken);
+		response.clearCookie(TokenType.RefreshToken);
 	}
 }

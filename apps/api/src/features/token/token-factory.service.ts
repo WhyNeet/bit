@@ -12,12 +12,12 @@ export class TokenFactoryService {
 		);
 	}
 
-	public createTokenEntity(): Token {
+	public createTokenEntity(exp?: number): Token {
 		const token = new Token();
 
-		token.expireAt = new Date(
-			new Date().getTime() + this.refreshTokenExpiresIn * 1000,
-		);
+		token.expireAt = exp
+			? new Date(exp * 1000)
+			: new Date(new Date().getTime() + this.refreshTokenExpiresIn * 1000);
 
 		return token;
 	}

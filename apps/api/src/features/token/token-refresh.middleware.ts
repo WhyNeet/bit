@@ -47,9 +47,13 @@ export class TokenRefreshMiddlware implements NestMiddleware {
 		res: Response,
 		payload: JwtPayload,
 	) {
-		await this.tokenRepositoryService.deleteToken(payload.jti);
+		const deletedToken = await this.tokenRepositoryService.deleteToken(
+			payload.jti,
+		);
+		// no token found, user is logged out
+		if (!deletedToken) return;
 
-		const tokenEntity = this.tokenFactoryService.createTokenEntity();
+		const tokenEntity = this.tokenFactoryService.createTokenEntity(payload.exp);
 		const token = await this.tokenRepositoryService.createToken(tokenEntity);
 
 		const refreshToken = await this.tokenEncryptionService.issueRefreshToken(

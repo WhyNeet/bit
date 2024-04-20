@@ -1,4 +1,6 @@
 import { Controller, Get, HttpCode, Param, UseGuards } from "@nestjs/common";
+import { UserDto } from "src/core/dtos/user.dto";
+import { ApiResponse } from "src/core/types/response/response.interface";
 import { UserFactoryService } from "src/features/user/user-factory.service";
 import { UserRepositoryService } from "src/features/user/user-repository.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
@@ -15,7 +17,9 @@ export class UserController {
 	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
 	@Get("/me")
-	public async getCurrentUser(@Token() token: JwtPayload) {
+	public async getCurrentUser(
+		@Token() token: JwtPayload,
+	): ApiResponse<UserDto> {
 		const user = await this.userRepositoryService.getUserById(token.sub);
 
 		return {
@@ -25,7 +29,9 @@ export class UserController {
 
 	@HttpCode(200)
 	@Get("/:userId")
-	public async getUserById(@Param("userId") userId: string) {
+	public async getUserById(
+		@Param("userId") userId: string,
+	): ApiResponse<UserDto> {
 		const user = await this.userRepositoryService.getUserById(userId);
 
 		return {

@@ -9,8 +9,13 @@ import {
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { CreateUserDto, UserCredentialsDto } from "src/core/dtos/user.dto";
+import {
+	CreateUserDto,
+	UserCredentialsDto,
+	UserDto,
+} from "src/core/dtos/user.dto";
 import { TokenType } from "src/core/entities/token.entity";
+import { ApiResponse } from "src/core/types/response/response.interface";
 import { AuthService } from "src/features/auth/auth.service";
 import { TokenEncryptionService } from "src/features/token/token-encryption.service";
 import { TokenFactoryService } from "src/features/token/token-factory.service";
@@ -34,7 +39,7 @@ export class AuthController {
 	public async register(
 		@Body() createUserDto: CreateUserDto,
 		@Res({ passthrough: true }) response: Response,
-	) {
+	): ApiResponse<UserDto> {
 		const user = await this.authService.registerUser(createUserDto);
 
 		const tokenEntity = this.tokenFactoryService.createTokenEntity();
@@ -62,7 +67,7 @@ export class AuthController {
 	public async login(
 		@Body() userCredentialsDto: UserCredentialsDto,
 		@Res({ passthrough: true }) response: Response,
-	) {
+	): ApiResponse<UserDto> {
 		const user = await this.userRepositoryService.getUserByEmail(
 			userCredentialsDto.email,
 		);
@@ -100,7 +105,7 @@ export class AuthController {
 	public async logout(
 		@Req() request: Request,
 		@Res({ passthrough: true }) response: Response,
-	) {
+	): ApiResponse<null> {
 		const token = await this.tokenEncryptionService.decodeRefreshToken(
 			request.cookies[TokenType.RefreshToken],
 		);
@@ -109,5 +114,9 @@ export class AuthController {
 
 		response.clearCookie(TokenType.AccessToken);
 		response.clearCookie(TokenType.RefreshToken);
+
+		return {
+			data: null,
+		};
 	}
 }

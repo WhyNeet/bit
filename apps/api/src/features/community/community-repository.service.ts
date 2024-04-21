@@ -11,8 +11,16 @@ export class CommunityRepositoryService {
 		private communityFactoryService: CommunityFactoryService,
 	) {}
 
-	public async getCommunityById(id: string): Promise<Community | null> {
-		return await this.dataServices.communities.getById(id);
+	public async getCommunityById(
+		id: string,
+		includeAuthor?: boolean,
+		select?: string,
+	): Promise<Community | null> {
+		return await this.dataServices.communities.getById(
+			id,
+			includeAuthor ? ["author"] : undefined,
+			select,
+		);
 	}
 
 	public async createCommunity(

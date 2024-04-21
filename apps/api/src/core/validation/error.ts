@@ -5,6 +5,6 @@ export class ValidationError {
 	public static readonly InvalidUsername = () => "invalid username";
 	public static readonly BadPasswordLength = () =>
 		"password must be 8 - 72 characters long";
-	public static readonly MustBeBetween = (min: number, max: number) =>
-		`must be between ${min} and ${max}`;
+	public static readonly MustBeBetweenChars = (min: number, max: number) =>
+		`must be between ${min} and ${max} characters long`;
 }

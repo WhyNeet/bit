@@ -18,12 +18,21 @@ export class MongoGenericRepository<Entity>
 		return this.model.find().exec();
 	}
 
-	public async getById(id: string, select?: string): Promise<Entity | null> {
-		return this.model.findById(id).select(select).exec();
+	public async getById(
+		id: string,
+		populate?: string[],
+		select?: string,
+	): Promise<Entity | null> {
+		/* @ts-ignore */
+		return this.model.findById(id).select(select).populate(populate).exec();
 	}
 
-	public async get(filter: Record<string, string>): Promise<Entity | null> {
-		return this.model.findOne().where(filter).exec();
+	public async get(
+		filter: Record<string, string>,
+		populate?: string[],
+	): Promise<Entity | null> {
+		/* @ts-ignore */
+		return this.model.findOne().where(filter).populate(populate).exec();
 	}
 
 	public async update(id: string, entity: Entity): Promise<Entity | null> {

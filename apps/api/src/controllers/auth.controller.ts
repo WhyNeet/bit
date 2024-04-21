@@ -17,6 +17,7 @@ import {
 import { TokenType } from "src/core/entities/token.entity";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { AuthService } from "src/features/auth/auth.service";
+import { AuthException } from "src/features/exception-handling/exceptions/auth.exception";
 import { TokenEncryptionService } from "src/features/token/token-encryption.service";
 import { TokenFactoryService } from "src/features/token/token-factory.service";
 import { TokenRepositoryService } from "src/features/token/token-repository.service";
@@ -72,13 +73,10 @@ export class AuthController {
 			userCredentialsDto.email,
 		);
 
-		if (!user) {
-			throw new BadRequestException("User not found");
-		}
+		if (!user) throw new AuthException.UserDoesNotExist();
 
-		if (!(await bcrypt.compare(userCredentialsDto.password, user.password))) {
-			throw new BadRequestException("Invalid password");
-		}
+		if (!(await bcrypt.compare(userCredentialsDto.password, user.password)))
+			throw new AuthException.WrongPassword();
 
 		const tokenEntity = this.tokenFactoryService.createTokenEntity();
 		const token = await this.tokenRepositoryService.createToken(tokenEntity);

@@ -29,7 +29,7 @@ export class CommunityFactoryService {
 		dto.description = community.description;
 
 		dto.author =
-			community.author instanceof Schema.ObjectId
+			typeof community.author === "object"
 				? community.author.toString()
 				: typeof community.author === "string"
 					? community.author

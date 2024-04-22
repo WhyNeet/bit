@@ -10,13 +10,13 @@ export class CommunityFactoryService {
 
 	public createFromDto(
 		createCommunityDto: CreateCommunityDto,
-		authorId: string,
+		ownerId: string,
 	): Community {
 		const community = new Community();
 
 		community.name = createCommunityDto.name;
 		community.description = createCommunityDto.description;
-		community.author = authorId;
+		community.owner = ownerId;
 
 		return community;
 	}
@@ -27,13 +27,12 @@ export class CommunityFactoryService {
 		dto.id = community.id;
 		dto.name = community.name;
 		dto.description = community.description;
-
-		dto.author =
-			typeof community.author === "object"
-				? community.author.toString()
-				: typeof community.author === "string"
-					? community.author
-					: this.userFactoryService.createDto(community.author);
+		dto.owner =
+			typeof community.owner === "object"
+				? community.owner.toString()
+				: typeof community.owner === "string"
+					? community.owner
+					: this.userFactoryService.createDto(community.owner);
 
 		dto.createdAt = community.createdAt;
 		dto.updatedAt = community.updatedAt;

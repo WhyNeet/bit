@@ -15,7 +15,7 @@ export class Community {
 	description?: string;
 
 	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
-	author?: User;
+	owner?: User;
 
 	createdAt: Date;
 	updatedAt: Date;

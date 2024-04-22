@@ -14,23 +14,23 @@ export class CommunityRepositoryService {
 
 	public async getCommunityById(
 		id: string,
-		includeAuthor?: boolean,
+		includeOwner?: boolean,
 		select?: string,
 	): Promise<Community | null> {
 		return await this.dataServices.communities.getById(
 			id,
-			includeAuthor ? ["author"] : undefined,
+			includeOwner ? ["owner"] : undefined,
 			select,
 		);
 	}
 
 	public async createCommunity(
 		createCommunityDto: CreateCommunityDto,
-		authorId: string,
+		ownerId: string,
 	): Promise<Community> {
 		const community = this.communityFactoryService.createFromDto(
 			createCommunityDto,
-			authorId,
+			ownerId,
 		);
 
 		try {

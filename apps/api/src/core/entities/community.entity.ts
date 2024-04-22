@@ -6,7 +6,7 @@ export class Community {
 	name: string;
 	description?: string;
 
-	author?: User | ObjectId | string;
+	owner?: User | ObjectId | string;
 
 	createdAt: Date;
 	updatedAt: Date;

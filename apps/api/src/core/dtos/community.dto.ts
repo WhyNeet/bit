@@ -19,7 +19,7 @@ export class CommunityDto {
 	id: string;
 	name: string;
 	description?: string;
-	author?: UserDto | ObjectId | string;
+	owner?: UserDto | ObjectId | string;
 	createdAt: Date;
 	updatedAt: Date;
 }

@@ -48,12 +48,12 @@ export class CommunityController {
 	@Get("/:communityId")
 	public async getCommunity(
 		@Param("communityId") communityId: string,
-		@Query("includeAuthor", new ParseBoolPipe({ optional: true }))
-		includeAuthor?: boolean,
+		@Query("includeOwner", new ParseBoolPipe({ optional: true }))
+		includeOwner?: boolean,
 	): ApiResponse<CommunityDto> {
 		const community = await this.communityRepositoryService.getCommunityById(
 			communityId,
-			includeAuthor,
+			includeOwner,
 		);
 
 		if (!community) throw new CommunityException.CommunityDoesNotExist();
@@ -73,12 +73,12 @@ export class CommunityController {
 		const community = await this.communityRepositoryService.getCommunityById(
 			communityId,
 			false,
-			"author",
+			"owner",
 		);
 
 		if (!community) throw new CommunityException.CommunityDoesNotExist();
 
-		if (community.author.toString() !== token.sub)
+		if (community.owner.toString() !== token.sub)
 			throw new CommunityException.CommunityCannotBeModified();
 
 		await this.communityRepositoryService.deleteCommunity(communityId);

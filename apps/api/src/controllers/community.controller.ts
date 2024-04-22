@@ -15,6 +15,7 @@ import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityFactoryService } from "src/features/community/community-factory.service";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
+import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
@@ -55,6 +56,8 @@ export class CommunityController {
 			includeAuthor,
 		);
 
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
 		return {
 			data: this.communityFactoryService.createDto(community),
 		};
@@ -73,10 +76,10 @@ export class CommunityController {
 			"author",
 		);
 
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
 		if (community.author.toString() !== token.sub)
-			throw new ForbiddenException(
-				"You are not authorized to perform this action.",
-			);
+			throw new CommunityException.CommunityCannotBeModified();
 
 		await this.communityRepositoryService.deleteCommunity(communityId);
 

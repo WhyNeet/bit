@@ -17,4 +17,11 @@ export class CommunityException {
 		HttpStatus.FORBIDDEN,
 	)
 	public static readonly CommunityCannotBeModified: Exception;
+
+	@CommonException(
+		"Community already exists.",
+		"Community with this name already exists.",
+		HttpStatus.FORBIDDEN,
+	)
+	public static readonly CommunityAlreadyExists: Exception;
 }

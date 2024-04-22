@@ -1,6 +1,9 @@
 import { HttpStatus } from "@nestjs/common";
 import { CommonException } from "src/frameworks/exception-handling/decorators/common-exception.decorator";
-import { Exception } from "src/frameworks/exception-handling/types/exception.interface";
+import {
+	CustomizableException,
+	Exception,
+} from "src/frameworks/exception-handling/types/exception.interface";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: grouping
 export class AuthException {
@@ -17,4 +20,11 @@ export class AuthException {
 		HttpStatus.BAD_REQUEST,
 	)
 	public static readonly WrongPassword: Exception;
+
+	@CommonException(
+		"User already exists.",
+		"User with these credentials already exists.",
+		HttpStatus.BAD_REQUEST,
+	)
+	public static readonly UserAlreadyExists: CustomizableException;
 }

@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { CreateCommunityDto } from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
+import { CommunityException } from "../exception-handling/exceptions/community.exception";
 import { CommunityFactoryService } from "./community-factory.service";
 
 @Injectable()
@@ -32,7 +33,13 @@ export class CommunityRepositoryService {
 			authorId,
 		);
 
-		return await this.dataServices.communities.create(community);
+		try {
+			return await this.dataServices.communities.create(community);
+		} catch (e) {
+			if (e.code && e.code === 11000)
+				throw new CommunityException.CommunityAlreadyExists();
+			throw e;
+		}
 	}
 
 	public async updateCommunity(community: Community): Promise<Community> {

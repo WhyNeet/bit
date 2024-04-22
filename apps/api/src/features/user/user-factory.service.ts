@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Types } from "mongoose";
 import { CreateUserDto, UserDto } from "src/core/dtos/user.dto";
 import { User } from "src/core/entities/user.entity";
 
@@ -26,5 +27,11 @@ export class UserFactoryService {
 		userDto.updatedAt = user.updatedAt;
 
 		return userDto;
+	}
+
+	public createDtoOrString(user: User | Types.ObjectId): UserDto | string {
+		if (user instanceof Types.ObjectId) return user.toString();
+
+		return this.createDto(user);
 	}
 }

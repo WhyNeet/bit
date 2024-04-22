@@ -1,6 +1,4 @@
 import { IsOptional, IsString, Length } from "class-validator";
-import { ObjectId } from "mongoose";
-import { User } from "../entities/user.entity";
 import { ValidationError } from "../validation/error";
 import { UserDto } from "./user.dto";
 
@@ -19,7 +17,7 @@ export class CommunityDto {
 	id: string;
 	name: string;
 	description?: string;
-	owner?: UserDto | ObjectId | string;
+	owner?: UserDto | string;
 	createdAt: Date;
 	updatedAt: Date;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { Schema } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
+import { User } from "src/core/entities/user.entity";
 import { UserFactoryService } from "../user/user-factory.service";
 
 @Injectable()
@@ -16,7 +17,7 @@ export class CommunityFactoryService {
 
 		community.name = createCommunityDto.name;
 		community.description = createCommunityDto.description;
-		community.owner = ownerId;
+		community.owner = ownerId as unknown as ObjectId;
 
 		return community;
 	}
@@ -27,12 +28,9 @@ export class CommunityFactoryService {
 		dto.id = community.id;
 		dto.name = community.name;
 		dto.description = community.description;
-		dto.owner =
-			typeof community.owner === "object"
-				? community.owner.toString()
-				: typeof community.owner === "string"
-					? community.owner
-					: this.userFactoryService.createDto(community.owner);
+		dto.owner = this.userFactoryService.createDtoOrString(
+			community.owner as User | Types.ObjectId,
+		);
 
 		dto.createdAt = community.createdAt;
 		dto.updatedAt = community.updatedAt;

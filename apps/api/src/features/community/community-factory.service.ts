@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { ObjectId, Types } from "mongoose";
+import { ObjectId } from "mongoose";
 import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
-import { User } from "src/core/entities/user.entity";
+import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { UserFactoryService } from "../user/user-factory.service";
 
 @Injectable()
@@ -28,8 +28,9 @@ export class CommunityFactoryService {
 		dto.id = community.id;
 		dto.name = community.name;
 		dto.description = community.description;
-		dto.owner = this.userFactoryService.createDtoOrString(
-			community.owner as User | Types.ObjectId,
+		dto.owner = RelationDtoHelper.createFromRelation(
+			community.owner,
+			this.userFactoryService.createDto.bind(this.userFactoryService),
 		);
 
 		dto.createdAt = community.createdAt;

@@ -15,6 +15,7 @@ import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityFactoryService } from "src/features/community/community-factory.service";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
+import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
@@ -48,12 +49,11 @@ export class CommunityController {
 	@Get("/:communityId")
 	public async getCommunity(
 		@Param("communityId") communityId: string,
-		@Query("includeOwner", new ParseBoolPipe({ optional: true }))
-		includeOwner?: boolean,
+		@IncludeFields() includeFields: string[],
 	): ApiResponse<CommunityDto> {
 		const community = await this.communityRepositoryService.getCommunityById(
 			communityId,
-			includeOwner,
+			includeFields,
 		);
 
 		if (!community) throw new CommunityException.CommunityDoesNotExist();
@@ -72,7 +72,7 @@ export class CommunityController {
 	): ApiResponse<void> {
 		const community = await this.communityRepositoryService.getCommunityById(
 			communityId,
-			false,
+			[],
 			"owner",
 		);
 

@@ -14,14 +14,10 @@ export class CommunityRepositoryService {
 
 	public async getCommunityById(
 		id: string,
-		includeOwner?: boolean,
+		include?: string[],
 		select?: string,
 	): Promise<Community | null> {
-		return await this.dataServices.communities.getById(
-			id,
-			includeOwner ? ["owner"] : undefined,
-			select,
-		);
+		return await this.dataServices.communities.getById(id, include, select);
 	}
 
 	public async createCommunity(

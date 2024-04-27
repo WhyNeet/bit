@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { NestjsFormDataModule as FormDataModule } from "nestjs-form-data";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { AuthController } from "./controllers/auth.controller";
 import { CommunityController } from "./controllers/community.controller";
@@ -8,7 +9,12 @@ import { FeaturesModule } from "./features/features.module";
 import { FrameworksModule } from "./frameworks/frameworks.module";
 
 @Module({
-	imports: [ConfigurationModule, FrameworksModule, FeaturesModule],
+	imports: [
+		ConfigurationModule,
+		FrameworksModule,
+		FeaturesModule,
+		FormDataModule,
+	],
 	controllers: [
 		AuthController,
 		UserController,

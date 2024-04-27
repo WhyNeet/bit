@@ -8,7 +8,11 @@ export type Configuration = Record<string, unknown>;
 // biome-ignore lint/complexity/noStaticOnlyClass: method grouping
 export class ConfigurationLoader {
 	public static dev(fileName: string): () => Configuration {
-		return () => ConfigurationLoader.load(fileName, true);
+		const conf = ConfigurationLoader.load(fileName, true);
+
+		conf.env = { dev: true };
+
+		return () => conf;
 	}
 
 	private static load(fileName: string, devOnly?: boolean): Configuration {

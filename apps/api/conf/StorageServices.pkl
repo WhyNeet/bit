@@ -1,0 +1,15 @@
+class StorageServices {
+    s3: S3ConnectionProperties
+}
+
+class S3ConnectionProperties {
+    bucketName: String
+    region: String
+    endpoint: String
+    credentials: S3ConnectionCredentials
+}
+
+class S3ConnectionCredentials {
+    accessKeyId: String
+    secretAccessKey: String
+}

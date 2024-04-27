@@ -1,5 +1,6 @@
 import "DataServices.pkl"
 import "JWT.pkl"
+import "StorageServices.pkl"
 
 mongo = new DataServices.DbConnectionProperties {
   host = "localhost"
@@ -15,4 +16,16 @@ mongo = new DataServices.DbConnectionProperties {
 tokens = new JWT.Tokens {
   accessToken = JWT.tokenPropertiesFactory.create("access_token_secret", 2.min)
   refreshToken = JWT.tokenPropertiesFactory.create("refresh_token_secret", 120.d)
+}
+
+storage = new StorageServices.StorageServices {
+  s3 = new StorageServices.S3ConnectionProperties {
+    bucketName = "testing-bucket"
+    region = "us-east-1"
+    endpoint = "http://localhost:4566"
+    credentials = new StorageServices.S3ConnectionCredentials {
+      accessKeyId = "access-key-id"
+      secretAccessKey = "access-key-secret"
+    }
+  }
 }

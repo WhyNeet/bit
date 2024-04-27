@@ -16,10 +16,14 @@ import {
 	FileFieldsInterceptor,
 	FilesInterceptor,
 } from "@nestjs/platform-express";
+import { FormDataRequest } from "nestjs-form-data";
+import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { CreatePostDto, PostDto } from "src/core/dtos/post.dto";
 import { Post } from "src/core/entities/post.entity";
 import { ApiResponse } from "src/core/types/response/response.interface";
+import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
+import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { PostFactoryService } from "src/features/post/post-factory.service";
 import { PostRepositoryService } from "src/features/post/post-repository.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
@@ -31,45 +35,44 @@ export class PostController {
 	constructor(
 		private postRepositoryService: PostRepositoryService,
 		private postFactoryService: PostFactoryService,
+		private storageServices: IStorageServices,
+		private communityRepositoryService: CommunityRepositoryService,
 	) {}
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@UseInterceptors(
-		FileFieldsInterceptor([
-			{ name: "images", maxCount: 4 },
-			{ name: "attachments", maxCount: 4 },
-		]),
-	)
+	@FormDataRequest()
 	@PostRequest("/create")
 	public async createPost(
 		@Body() createPostDto: CreatePostDto,
-		@UploadedFiles(
-			new ParseFilePipeBuilder()
-				.addMaxSizeValidator({ maxSize: 3000000 })
-				.build({
-					errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-					fileIsRequired: false,
-				}),
-		)
-		files: {
-			images?: Express.Multer.File[];
-			attachments?: Express.Multer.File[];
-		},
 		@Token() token: JwtPayload,
 	): ApiResponse<PostDto> {
-		if (files.images?.some((f) => !f.mimetype.startsWith("image/")))
-			throw new BadRequestException("invalid image filetype");
+		const community = await this.communityRepositoryService.getCommunityById(
+			createPostDto.community,
+			[],
+			"_id",
+		);
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
+		const images = (createPostDto.images ?? []).map((f) => ({
+			body: f.buffer,
+			fileName: crypto.randomUUID(),
+		}));
+		const files = (createPostDto.files ?? []).map((f) => ({
+			body: f.buffer,
+			fileName: crypto.randomUUID(),
+		}));
+
+		for (const image of images)
+			await this.storageServices.putFile(image.fileName, image.body);
+		for (const file of files)
+			await this.storageServices.putFile(file.fileName, file.body);
 
 		const _post = this.postFactoryService.createFromDto(
 			createPostDto,
 			token.sub,
-			files.images
-				? files.images.map((f) => `${crypto.randomUUID()}-${f.filename}`)
-				: [],
-			files.attachments
-				? files.attachments.map((f) => `${crypto.randomUUID()}-${f.filename}`)
-				: [],
+			images.map((f) => f.fileName),
+			files.map((f) => f.fileName),
 		);
 
 		const post = await this.postRepositoryService.createPost(_post);

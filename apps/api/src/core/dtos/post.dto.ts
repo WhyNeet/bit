@@ -1,4 +1,16 @@
-import { IsString, Length, MinLength } from "class-validator";
+import {
+	ArrayMaxSize,
+	IsOptional,
+	IsString,
+	Length,
+	MinLength,
+} from "class-validator";
+import {
+	HasMimeType,
+	IsFiles,
+	MaxFileSize,
+	MemoryStoredFile,
+} from "nestjs-form-data";
 import { IsObjectId } from "../validation/decorators/ObjectId";
 import { ValidationError } from "../validation/error";
 import { CommunityDto } from "./community.dto";
@@ -16,6 +28,28 @@ export class CreatePostDto {
 	@IsString({ message: ValidationError.MustBeAString })
 	@IsObjectId({ message: ValidationError.MustBeAnObjectId })
 	community: string;
+
+	@IsOptional()
+	@IsFiles({ message: ValidationError.MustBeAFile })
+	@MaxFileSize(3000000, {
+		message: ValidationError.MaxFileSizeExceeded,
+		each: true,
+	})
+	@HasMimeType("image/*", {
+		message: ValidationError.InvalidMimeType("image/*"),
+		each: true,
+	})
+	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
+	images: MemoryStoredFile[];
+
+	@IsOptional()
+	@IsFiles({ message: ValidationError.MustBeAFile })
+	@MaxFileSize(3000000, {
+		message: ValidationError.MaxFileSizeExceeded,
+		each: true,
+	})
+	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
+	files: MemoryStoredFile[];
 }
 
 export class PostDto {

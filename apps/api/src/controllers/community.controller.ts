@@ -29,7 +29,7 @@ export class CommunityController {
 		private communityFactoryService: CommunityFactoryService,
 	) {}
 
-	@HttpCode(HttpStatus.OK)
+	@HttpCode(HttpStatus.CREATED)
 	@UseGuards(JwtAuthGuard)
 	@Post("/create")
 	public async createCommunity(

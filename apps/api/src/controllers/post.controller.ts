@@ -33,7 +33,7 @@ export class PostController {
 		private communityRepositoryService: CommunityRepositoryService,
 	) {}
 
-	@HttpCode(HttpStatus.OK)
+	@HttpCode(HttpStatus.CREATED)
 	@UseGuards(JwtAuthGuard)
 	@FormDataRequest()
 	@PostRequest("/create")

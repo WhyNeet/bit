@@ -1,29 +1,23 @@
 import {
-	BadRequestException,
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Param,
-	ParseFilePipeBuilder,
 	Post as PostRequest,
-	UploadedFiles,
 	UseGuards,
-	UseInterceptors,
 } from "@nestjs/common";
-import {
-	FileFieldsInterceptor,
-	FilesInterceptor,
-} from "@nestjs/platform-express";
 import { FormDataRequest } from "nestjs-form-data";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { CreatePostDto, PostDto } from "src/core/dtos/post.dto";
-import { Post } from "src/core/entities/post.entity";
+import { Community } from "src/core/entities/community.entity";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
+import { PostException } from "src/features/exception-handling/exceptions/post.exception";
 import { PostFactoryService } from "src/features/post/post-factory.service";
 import { PostRepositoryService } from "src/features/post/post-repository.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
@@ -82,6 +76,7 @@ export class PostController {
 		};
 	}
 
+	@HttpCode(HttpStatus.OK)
 	@Get("/:postId")
 	public async getPostById(
 		@Param("postId") postId: string,
@@ -92,8 +87,42 @@ export class PostController {
 			includeFields,
 		);
 
+		if (!post) throw new PostException.PostDoesNotExist();
+
 		return {
 			data: this.postFactoryService.createDto(post),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Delete("/:postId")
+	public async deletePost(
+		@Param("postId") postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		const post = await this.postRepositoryService.getPostById(
+			postId,
+			["community"],
+			"author commmunity images files",
+		);
+
+		if (!post) throw new PostException.PostDoesNotExist();
+
+		if (
+			post.author.toString() !== payload.sub &&
+			(post.community as Community).owner.toString() !== payload.sub
+		)
+			throw new PostException.PostCannotBeModified();
+
+		await this.postRepositoryService.deletePost(postId);
+
+		for (const image of post.images)
+			await this.storageServices.deleteFile(image);
+		for (const file of post.files) await this.storageServices.deleteFile(file);
+
+		return {
+			data: null,
 		};
 	}
 }

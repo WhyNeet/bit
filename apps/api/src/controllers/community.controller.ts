@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	ForbiddenException,
 	Get,
 	HttpCode,
@@ -65,7 +66,7 @@ export class CommunityController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@Post("/:communityId/delete")
+	@Delete("/:communityId")
 	public async deleteCommunity(
 		@Param("communityId") communityId: string,
 		@Token() token: JwtPayload,

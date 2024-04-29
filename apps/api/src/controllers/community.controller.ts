@@ -77,10 +77,11 @@ export class CommunityController {
 		@Body() updateCommunityDto: UpdateCommunityDto,
 		@Token() payload: JwtPayload,
 	): ApiResponse<CommunityDto> {
-		const { owner } =
+		const oldCommunity =
 			await this.communityRepositoryService.getCommunityById(communityId);
 
-		if (owner.toString() !== payload.sub)
+		if (!oldCommunity) throw new CommunityException.CommunityDoesNotExist();
+		if (oldCommunity.owner.toString() !== payload.sub)
 			throw new CommunityException.CommunityCannotBeModified();
 
 		const community = await this.communityRepositoryService.updateCommunity(

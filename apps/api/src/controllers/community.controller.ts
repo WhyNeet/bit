@@ -8,11 +8,16 @@ import {
 	HttpStatus,
 	Param,
 	ParseBoolPipe,
+	Patch,
 	Post,
 	Query,
 	UseGuards,
 } from "@nestjs/common";
-import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
+import {
+	CommunityDto,
+	CreateCommunityDto,
+	UpdateCommunityDto,
+} from "src/core/dtos/community.dto";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityFactoryService } from "src/features/community/community-factory.service";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
@@ -61,6 +66,37 @@ export class CommunityController {
 
 		return {
 			data: this.communityFactoryService.createDto(community),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Patch("/:communityId")
+	public async updateCommunity(
+		@Param("communityId") communityId: string,
+		@Body() updateCommunityDto: UpdateCommunityDto,
+		@Token() payload: JwtPayload,
+	): ApiResponse<CommunityDto> {
+		const { owner } =
+			await this.communityRepositoryService.getCommunityById(communityId);
+
+		if (owner.toString() !== payload.sub)
+			throw new CommunityException.CommunityCannotBeModified();
+
+		const community = await this.communityRepositoryService.updateCommunity(
+			communityId,
+			updateCommunityDto,
+		);
+
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
+		const updatedCommunity = this.communityFactoryService.updateCommunity(
+			community,
+			updateCommunityDto,
+		);
+
+		return {
+			data: this.communityFactoryService.createDto(updatedCommunity),
 		};
 	}
 

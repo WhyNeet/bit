@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
-import { CreateCommunityDto } from "src/core/dtos/community.dto";
+import {
+	CreateCommunityDto,
+	UpdateCommunityDto,
+} from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
 import { CommunityException } from "../exception-handling/exceptions/community.exception";
 import { CommunityFactoryService } from "./community-factory.service";
@@ -38,8 +41,14 @@ export class CommunityRepositoryService {
 		}
 	}
 
-	public async updateCommunity(community: Community): Promise<Community> {
-		return await this.dataServices.communities.update(community.id, community);
+	public async updateCommunity(
+		id: string,
+		updateCommunityDto: UpdateCommunityDto,
+	): Promise<Community> {
+		const community =
+			this.communityFactoryService.createFromUpdateDto(updateCommunityDto);
+
+		return await this.dataServices.communities.update(id, community);
 	}
 
 	public async deleteCommunity(id: string): Promise<Community | null> {

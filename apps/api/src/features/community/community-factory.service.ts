@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ObjectId } from "mongoose";
-import { CommunityDto, CreateCommunityDto } from "src/core/dtos/community.dto";
+import {
+	CommunityDto,
+	CreateCommunityDto,
+	UpdateCommunityDto,
+} from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { UserFactoryService } from "../user/user-factory.service";
@@ -22,6 +26,17 @@ export class CommunityFactoryService {
 		return community;
 	}
 
+	public createFromUpdateDto(
+		updateCommunityDto: UpdateCommunityDto,
+	): Community {
+		const community = new Community();
+
+		community.name = updateCommunityDto.name;
+		community.description = updateCommunityDto.description;
+
+		return community;
+	}
+
 	public createDto(community: Community): CommunityDto {
 		const dto = new CommunityDto();
 
@@ -37,5 +52,15 @@ export class CommunityFactoryService {
 		dto.updatedAt = community.updatedAt;
 
 		return dto;
+	}
+
+	public updateCommunity(
+		community: Community,
+		updateCommunityDto: UpdateCommunityDto,
+	): Community {
+		community.name = updateCommunityDto.name;
+		community.description = updateCommunityDto.description;
+
+		return community;
 	}
 }

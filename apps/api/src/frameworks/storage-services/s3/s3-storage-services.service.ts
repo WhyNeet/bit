@@ -54,4 +54,13 @@ export class S3StorageServices extends IStorageServices {
 			Key: fileName,
 		});
 	}
+
+	public async deleteFiles(fileNames: string[]): Promise<void> {
+		await this.s3.deleteObjects({
+			Bucket: this.bucket,
+			Delete: {
+				Objects: fileNames.map((f) => ({ Key: f })),
+			},
+		});
+	}
 }

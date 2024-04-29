@@ -15,6 +15,16 @@ export class PostRepositoryService {
 		return await this.dataServices.posts.create(post);
 	}
 
+	public async getLatestPosts(populate?: string[]): Promise<Post[]> {
+		return await this.dataServices.posts.getAll(
+			{},
+			{ createdAt: "desc" },
+			20,
+			0,
+			populate,
+		);
+	}
+
 	public async getPostById(
 		postId: string,
 		include?: string[],

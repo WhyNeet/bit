@@ -78,6 +78,21 @@ export class PostController {
 	}
 
 	@HttpCode(HttpStatus.OK)
+	@Get("/latest")
+	public async getLatestPosts(
+		@IncludeFields() includeFields: string[],
+	): ApiResponse<PostDto[]> {
+		const posts =
+			await this.postRepositoryService.getLatestPosts(includeFields);
+
+		return {
+			data: posts.map(
+				this.postFactoryService.createDto.bind(this.postFactoryService),
+			),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
 	@Get("/:postId")
 	public async getPostById(
 		@Param("postId") postId: string,

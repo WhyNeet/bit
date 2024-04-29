@@ -17,4 +17,5 @@ export class ValidationError {
 		`must be of type "${correct}"`;
 	public static readonly TooManyFiles = (max: number) =>
 		`at most ${max} files can be uploaded`;
+	public static readonly InvalidCommunityName = () => "invalid community name";
 }

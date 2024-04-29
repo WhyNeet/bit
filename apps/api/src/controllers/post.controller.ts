@@ -6,12 +6,13 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
+	Patch,
 	Post as PostRequest,
 	UseGuards,
 } from "@nestjs/common";
 import { FormDataRequest } from "nestjs-form-data";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
-import { CreatePostDto, PostDto } from "src/core/dtos/post.dto";
+import { CreatePostDto, PostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { Community } from "src/core/entities/community.entity";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
@@ -94,6 +95,57 @@ export class PostController {
 		};
 	}
 
+	@HttpCode(HttpStatus.CREATED)
+	@UseGuards(JwtAuthGuard)
+	@FormDataRequest()
+	@Patch("/:postId")
+	public async updatePost(
+		@Param("postId") postId: string,
+		@Body() updatePostDto: UpdatePostDto,
+		@Token() token: JwtPayload,
+	): ApiResponse<PostDto> {
+		const oldPost = await this.postRepositoryService.getPostById(postId);
+
+		if (!oldPost) throw new PostException.PostDoesNotExist();
+		if (oldPost.author.toString() !== token.sub)
+			throw new PostException.PostCannotBeModified();
+
+		await this.storageServices.deleteFiles(oldPost.images);
+		await this.storageServices.deleteFiles(oldPost.files);
+
+		const images = (updatePostDto.images ?? []).map((f) => ({
+			body: f.buffer,
+			fileName: crypto.randomUUID(),
+		}));
+		const files = (updatePostDto.files ?? []).map((f) => ({
+			body: f.buffer,
+			fileName: crypto.randomUUID(),
+		}));
+
+		for (const image of images)
+			await this.storageServices.putFile(image.fileName, image.body);
+		for (const file of files)
+			await this.storageServices.putFile(file.fileName, file.body);
+
+		const post = await this.postRepositoryService.updatePost(
+			postId,
+			updatePostDto,
+			images.map((f) => f.fileName),
+			files.map((f) => f.fileName),
+		);
+
+		const updatedPost = this.postFactoryService.updatePost(
+			post,
+			updatePostDto,
+			images.map((f) => f.fileName),
+			files.map((f) => f.fileName),
+		);
+
+		return {
+			data: this.postFactoryService.createDto(updatedPost),
+		};
+	}
+
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
 	@Delete("/:postId")
@@ -117,9 +169,8 @@ export class PostController {
 
 		await this.postRepositoryService.deletePost(postId);
 
-		for (const image of post.images)
-			await this.storageServices.deleteFile(image);
-		for (const file of post.files) await this.storageServices.deleteFile(file);
+		await this.storageServices.deleteFiles(post.images);
+		await this.storageServices.deleteFiles(post.files);
 
 		return {
 			data: null,

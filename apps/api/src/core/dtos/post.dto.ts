@@ -52,6 +52,38 @@ export class CreatePostDto {
 	files: MemoryStoredFile[];
 }
 
+export class UpdatePostDto {
+	@IsString({ message: ValidationError.MustBeAString })
+	@Length(1, 256, { message: ValidationError.MustBeBetweenChars(1, 256) })
+	title: string;
+
+	@IsString({ message: ValidationError.MustBeAString })
+	@MinLength(1, { message: ValidationError.MustBeAtLeastChars(1) })
+	content: string;
+
+	@IsOptional()
+	@IsFiles({ message: ValidationError.MustBeAFile })
+	@MaxFileSize(3000000, {
+		message: ValidationError.MaxFileSizeExceeded,
+		each: true,
+	})
+	@HasMimeType("image/*", {
+		message: ValidationError.InvalidMimeType("image/*"),
+		each: true,
+	})
+	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
+	images: MemoryStoredFile[];
+
+	@IsOptional()
+	@IsFiles({ message: ValidationError.MustBeAFile })
+	@MaxFileSize(3000000, {
+		message: ValidationError.MaxFileSizeExceeded,
+		each: true,
+	})
+	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
+	files: MemoryStoredFile[];
+}
+
 export class PostDto {
 	id: string;
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePostDto, PostDto } from "src/core/dtos/post.dto";
+import { CreatePostDto, PostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { Post } from "src/core/entities/post.entity";
 import { CommunityFactoryService } from "../community/community-factory.service";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
@@ -51,5 +51,34 @@ export class PostFactoryService {
 		dto.updatedAt = post.updatedAt;
 
 		return dto;
+	}
+
+	public createFromUpdateDto(
+		updatePostDto: UpdatePostDto,
+		images: string[],
+		files: string[],
+	): Post {
+		const post = new Post();
+
+		post.title = updatePostDto.title;
+		post.content = updatePostDto.content;
+		post.images = images;
+		post.files = files;
+
+		return post;
+	}
+
+	public updatePost(
+		post: Post,
+		updatePostDto: UpdatePostDto,
+		images: string[],
+		files: string[],
+	): Post {
+		post.title = updatePostDto.title;
+		post.content = updatePostDto.content;
+		post.images = images;
+		post.files = files;
+
+		return post;
 	}
 }

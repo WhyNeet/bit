@@ -1,5 +1,15 @@
+import { FilterQuery, SortOrder } from "mongoose";
+
+export type SortQuery<Entity> = Partial<{ [key in keyof Entity]: SortOrder }>;
+
 export abstract class IGenericRepository<Entity> {
-	abstract getAll(): Promise<Entity[]>;
+	abstract getAll(
+		filter: FilterQuery<Entity>,
+		sort: SortQuery<Entity>,
+		limit: number,
+		skip: number,
+		populate?: string[],
+	): Promise<Entity[]>;
 
 	abstract getById(
 		id: string,

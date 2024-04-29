@@ -1,5 +1,8 @@
-import type { Model } from "mongoose";
-import type { IGenericRepository } from "src/core/abstracts/generic-repository.abstract";
+import type { FilterQuery, Model, SortOrder } from "mongoose";
+import type {
+	IGenericRepository,
+	SortQuery,
+} from "src/core/abstracts/generic-repository.abstract";
 
 export class MongoGenericRepository<Entity>
 	implements IGenericRepository<Entity>
@@ -14,8 +17,20 @@ export class MongoGenericRepository<Entity>
 		return this.model.create(entity);
 	}
 
-	public async getAll(): Promise<Entity[]> {
-		return this.model.find().exec();
+	public async getAll(
+		filter: FilterQuery<Entity>,
+		sort: SortQuery<Entity>,
+		limit: number,
+		skip: number,
+		populate?: string[],
+	): Promise<Entity[]> {
+		return this.model
+			.find(filter)
+			.limit(limit)
+			.skip(skip)
+			.sort(sort)
+			.populate(populate)
+			.exec();
 	}
 
 	public async getById(

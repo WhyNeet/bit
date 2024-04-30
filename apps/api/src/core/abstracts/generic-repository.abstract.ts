@@ -18,8 +18,9 @@ export abstract class IGenericRepository<Entity> {
 	): Promise<Entity | null>;
 
 	abstract get(
-		filter: Record<string, string>,
+		filter: FilterQuery<Entity>,
 		populate?: string[],
+		select?: string,
 	): Promise<Entity | null>;
 
 	abstract create(entity: Entity): Promise<Entity>;

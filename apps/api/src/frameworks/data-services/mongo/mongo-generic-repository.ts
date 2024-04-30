@@ -43,11 +43,17 @@ export class MongoGenericRepository<Entity>
 	}
 
 	public async get(
-		filter: Record<string, string>,
+		filter: FilterQuery<Entity>,
 		populate?: string[],
+		select?: string,
 	): Promise<Entity | null> {
 		/* @ts-ignore */
-		return this.model.findOne().where(filter).populate(populate).exec();
+		return this.model
+			.findOne()
+			.where(filter)
+			.select(select)
+			.populate(populate)
+			.exec();
 	}
 
 	public async update(

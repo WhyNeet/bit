@@ -8,8 +8,6 @@ export class Community {
 
 	owner: User | ObjectId;
 
-	members: User[] | ObjectId[];
-
 	createdAt: Date;
 	updatedAt: Date;
 }

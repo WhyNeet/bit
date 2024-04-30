@@ -49,12 +49,6 @@ export class CommunityFactoryService {
 			community.owner,
 			this.userFactoryService.createDto.bind(this.userFactoryService),
 		);
-		dto.members = community.members.map((member: User | ObjectId) =>
-			RelationDtoHelper.createFromRelation(
-				member,
-				this.userFactoryService.createDto.bind(this.userFactoryService),
-			),
-		) as UserDto[] | string[];
 
 		dto.createdAt = community.createdAt;
 		dto.updatedAt = community.updatedAt;

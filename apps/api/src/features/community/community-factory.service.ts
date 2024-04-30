@@ -5,7 +5,9 @@ import {
 	CreateCommunityDto,
 	UpdateCommunityDto,
 } from "src/core/dtos/community.dto";
+import { UserDto } from "src/core/dtos/user.dto";
 import { Community } from "src/core/entities/community.entity";
+import { User } from "src/core/entities/user.entity";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { UserFactoryService } from "../user/user-factory.service";
 
@@ -13,7 +15,7 @@ import { UserFactoryService } from "../user/user-factory.service";
 export class CommunityFactoryService {
 	constructor(private userFactoryService: UserFactoryService) {}
 
-	public createFromDto(
+	public createFromCreateDto(
 		createCommunityDto: CreateCommunityDto,
 		ownerId: string,
 	): Community {
@@ -47,6 +49,12 @@ export class CommunityFactoryService {
 			community.owner,
 			this.userFactoryService.createDto.bind(this.userFactoryService),
 		);
+		dto.members = community.members.map((member: User | ObjectId) =>
+			RelationDtoHelper.createFromRelation(
+				member,
+				this.userFactoryService.createDto.bind(this.userFactoryService),
+			),
+		) as UserDto[] | string[];
 
 		dto.createdAt = community.createdAt;
 		dto.updatedAt = community.updatedAt;

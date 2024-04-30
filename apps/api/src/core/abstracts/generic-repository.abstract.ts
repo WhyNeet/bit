@@ -1,4 +1,4 @@
-import { FilterQuery, SortOrder } from "mongoose";
+import { FilterQuery, SortOrder, UpdateQuery } from "mongoose";
 
 export type SortQuery<Entity> = Partial<{ [key in keyof Entity]: SortOrder }>;
 
@@ -24,7 +24,10 @@ export abstract class IGenericRepository<Entity> {
 
 	abstract create(entity: Entity): Promise<Entity>;
 
-	abstract update(id: string, entity: Entity): Promise<Entity | null>;
+	abstract update(
+		filter: FilterQuery<Entity>,
+		entity: Entity | UpdateQuery<Entity>,
+	): Promise<Entity | null>;
 
 	abstract delete(id: string): Promise<Entity | null>;
 }

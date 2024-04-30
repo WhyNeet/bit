@@ -27,7 +27,7 @@ export class CommunityRepositoryService {
 		createCommunityDto: CreateCommunityDto,
 		ownerId: string,
 	): Promise<Community> {
-		const community = this.communityFactoryService.createFromDto(
+		const community = this.communityFactoryService.createFromCreateDto(
 			createCommunityDto,
 			ownerId,
 		);
@@ -48,7 +48,17 @@ export class CommunityRepositoryService {
 		const community =
 			this.communityFactoryService.createFromUpdateDto(updateCommunityDto);
 
-		return await this.dataServices.communities.update(id, community);
+		return await this.dataServices.communities.update({ _id: id }, community);
+	}
+
+	public async addMember(
+		communityId: string,
+		memberId: string,
+	): Promise<Community> {
+		return await this.dataServices.communities.update(
+			{ _id: communityId },
+			{ $push: { members: memberId } },
+		);
 	}
 
 	public async deleteCommunity(id: string): Promise<Community | null> {

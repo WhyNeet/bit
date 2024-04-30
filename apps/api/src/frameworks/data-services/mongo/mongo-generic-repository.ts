@@ -1,4 +1,4 @@
-import type { FilterQuery, Model, SortOrder } from "mongoose";
+import type { FilterQuery, Model, SortOrder, UpdateQuery } from "mongoose";
 import type {
 	IGenericRepository,
 	SortQuery,
@@ -50,8 +50,11 @@ export class MongoGenericRepository<Entity>
 		return this.model.findOne().where(filter).populate(populate).exec();
 	}
 
-	public async update(id: string, entity: Entity): Promise<Entity | null> {
-		return this.model.findByIdAndUpdate(id, entity).exec();
+	public async update(
+		filter: FilterQuery<Entity>,
+		entity: Entity | UpdateQuery<Entity>,
+	): Promise<Entity | null> {
+		return await this.model.findOneAndUpdate(filter, entity).exec();
 	}
 
 	public async delete(id: string): Promise<Entity | null> {

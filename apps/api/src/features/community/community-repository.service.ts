@@ -61,6 +61,16 @@ export class CommunityRepositoryService {
 		);
 	}
 
+	public async removeMember(
+		communityId: string,
+		memberId: string,
+	): Promise<Community> {
+		return await this.dataServices.communities.update(
+			{ _id: communityId },
+			{ $pull: { members: memberId } },
+		);
+	}
+
 	public async deleteCommunity(id: string): Promise<Community | null> {
 		return await this.dataServices.communities.delete(id);
 	}

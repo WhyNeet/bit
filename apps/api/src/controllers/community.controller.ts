@@ -71,6 +71,37 @@ export class CommunityController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
+	@Post("/:communityId/join")
+	public async joinCommunity(
+		@Param("communityId") communityId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.communityRepositoryService.addMember(communityId, payload.sub);
+
+		return {
+			data: null,
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Post("/:communityId/leave")
+	public async leaveCommunity(
+		@Param("communityId") communityId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.communityRepositoryService.removeMember(
+			communityId,
+			payload.sub,
+		);
+
+		return {
+			data: null,
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
 	@Patch("/:communityId")
 	public async updateCommunity(
 		@Param("communityId") communityId: string,

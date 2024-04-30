@@ -5,7 +5,12 @@ import {
 	UpdateCommunityDto,
 } from "src/core/dtos/community.dto";
 import { Community } from "src/core/entities/community.entity";
+import {
+	UserCommunityRelation,
+	UserCommunityRelationType,
+} from "src/core/entities/relation/user-community.entity";
 import { CommunityException } from "../exception-handling/exceptions/community.exception";
+import { RelationFactoryService } from "../relation/relation-factory.service";
 import { CommunityFactoryService } from "./community-factory.service";
 
 @Injectable()
@@ -13,6 +18,7 @@ export class CommunityRepositoryService {
 	constructor(
 		private dataServices: IDataServices,
 		private communityFactoryService: CommunityFactoryService,
+		private relationFactoryService: RelationFactoryService,
 	) {}
 
 	public async getCommunityById(
@@ -54,24 +60,27 @@ export class CommunityRepositoryService {
 	public async addMember(
 		communityId: string,
 		memberId: string,
-	): Promise<Community> {
-		return await this.dataServices.communities.update(
-			{ _id: communityId },
-			{ $push: { members: memberId } },
+	): Promise<UserCommunityRelation> {
+		const relation = this.relationFactoryService.createUserCommunityRelation(
+			memberId,
+			communityId,
+			UserCommunityRelationType.Member,
 		);
+
+		return await this.dataServices.userCommunityRelations.create(relation);
 	}
 
 	public async removeMember(
 		communityId: string,
 		memberId: string,
-	): Promise<Community> {
-		return await this.dataServices.communities.update(
-			{ _id: communityId },
-			{ $pull: { members: memberId } },
-		);
+	): Promise<UserCommunityRelation> {
+		return await this.dataServices.userCommunityRelations.delete({
+			user: memberId,
+			community: communityId,
+		});
 	}
 
 	public async deleteCommunity(id: string): Promise<Community | null> {
-		return await this.dataServices.communities.delete(id);
+		return await this.dataServices.communities.delete({ _id: id });
 	}
 }

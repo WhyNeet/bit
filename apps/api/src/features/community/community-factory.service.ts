@@ -5,9 +5,7 @@ import {
 	CreateCommunityDto,
 	UpdateCommunityDto,
 } from "src/core/dtos/community.dto";
-import { UserDto } from "src/core/dtos/user.dto";
 import { Community } from "src/core/entities/community.entity";
-import { User } from "src/core/entities/user.entity";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { UserFactoryService } from "../user/user-factory.service";
 

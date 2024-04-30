@@ -3,7 +3,7 @@ import { Community } from "../community.entity";
 import { User } from "../user.entity";
 
 export enum UserCommunityRelationType {
-	Join = "JOIN",
+	Member = "MEMBER",
 }
 
 export class UserCommunityRelation {

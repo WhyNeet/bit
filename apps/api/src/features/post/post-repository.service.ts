@@ -49,6 +49,6 @@ export class PostRepositoryService {
 	}
 
 	public async deletePost(postId: string): Promise<Post | null> {
-		return await this.dataServices.posts.delete(postId);
+		return await this.dataServices.posts.delete({ _id: postId });
 	}
 }

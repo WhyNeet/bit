@@ -30,5 +30,5 @@ export abstract class IGenericRepository<Entity> {
 		entity: Entity | UpdateQuery<Entity>,
 	): Promise<Entity | null>;
 
-	abstract delete(id: string): Promise<Entity | null>;
+	abstract delete(filter: FilterQuery<Entity>): Promise<Entity | null>;
 }

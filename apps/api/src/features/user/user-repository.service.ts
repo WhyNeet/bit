@@ -45,6 +45,6 @@ export class UserRepositoryService {
 	}
 
 	public deleteUser(id: string): Promise<User | null> {
-		return this.dataServices.users.delete(id);
+		return this.dataServices.users.delete({ _id: id });
 	}
 }

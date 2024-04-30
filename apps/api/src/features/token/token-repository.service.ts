@@ -15,6 +15,6 @@ export class TokenRepositoryService {
 	}
 
 	public async deleteToken(id: string): Promise<Token | null> {
-		return this.dataServices.tokens.delete(id);
+		return this.dataServices.tokens.delete({ _id: id });
 	}
 }

@@ -63,7 +63,7 @@ export class MongoGenericRepository<Entity>
 		return await this.model.findOneAndUpdate(filter, entity).exec();
 	}
 
-	public async delete(id: string): Promise<Entity | null> {
-		return this.model.findByIdAndDelete(id).exec();
+	public async delete(filter: FilterQuery<Entity>): Promise<Entity | null> {
+		return this.model.findOneAndDelete(filter).exec();
 	}
 }

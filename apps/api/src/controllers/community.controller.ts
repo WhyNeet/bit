@@ -76,6 +76,13 @@ export class CommunityController {
 		@Param("communityId") communityId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
+		const community = await this.communityRepositoryService.getCommunityById(
+			communityId,
+			[],
+			"_id",
+		);
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
 		await this.communityRepositoryService.addMember(communityId, payload.sub);
 
 		return {
@@ -90,6 +97,13 @@ export class CommunityController {
 		@Param("communityId") communityId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
+		const community = await this.communityRepositoryService.getCommunityById(
+			communityId,
+			[],
+			"_id",
+		);
+		if (!community) throw new CommunityException.CommunityDoesNotExist();
+
 		await this.communityRepositoryService.removeMember(
 			communityId,
 			payload.sub,

@@ -7,6 +7,7 @@ export class Community {
 	description?: string;
 
 	owner: User | ObjectId;
+	members: number;
 
 	createdAt: Date;
 	updatedAt: Date;

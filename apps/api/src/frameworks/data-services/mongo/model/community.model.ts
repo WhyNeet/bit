@@ -17,6 +17,9 @@ export class Community {
 	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
 	owner: User;
 
+	@Prop({ required: true })
+	members: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 }

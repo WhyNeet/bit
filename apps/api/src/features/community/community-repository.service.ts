@@ -67,6 +67,10 @@ export class CommunityRepositoryService {
 			UserCommunityRelationType.Member,
 		);
 
+		await this.dataServices.communities.update(
+			{ _id: communityId },
+			{ $inc: { members: 1 } },
+		);
 		return await this.dataServices.userCommunityRelations.create(relation);
 	}
 
@@ -74,6 +78,11 @@ export class CommunityRepositoryService {
 		communityId: string,
 		memberId: string,
 	): Promise<UserCommunityRelation> {
+		await this.dataServices.communities.update(
+			{ _id: communityId },
+			{ $inc: { members: -1 } },
+		);
+
 		return await this.dataServices.userCommunityRelations.delete({
 			user: memberId,
 			community: communityId,

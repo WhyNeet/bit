@@ -22,6 +22,7 @@ export class CommunityFactoryService {
 		community.name = createCommunityDto.name;
 		community.description = createCommunityDto.description;
 		community.owner = ownerId as unknown as ObjectId;
+		community.members = 0;
 
 		return community;
 	}
@@ -47,7 +48,7 @@ export class CommunityFactoryService {
 			community.owner,
 			this.userFactoryService.createDto.bind(this.userFactoryService),
 		);
-
+		dto.members = community.members;
 		dto.createdAt = community.createdAt;
 		dto.updatedAt = community.updatedAt;
 

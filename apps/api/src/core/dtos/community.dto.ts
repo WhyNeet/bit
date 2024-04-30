@@ -32,6 +32,7 @@ export class CommunityDto {
 	name: string;
 	description?: string;
 	owner: UserDto | string;
+	members: number;
 	createdAt: Date;
 	updatedAt: Date;
 }

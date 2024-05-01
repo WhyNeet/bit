@@ -21,6 +21,20 @@ export class CommunityRepositoryService {
 		private relationFactoryService: RelationFactoryService,
 	) {}
 
+	public async getUserCommunities(
+		userId: string,
+		include?: string[],
+		limit?: number,
+	): Promise<UserCommunityRelation[]> {
+		return await this.dataServices.userCommunityRelations.getAll(
+			{ user: userId, type: UserCommunityRelationType.Member },
+			{},
+			limit ?? 100,
+			0,
+			include,
+		);
+	}
+
 	public async getCommunityById(
 		id: string,
 		include?: string[],

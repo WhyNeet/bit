@@ -82,8 +82,32 @@ export class PostController {
 	public async getLatestPosts(
 		@IncludeFields() includeFields: string[],
 	): ApiResponse<PostDto[]> {
-		const posts =
-			await this.postRepositoryService.getLatestPosts(includeFields);
+		const posts = await this.postRepositoryService.getLatestPosts(
+			undefined,
+			includeFields,
+		);
+
+		return {
+			data: posts.map(
+				this.postFactoryService.createDto.bind(this.postFactoryService),
+			),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Get("/home")
+	public async getHomePosts(
+		@IncludeFields() includeFields: string[],
+		@Token() payload: JwtPayload,
+	): ApiResponse<PostDto[]> {
+		const allowedCommunities =
+			await this.communityRepositoryService.getUserCommunities(payload.sub);
+
+		const posts = await this.postRepositoryService.getLatestPosts(
+			allowedCommunities.map((c) => c.community.toString()),
+			includeFields,
+		);
 
 		return {
 			data: posts.map(

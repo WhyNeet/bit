@@ -20,12 +20,12 @@ import { MongoDataServices } from "./mongo-data-services.service";
 			useFactory: (configService: ConfigService) => {
 				return {
 					uri: `mongodb://${configService.get<string>(
-						"mongo.host",
-					)}:${configService.get<string>("mongo.port")}`,
+						"db.mongo.host",
+					)}:${configService.get<string>("db.mongo.port")}`,
 					dbName: "primary",
 					auth: {
-						username: configService.get<string>("mongo.auth.username"),
-						password: configService.get<string>("mongo.auth.password"),
+						username: configService.get<string>("db.mongo.auth.username"),
+						password: configService.get<string>("db.mongo.auth.password"),
 					},
 				};
 			},

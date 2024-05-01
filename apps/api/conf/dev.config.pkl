@@ -2,13 +2,25 @@ import "DataServices.pkl"
 import "JWT.pkl"
 import "StorageServices.pkl"
 
-mongo = new DataServices.DbConnectionProperties {
-  host = "localhost"
-  port = 27017
+db = new DataServices.DbProperties {
+  mongo = new DataServices.DbConnectionProperties {
+    host = "localhost"
+    port = 27017
 
-  auth = new DataServices.DbConnectionAuthProperties {
-    username = "root"
-    password = "root"
+    auth = new DataServices.DbConnectionAuthProperties {
+      username = "root"
+      password = "root"
+    }
+  }
+
+  milvus = new DataServices.DbConnectionProperties {
+    host = "localhost"
+    port = 9091
+
+    auth = new DataServices.DbConnectionAuthProperties {
+      username = ""
+      password = ""
+    }
   }
 }
 

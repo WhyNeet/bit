@@ -11,3 +11,8 @@ class DbConnectionAuthProperties {
   username: String
   password: String
 }
+
+class DbProperties {
+  mongo: DbConnectionProperties
+  milvus: DbConnectionProperties
+}

@@ -5,6 +5,7 @@ import { PostFeatureModule } from "./post/post-feature.module";
 import { RelationFeatureModule } from "./relation/relation-feature.module";
 import { TokenFeatureModule } from "./token/token-feature.module";
 import { UserFeatureModule } from "./user/user-feature.module";
+import { VectorFeatureModule } from "./vector/vector-feature.module";
 
 @Module({
 	imports: [
@@ -14,6 +15,7 @@ import { UserFeatureModule } from "./user/user-feature.module";
 		CommunityFeatureModule,
 		PostFeatureModule,
 		RelationFeatureModule,
+		VectorFeatureModule,
 	],
 	exports: [
 		UserFeatureModule,
@@ -22,6 +24,7 @@ import { UserFeatureModule } from "./user/user-feature.module";
 		CommunityFeatureModule,
 		PostFeatureModule,
 		RelationFeatureModule,
+		VectorFeatureModule,
 	],
 })
 export class FeaturesModule {}

@@ -12,8 +12,11 @@ import {
 } from "@nestjs/common";
 import { FormDataRequest } from "nestjs-form-data";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
+import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-services.abstract";
+import { IVectorStorageServices } from "src/core/abstracts/vector-storage-services.abstract";
 import { CreatePostDto, PostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { Community } from "src/core/entities/community.entity";
+import { PostVectorData } from "src/core/entities/vector/post.entity";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
@@ -21,6 +24,7 @@ import { CommunityException } from "src/features/exception-handling/exceptions/c
 import { PostException } from "src/features/exception-handling/exceptions/post.exception";
 import { PostFactoryService } from "src/features/post/post-factory.service";
 import { PostRepositoryService } from "src/features/post/post-repository.service";
+import { VectorFactoryService } from "src/features/vector/vector-factory.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
@@ -32,6 +36,9 @@ export class PostController {
 		private postFactoryService: PostFactoryService,
 		private storageServices: IStorageServices,
 		private communityRepositoryService: CommunityRepositoryService,
+		private vectorEmbeddingServices: IVectorEmbeddingServices,
+		private vectorStorageServices: IVectorStorageServices,
+		private vectorFactoryService: VectorFactoryService,
 	) {}
 
 	@HttpCode(HttpStatus.CREATED)
@@ -71,6 +78,21 @@ export class PostController {
 		);
 
 		const post = await this.postRepositoryService.createPost(_post);
+		const titleVector = await this.vectorEmbeddingServices.createEmbedding(
+			post.title,
+		);
+		await this.vectorStorageServices.insertVectorData<PostVectorData>(
+			"POSTS_EMBEDDINGS",
+			[
+				this.vectorFactoryService.createPostEmbeddingVector(
+					post.id,
+					post.title,
+					titleVector,
+					token.sub,
+					post.community.toString(),
+				),
+			],
+		);
 
 		return {
 			data: this.postFactoryService.createDto(post),

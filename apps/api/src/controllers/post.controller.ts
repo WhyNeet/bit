@@ -8,6 +8,7 @@ import {
 	Param,
 	Patch,
 	Post as PostRequest,
+	Query,
 	UseGuards,
 } from "@nestjs/common";
 import { FormDataRequest } from "nestjs-form-data";
@@ -96,6 +97,25 @@ export class PostController {
 
 		return {
 			data: this.postFactoryService.createDto(post),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@Get("/search")
+	public async searchPosts(
+		@Query("q") query: string,
+	): ApiResponse<PostVectorData[]> {
+		const queryVector =
+			await this.vectorEmbeddingServices.createEmbedding(query);
+		const results =
+			await this.vectorStorageServices.searchVectorData<PostVectorData>(
+				"POSTS_EMBEDDINGS",
+				queryVector,
+				10,
+			);
+
+		return {
+			data: results,
 		};
 	}
 
@@ -200,6 +220,23 @@ export class PostController {
 			updatePostDto,
 			images.map((f) => f.fileName),
 			files.map((f) => f.fileName),
+		);
+
+		const titleVector = await this.vectorEmbeddingServices.createEmbedding(
+			updatePostDto.title,
+		);
+
+		await this.vectorStorageServices.updateVectorData<PostVectorData>(
+			"POSTS_EMBEDDINGS",
+			[
+				this.vectorFactoryService.createPostEmbeddingVector(
+					post.id,
+					post.title,
+					titleVector,
+					token.sub,
+					post.community.toString(),
+				),
+			],
 		);
 
 		return {

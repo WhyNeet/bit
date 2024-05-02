@@ -31,6 +31,13 @@ export class MilvusVectorServices
 			index_type: IndexType.HNSW,
 			metric_type: "COSINE",
 			index_name: "post_title_vector_index",
+			params: {
+				efConstruction: 200,
+				M: 100,
+			},
+		});
+		await this.milvus.loadCollection({
+			collection_name: "POSTS_EMBEDDINGS",
 		});
 	}
 
@@ -49,13 +56,13 @@ export class MilvusVectorServices
 		vector: number[],
 		limit?: number,
 	): Promise<({ score: number } & Schema)[]> {
-		return (
-			await this.milvus.search({
-				collection_name: collection,
-				vector,
-				limit,
-			})
-		).results as unknown as ({ score: number } & Schema)[];
+		const result = await this.milvus.search({
+			collection_name: collection,
+			vector,
+			limit,
+		});
+
+		return result.results as unknown as ({ score: number } & Schema)[];
 	}
 
 	public async updateVectorData<Schema>(

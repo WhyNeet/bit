@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { MilvusClient, RowData } from "@zilliz/milvus2-sdk-node";
+import { IndexType, MilvusClient, RowData } from "@zilliz/milvus2-sdk-node";
 import { IVectorStorageServices } from "src/core/abstracts/vector-storage-services.abstract";
 import { PostsSchema } from "./schema/posts.schema";
 
@@ -24,6 +24,13 @@ export class MilvusVectorServices
 		await this.milvus.createCollection({
 			collection_name: "POSTS_EMBEDDINGS",
 			fields: PostsSchema,
+		});
+		await this.milvus.createIndex({
+			collection_name: "POSTS_EMBEDDINGS",
+			field_name: "vector",
+			index_type: IndexType.HNSW,
+			metric_type: "COSINE",
+			index_name: "post_title_vector_index",
 		});
 	}
 

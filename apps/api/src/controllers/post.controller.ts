@@ -270,6 +270,10 @@ export class PostController {
 		await this.storageServices.deleteFiles(post.images);
 		await this.storageServices.deleteFiles(post.files);
 
+		await this.vectorStorageServices.deleteVectorData("POSTS_EMBEDDINGS", [
+			post.id,
+		]);
+
 		return {
 			data: null,
 		};

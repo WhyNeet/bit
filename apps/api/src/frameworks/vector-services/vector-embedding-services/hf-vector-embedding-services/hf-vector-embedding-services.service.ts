@@ -3,9 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-services.abstract";
 
 @Injectable()
-export class WhereIsAIVectorEmbeddingServices
-	implements IVectorEmbeddingServices
-{
+export class HfVectorEmbeddingServices implements IVectorEmbeddingServices {
 	private model: HuggingFaceTransformersEmbeddings;
 
 	constructor() {

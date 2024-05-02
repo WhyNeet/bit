@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
-import { WhereIsAIVectorEmbeddingServicesModule } from "./whereisai-vector-embedding-services/whereisai-vector-embedding-services.module";
+import { HfVectorEmbeddingServicesModule } from "./hf-vector-embedding-services/hf-vector-embedding-services.module";
 
 @Module({
-	imports: [WhereIsAIVectorEmbeddingServicesModule],
+	imports: [HfVectorEmbeddingServicesModule],
 	providers: [],
-	exports: [WhereIsAIVectorEmbeddingServicesModule],
+	exports: [HfVectorEmbeddingServicesModule],
 })
 export class VectorEmbeddingServicesModule {}

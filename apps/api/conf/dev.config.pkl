@@ -15,7 +15,7 @@ db = new DataServices.DbProperties {
 
   milvus = new DataServices.DbConnectionProperties {
     host = "localhost"
-    port = 9091
+    port = 19530
 
     auth = new DataServices.DbConnectionAuthProperties {
       username = ""

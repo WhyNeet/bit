@@ -27,8 +27,8 @@ export const PostsSchema: FieldType[] = [
 		max_length: 24,
 	},
 	{
-		name: "collection",
-		description: "Collection ID from the database",
+		name: "community",
+		description: "community ID from the database",
 		data_type: DataType.VarChar,
 		max_length: 24,
 	},

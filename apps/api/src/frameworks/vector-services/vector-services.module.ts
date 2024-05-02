@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
 import { VectorEmbeddingServicesModule } from "./vector-embedding-services/vector-embedding-services.module";
+import { VectorStorageServicesModule } from "./vector-storage-services/vector-storage-services.module";
 
 @Module({
-	imports: [VectorServicesModule, VectorEmbeddingServicesModule],
+	imports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
 	providers: [],
-	exports: [VectorServicesModule, VectorEmbeddingServicesModule],
+	exports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
 })
 export class VectorServicesModule {}

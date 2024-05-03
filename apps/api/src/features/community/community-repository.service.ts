@@ -74,7 +74,16 @@ export class CommunityRepositoryService {
 	public async addMember(
 		communityId: string,
 		memberId: string,
-	): Promise<UserCommunityRelation> {
+	): Promise<UserCommunityRelation | null> {
+		if (
+			await this.dataServices.userCommunityRelations.get({
+				community: communityId,
+				user: memberId,
+				type: UserCommunityRelationType.Member,
+			})
+		)
+			return null;
+
 		const relation = this.relationFactoryService.createUserCommunityRelation(
 			memberId,
 			communityId,

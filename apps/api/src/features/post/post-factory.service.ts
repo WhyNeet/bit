@@ -27,6 +27,8 @@ export class PostFactoryService {
 		post.community = createPostDto.community;
 		post.images = images;
 		post.files = files;
+		post.likes = 0;
+		post.dislikes = 0;
 
 		return post;
 	}

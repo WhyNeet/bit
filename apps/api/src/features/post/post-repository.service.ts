@@ -61,20 +61,28 @@ export class PostRepositoryService {
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
-		if (
-			await this.dataServices.userPostRelations.get({
-				post: postId,
-				user: userId,
-				type: UserPostRelationType.Like,
-			})
-		)
-			return null;
+		const relation = await this.dataServices.userPostRelations.get({
+			post: postId,
+			user: userId,
+		});
 
+		if (relation?.type === UserPostRelationType.Like) return null;
 		const post = await this.dataServices.posts.update(
 			{ _id: postId },
 			{ $inc: { likes: 1 } },
 		);
 		if (!post) return null;
+
+		if (relation?.type === UserPostRelationType.Dislike) {
+			await this.dataServices.posts.update(
+				{ _id: postId },
+				{ $inc: { dislikes: -1 } },
+			);
+			return await this.dataServices.userPostRelations.update(
+				{ user: userId, post: postId, type: UserPostRelationType.Dislike },
+				{ type: UserPostRelationType.Like },
+			);
+		}
 
 		return await this.dataServices.userPostRelations.create(
 			this.relationFactoryService.createUserPostRelation(
@@ -109,19 +117,30 @@ export class PostRepositoryService {
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
-		if (
-			await this.dataServices.userPostRelations.get({
-				user: userId,
-				post: postId,
-				type: UserPostRelationType.Dislike,
-			})
-		)
-			return null;
+		const relation = await this.dataServices.userPostRelations.get({
+			user: userId,
+			post: postId,
+		});
 
-		await this.dataServices.posts.update(
+		if (relation?.type === UserPostRelationType.Dislike) return null;
+
+		const post = await this.dataServices.posts.update(
 			{ _id: postId },
 			{ $inc: { dislikes: 1 } },
 		);
+
+		if (!post) return null;
+
+		if (relation?.type === UserPostRelationType.Like) {
+			await this.dataServices.posts.update(
+				{ _id: postId },
+				{ $inc: { likes: -1 } },
+			);
+			return await this.dataServices.userPostRelations.update(
+				{ user: userId, post: postId, type: UserPostRelationType.Like },
+				{ type: UserPostRelationType.Dislike },
+			);
+		}
 
 		return await this.dataServices.userPostRelations.create(
 			this.relationFactoryService.createUserPostRelation(

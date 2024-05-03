@@ -23,6 +23,7 @@ import { CommunityRepositoryService } from "src/features/community/community-rep
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { PostException } from "src/features/exception-handling/exceptions/post.exception";
+import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { PostFactoryService } from "src/features/post/post-factory.service";
 import { PostRepositoryService } from "src/features/post/post-repository.service";
 import { VectorFactoryService } from "src/features/vector/vector-factory.service";
@@ -161,7 +162,7 @@ export class PostController {
 	@HttpCode(HttpStatus.OK)
 	@Get("/:postId")
 	public async getPostById(
-		@Param("postId") postId: string,
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@IncludeFields() includeFields: string[],
 	): ApiResponse<PostDto> {
 		const post = await this.postRepositoryService.getPostById(
@@ -181,7 +182,7 @@ export class PostController {
 	@FormDataRequest()
 	@Patch("/:postId")
 	public async updatePost(
-		@Param("postId") postId: string,
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Body() updatePostDto: UpdatePostDto,
 		@Token() token: JwtPayload,
 	): ApiResponse<PostDto> {
@@ -248,7 +249,7 @@ export class PostController {
 	@UseGuards(JwtAuthGuard)
 	@Delete("/:postId")
 	public async deletePost(
-		@Param("postId") postId: string,
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
 		const post = await this.postRepositoryService.getPostById(

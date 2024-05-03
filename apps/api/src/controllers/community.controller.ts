@@ -13,6 +13,7 @@ import {
 	Query,
 	UseGuards,
 } from "@nestjs/common";
+import { ObjectId } from "mongoose";
 import {
 	CommunityDto,
 	CreateCommunityDto,
@@ -23,6 +24,7 @@ import { CommunityFactoryService } from "src/features/community/community-factor
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
+import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
@@ -54,7 +56,7 @@ export class CommunityController {
 	@HttpCode(HttpStatus.OK)
 	@Get("/:communityId")
 	public async getCommunity(
-		@Param("communityId") communityId: string,
+		@Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
 		@IncludeFields() includeFields: string[],
 	): ApiResponse<CommunityDto> {
 		const community = await this.communityRepositoryService.getCommunityById(
@@ -73,7 +75,7 @@ export class CommunityController {
 	@UseGuards(JwtAuthGuard)
 	@Post("/:communityId/join")
 	public async joinCommunity(
-		@Param("communityId") communityId: string,
+		@Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
 		const community = await this.communityRepositoryService.getCommunityById(
@@ -94,7 +96,7 @@ export class CommunityController {
 	@UseGuards(JwtAuthGuard)
 	@Post("/:communityId/leave")
 	public async leaveCommunity(
-		@Param("communityId") communityId: string,
+		@Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
 		const community = await this.communityRepositoryService.getCommunityById(
@@ -118,7 +120,7 @@ export class CommunityController {
 	@UseGuards(JwtAuthGuard)
 	@Patch("/:communityId")
 	public async updateCommunity(
-		@Param("communityId") communityId: string,
+		@Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
 		@Body() updateCommunityDto: UpdateCommunityDto,
 		@Token() payload: JwtPayload,
 	): ApiResponse<CommunityDto> {
@@ -150,7 +152,7 @@ export class CommunityController {
 	@UseGuards(JwtAuthGuard)
 	@Delete("/:communityId")
 	public async deleteCommunity(
-		@Param("communityId") communityId: string,
+		@Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
 		@Token() token: JwtPayload,
 	): ApiResponse<void> {
 		const community = await this.communityRepositoryService.getCommunityById(

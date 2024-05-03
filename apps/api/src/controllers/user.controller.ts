@@ -2,6 +2,7 @@ import { Controller, Get, HttpCode, Param, UseGuards } from "@nestjs/common";
 import { UserDto } from "src/core/dtos/user.dto";
 import { ApiResponse } from "src/core/types/response/response.interface";
 import { UserException } from "src/features/exception-handling/exceptions/user.exception";
+import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { UserFactoryService } from "src/features/user/user-factory.service";
 import { UserRepositoryService } from "src/features/user/user-repository.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
@@ -31,7 +32,7 @@ export class UserController {
 	@HttpCode(200)
 	@Get("/:userId")
 	public async getUserById(
-		@Param("userId") userId: string,
+		@Param("userId", ParseObjectIdPipe.stringified()) userId: string,
 	): ApiResponse<UserDto> {
 		const user = await this.userRepositoryService.getUserById(userId);
 

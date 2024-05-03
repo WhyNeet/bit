@@ -55,8 +55,8 @@ export class AuthController {
 			token.id,
 		);
 
-		response.cookie(TokenType.AccessToken, accessToken);
-		response.cookie(TokenType.RefreshToken, refreshToken);
+		response.cookie(TokenType.AccessToken, accessToken, { httpOnly: true });
+		response.cookie(TokenType.RefreshToken, refreshToken, { httpOnly: true });
 
 		return {
 			data: this.userFactoryService.createDto(user),
@@ -90,8 +90,8 @@ export class AuthController {
 			token.id,
 		);
 
-		response.cookie(TokenType.AccessToken, accessToken);
-		response.cookie(TokenType.RefreshToken, refreshToken);
+		response.cookie(TokenType.AccessToken, accessToken, { httpOnly: true });
+		response.cookie(TokenType.RefreshToken, refreshToken, { httpOnly: true });
 
 		return {
 			data: this.userFactoryService.createDto(user),
@@ -110,8 +110,8 @@ export class AuthController {
 
 		await this.tokenRepositoryService.deleteToken(token.jti);
 
-		response.clearCookie(TokenType.AccessToken);
-		response.clearCookie(TokenType.RefreshToken);
+		response.clearCookie(TokenType.AccessToken, { httpOnly: true });
+		response.clearCookie(TokenType.RefreshToken, { httpOnly: true });
 
 		return {
 			data: null,

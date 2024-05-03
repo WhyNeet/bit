@@ -69,7 +69,7 @@ export class TokenRefreshMiddlware implements NestMiddleware {
 		req.cookies[TokenType.AccessToken] = accessToken;
 		req.cookies[TokenType.RefreshToken] = refreshToken;
 
-		res.cookie(TokenType.AccessToken, accessToken);
-		res.cookie(TokenType.RefreshToken, refreshToken);
+		res.cookie(TokenType.AccessToken, accessToken, { httpOnly: true });
+		res.cookie(TokenType.RefreshToken, refreshToken, { httpOnly: true });
 	}
 }

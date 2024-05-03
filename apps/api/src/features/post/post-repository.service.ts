@@ -2,6 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { UpdatePostDto } from "src/core/dtos/post.dto";
 import { Post } from "src/core/entities/post.entity";
+import {
+	UserPostRelation,
+	UserPostRelationType,
+} from "src/core/entities/relation/user-post.entity";
+import { RelationFactoryService } from "../relation/relation-factory.service";
 import { PostFactoryService } from "./post-factory.service";
 
 @Injectable()
@@ -9,6 +14,7 @@ export class PostRepositoryService {
 	constructor(
 		private dataServices: IDataServices,
 		private postFactoryService: PostFactoryService,
+		private relationFactoryService: RelationFactoryService,
 	) {}
 
 	public async createPost(post: Post): Promise<Post> {
@@ -49,6 +55,25 @@ export class PostRepositoryService {
 		);
 
 		return await this.dataServices.posts.update({ _id: postId }, post);
+	}
+
+	public async likePost(
+		postId: string,
+		userId: string,
+	): Promise<UserPostRelation | null> {
+		const post = await this.dataServices.posts.update(
+			{ _id: postId },
+			{ $inc: { likes: 1 } },
+		);
+		if (!post) return null;
+
+		return await this.dataServices.userPostRelations.create(
+			this.relationFactoryService.createUserPostRelation(
+				userId,
+				postId,
+				UserPostRelationType.Like,
+			),
+		);
 	}
 
 	public async deletePost(postId: string): Promise<Post | null> {

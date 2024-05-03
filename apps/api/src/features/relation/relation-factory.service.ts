@@ -4,6 +4,10 @@ import {
 	UserCommunityRelation,
 	UserCommunityRelationType,
 } from "src/core/entities/relation/user-community.entity";
+import {
+	UserPostRelation,
+	UserPostRelationType,
+} from "src/core/entities/relation/user-post.entity";
 
 @Injectable()
 export class RelationFactoryService {
@@ -16,6 +20,20 @@ export class RelationFactoryService {
 
 		relation.user = userId;
 		relation.community = communityId;
+		relation.type = type;
+
+		return relation;
+	}
+
+	public createUserPostRelation(
+		userId: string,
+		postId: string,
+		type: UserPostRelationType,
+	): UserPostRelation {
+		const relation = new UserPostRelation();
+
+		relation.user = userId;
+		relation.post = postId;
 		relation.type = type;
 
 		return relation;

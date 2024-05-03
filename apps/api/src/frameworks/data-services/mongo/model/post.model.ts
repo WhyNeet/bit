@@ -26,6 +26,9 @@ export class Post {
 	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "Community" })
 	community?: Community;
 
+	@Prop({ required: true })
+	likes: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 }

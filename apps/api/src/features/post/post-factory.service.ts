@@ -47,6 +47,7 @@ export class PostFactoryService {
 			post.community,
 			this.communityFactoryService.createDto.bind(this.communityFactoryService),
 		);
+		dto.likes = post.likes;
 		dto.createdAt = post.createdAt;
 		dto.updatedAt = post.updatedAt;
 

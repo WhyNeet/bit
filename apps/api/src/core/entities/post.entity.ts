@@ -16,6 +16,8 @@ export class Post {
 	author?: User | ObjectId | string;
 	community?: Community | ObjectId | string;
 
+	likes: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 }

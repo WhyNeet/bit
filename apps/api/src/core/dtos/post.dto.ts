@@ -96,6 +96,8 @@ export class PostDto {
 	author?: UserDto | string;
 	community?: CommunityDto | string;
 
+	likes: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 }

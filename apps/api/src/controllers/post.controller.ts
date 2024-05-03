@@ -49,7 +49,7 @@ export class PostController {
 	@PostRequest("/create")
 	public async createPost(
 		@Body() createPostDto: CreatePostDto,
-		@Token() token: JwtPayload,
+		@Token() payload: JwtPayload,
 	): ApiResponse<PostDto> {
 		const community = await this.communityRepositoryService.getCommunityById(
 			createPostDto.community,
@@ -74,7 +74,7 @@ export class PostController {
 
 		const _post = this.postFactoryService.createFromDto(
 			createPostDto,
-			token.sub,
+			payload.sub,
 			images.map((f) => f.fileName),
 			files.map((f) => f.fileName),
 		);
@@ -90,14 +90,70 @@ export class PostController {
 					post.id,
 					post.title,
 					titleVector,
-					token.sub,
+					payload.sub,
 					post.community.toString(),
 				),
 			],
 		);
 
 		return {
-			data: this.postFactoryService.createDto(post),
+			data: this.postFactoryService.createDto(post, payload.sub),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@PostRequest("/:postId/like")
+	public async likePost(
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.postRepositoryService.likePost(postId, payload.sub);
+
+		return {
+			data: null,
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Delete("/:postId/like")
+	public async removePostLike(
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.postRepositoryService.removePostLike(postId, payload.sub);
+
+		return {
+			data: null,
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@PostRequest("/:postId/dislike")
+	public async dislikePost(
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.postRepositoryService.dislikePost(postId, payload.sub);
+
+		return {
+			data: null,
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Delete("/:postId/dislike")
+	public async removePostDislike(
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		await this.postRepositoryService.removePostDislike(postId, payload.sub);
+
+		return {
+			data: null,
 		};
 	}
 
@@ -153,8 +209,8 @@ export class PostController {
 		);
 
 		return {
-			data: posts.map(
-				this.postFactoryService.createDto.bind(this.postFactoryService),
+			data: posts.map((post) =>
+				this.postFactoryService.createDto(post, payload.sub),
 			),
 		};
 	}

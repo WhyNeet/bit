@@ -14,8 +14,8 @@ export class RelationFactoryService {
 	): UserCommunityRelation {
 		const relation = new UserCommunityRelation();
 
-		relation.user = userId as unknown as ObjectId;
-		relation.community = communityId as unknown as ObjectId;
+		relation.user = userId;
+		relation.community = communityId;
 		relation.type = type;
 
 		return relation;

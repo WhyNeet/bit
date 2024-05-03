@@ -10,6 +10,10 @@ import {
 	UserCommunityRelation,
 	UserCommunityRelationDocument,
 } from "./model/relation/user-community.model";
+import {
+	UserPostRelation,
+	UserPostRelationDocument,
+} from "./model/relation/user-post.model";
 import { Token, type TokenDocument } from "./model/token.model";
 import { User, type UserDocument } from "./model/user.model";
 import { MongoGenericRepository } from "./mongo-generic-repository";
@@ -24,6 +28,7 @@ export class MongoDataServices
 	public posts: MongoGenericRepository<Post>;
 
 	public userCommunityRelations: IGenericRepository<UserCommunityRelation>;
+	public userPostRelations: IGenericRepository<UserPostRelation>;
 
 	constructor(
 		@InjectModel(User.name) private UserModel: Model<UserDocument>,
@@ -33,6 +38,8 @@ export class MongoDataServices
 		@InjectModel(Post.name) private PostModel: Model<PostDocument>,
 		@InjectModel(UserCommunityRelation.name)
 		private UserCommunityRelationModel: Model<UserCommunityRelationDocument>,
+		@InjectModel(UserPostRelation.name)
+		private UserPostRelationModel: Model<UserPostRelationDocument>,
 	) {}
 
 	onApplicationBootstrap() {
@@ -47,5 +54,8 @@ export class MongoDataServices
 			new MongoGenericRepository<UserCommunityRelation>(
 				this.UserCommunityRelationModel,
 			);
+		this.userPostRelations = new MongoGenericRepository<UserPostRelation>(
+			this.UserPostRelationModel,
+		);
 	}
 }

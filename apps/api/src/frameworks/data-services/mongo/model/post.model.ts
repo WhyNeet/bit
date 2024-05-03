@@ -29,6 +29,9 @@ export class Post {
 	@Prop({ required: true })
 	likes: number;
 
+	@Prop({ required: true })
+	dislikes: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 }

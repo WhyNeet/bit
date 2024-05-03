@@ -17,6 +17,7 @@ export class Post {
 	community?: Community | ObjectId | string;
 
 	likes: number;
+	dislikes: number;
 
 	createdAt: Date;
 	updatedAt: Date;

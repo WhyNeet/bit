@@ -89,16 +89,67 @@ export class PostRepositoryService {
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
+		const relation = await this.dataServices.userPostRelations.delete({
+			user: userId,
+			post: postId,
+			type: UserPostRelationType.Like,
+		});
+
+		if (!relation) return null;
+
 		await this.dataServices.posts.update(
 			{ _id: postId },
 			{ $inc: { likes: -1 } },
 		);
 
-		return await this.dataServices.userPostRelations.delete({
+		return relation;
+	}
+
+	public async dislikePost(
+		postId: string,
+		userId: string,
+	): Promise<UserPostRelation | null> {
+		if (
+			await this.dataServices.userPostRelations.get({
+				user: userId,
+				post: postId,
+				type: UserPostRelationType.Dislike,
+			})
+		)
+			return null;
+
+		await this.dataServices.posts.update(
+			{ _id: postId },
+			{ $inc: { dislikes: 1 } },
+		);
+
+		return await this.dataServices.userPostRelations.create(
+			this.relationFactoryService.createUserPostRelation(
+				userId,
+				postId,
+				UserPostRelationType.Dislike,
+			),
+		);
+	}
+
+	public async removePostDislike(
+		postId: string,
+		userId: string,
+	): Promise<UserPostRelation | null> {
+		const relation = await this.dataServices.userPostRelations.delete({
 			user: userId,
 			post: postId,
-			type: UserPostRelationType.Like,
+			type: UserPostRelationType.Dislike,
 		});
+
+		if (!relation) return null;
+
+		await this.dataServices.posts.update(
+			{ _id: postId },
+			{ $inc: { dislikes: -1 } },
+		);
+
+		return relation;
 	}
 
 	public async deletePost(postId: string): Promise<Post | null> {

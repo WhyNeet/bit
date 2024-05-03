@@ -31,7 +31,7 @@ export class PostFactoryService {
 		return post;
 	}
 
-	public createDto(post: Post): PostDto {
+	public createDto(post: Post, requesterId?: string): PostDto {
 		const dto = new PostDto();
 
 		dto.id = post.id;
@@ -48,6 +48,13 @@ export class PostFactoryService {
 			this.communityFactoryService.createDto.bind(this.communityFactoryService),
 		);
 		dto.likes = post.likes;
+		// dislikes are only visible to post author
+		dto.dislikes =
+			requesterId &&
+			requesterId ===
+				(typeof dto.author === "string" ? dto.author : dto.author.id)
+				? post.dislikes
+				: undefined;
 		dto.createdAt = post.createdAt;
 		dto.updatedAt = post.updatedAt;
 

@@ -97,6 +97,8 @@ export class PostDto {
 	community?: CommunityDto | string;
 
 	likes: number;
+	// dislikes are only visible to authors
+	dislikes?: number;
 
 	createdAt: Date;
 	updatedAt: Date;

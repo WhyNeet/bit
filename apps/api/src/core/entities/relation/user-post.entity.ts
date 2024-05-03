@@ -3,6 +3,7 @@ import { User } from "../user.entity";
 
 export enum UserPostRelationType {
 	Like = "LIKE",
+	Dislike = "DISLIKE",
 }
 
 export class UserPostRelation {

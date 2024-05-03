@@ -100,17 +100,21 @@ export class CommunityRepositoryService {
 	public async removeMember(
 		communityId: string,
 		memberId: string,
-	): Promise<UserCommunityRelation> {
+	): Promise<UserCommunityRelation | null> {
+		const relation = await this.dataServices.userCommunityRelations.delete({
+			user: memberId,
+			community: communityId,
+			type: UserCommunityRelationType.Member,
+		});
+
+		if (!relation) return null;
+
 		await this.dataServices.communities.update(
 			{ _id: communityId },
 			{ $inc: { members: -1 } },
 		);
 
-		return await this.dataServices.userCommunityRelations.delete({
-			user: memberId,
-			community: communityId,
-			type: UserCommunityRelationType.Member,
-		});
+		return relation;
 	}
 
 	public async deleteCommunity(id: string): Promise<Community | null> {

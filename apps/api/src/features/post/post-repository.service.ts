@@ -61,6 +61,15 @@ export class PostRepositoryService {
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
+		if (
+			await this.dataServices.userPostRelations.get({
+				post: postId,
+				user: userId,
+				type: UserPostRelationType.Like,
+			})
+		)
+			return null;
+
 		const post = await this.dataServices.posts.update(
 			{ _id: postId },
 			{ $inc: { likes: 1 } },
@@ -74,6 +83,22 @@ export class PostRepositoryService {
 				UserPostRelationType.Like,
 			),
 		);
+	}
+
+	public async removePostLike(
+		postId: string,
+		userId: string,
+	): Promise<UserPostRelation | null> {
+		await this.dataServices.posts.update(
+			{ _id: postId },
+			{ $inc: { likes: -1 } },
+		);
+
+		return await this.dataServices.userPostRelations.delete({
+			user: userId,
+			post: postId,
+			type: UserPostRelationType.Like,
+		});
 	}
 
 	public async deletePost(postId: string): Promise<Post | null> {

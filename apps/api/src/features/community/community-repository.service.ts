@@ -109,6 +109,7 @@ export class CommunityRepositoryService {
 		return await this.dataServices.userCommunityRelations.delete({
 			user: memberId,
 			community: communityId,
+			type: UserCommunityRelationType.Member,
 		});
 	}
 

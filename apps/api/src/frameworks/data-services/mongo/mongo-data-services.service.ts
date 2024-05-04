@@ -27,8 +27,8 @@ export class MongoDataServices
 	public communities: MongoGenericRepository<Community>;
 	public posts: MongoGenericRepository<Post>;
 
-	public userCommunityRelations: IGenericRepository<UserCommunityRelation>;
-	public userPostRelations: IGenericRepository<UserPostRelation>;
+	public userCommunityRelations: MongoGenericRepository<UserCommunityRelation>;
+	public userPostRelations: MongoGenericRepository<UserPostRelation>;
 
 	constructor(
 		@InjectModel(User.name) private UserModel: Model<UserDocument>,

@@ -15,4 +15,5 @@ class DbConnectionAuthProperties {
 class DbProperties {
   mongo: DbConnectionProperties
   milvus: DbConnectionProperties
+  redis: DbConnectionProperties
 }

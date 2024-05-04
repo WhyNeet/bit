@@ -22,6 +22,16 @@ db = new DataServices.DbProperties {
       password = ""
     }
   }
+
+  redis = new DataServices.DbConnectionProperties {
+    host = "localhost"
+    port = 6379
+
+    auth = new DataServices.DbConnectionAuthProperties {
+      username = ""
+      password = ""
+    }
+  }
 }
 
 

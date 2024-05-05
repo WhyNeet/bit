@@ -12,6 +12,7 @@ import {
 	UseGuards,
 } from "@nestjs/common";
 import { FormDataRequest } from "nestjs-form-data";
+import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-services.abstract";
 import { IVectorStorageServices } from "src/core/abstracts/vector-storage-services.abstract";
@@ -41,6 +42,7 @@ export class PostController {
 		private vectorEmbeddingServices: IVectorEmbeddingServices,
 		private vectorStorageServices: IVectorStorageServices,
 		private vectorFactoryService: VectorFactoryService,
+		private cachingServices: ICachingServices,
 	) {}
 
 	@HttpCode(HttpStatus.CREATED)
@@ -200,13 +202,29 @@ export class PostController {
 		@IncludeFields() includeFields: string[],
 		@Token() payload: JwtPayload,
 	): ApiResponse<PostDto[]> {
+		const cachedAllowedCommunities = await this.cachingServices.sget<string>(
+			`userCommunities:${payload.sub}`,
+		);
+
 		const allowedCommunities =
-			await this.communityRepositoryService.getUserCommunities(payload.sub);
+			cachedAllowedCommunities.length > 0
+				? cachedAllowedCommunities
+				: (
+						await this.communityRepositoryService.getUserCommunities(
+							payload.sub,
+						)
+					).map((c) => c.community.toString());
 
 		const posts = await this.postRepositoryService.getLatestPosts(
-			allowedCommunities.map((c) => c.community.toString()),
+			allowedCommunities,
 			includeFields,
 		);
+
+		if (!cachedAllowedCommunities.length)
+			await this.cachingServices.sadd(
+				`userCommunities:${payload.sub}`,
+				allowedCommunities,
+			);
 
 		return {
 			data: posts.map((post) =>

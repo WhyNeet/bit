@@ -14,6 +14,7 @@ import {
 	UseGuards,
 } from "@nestjs/common";
 import { ObjectId } from "mongoose";
+import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import {
 	CommunityDto,
 	CreateCommunityDto,
@@ -34,6 +35,7 @@ export class CommunityController {
 	constructor(
 		private communityRepositoryService: CommunityRepositoryService,
 		private communityFactoryService: CommunityFactoryService,
+		private cachingServices: ICachingServices,
 	) {}
 
 	@HttpCode(HttpStatus.CREATED)
@@ -86,6 +88,10 @@ export class CommunityController {
 		if (!community) throw new CommunityException.CommunityDoesNotExist();
 
 		await this.communityRepositoryService.addMember(communityId, payload.sub);
+		await this.cachingServices.sadd(
+			`userCommunities:${payload.sub}`,
+			communityId,
+		);
 
 		return {
 			data: null,
@@ -109,6 +115,10 @@ export class CommunityController {
 		await this.communityRepositoryService.removeMember(
 			communityId,
 			payload.sub,
+		);
+		await this.cachingServices.srem(
+			`userCommunities:${payload.sub}`,
+			communityId,
 		);
 
 		return {

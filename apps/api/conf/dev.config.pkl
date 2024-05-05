@@ -29,7 +29,7 @@ db = new DataServices.DbProperties {
 
     auth = new DataServices.DbConnectionAuthProperties {
       username = ""
-      password = ""
+      password = "root"
     }
   }
 }

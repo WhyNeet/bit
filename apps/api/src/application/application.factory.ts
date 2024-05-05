@@ -1,6 +1,6 @@
 import { type INestApplication, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import { ValidationExceptionFactory } from "src/features/exception-handling/validation/validation-exception.factory";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: static factory class

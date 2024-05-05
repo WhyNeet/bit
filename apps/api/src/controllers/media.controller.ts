@@ -1,3 +1,4 @@
+import { NoSuchKey } from "@aws-sdk/client-s3";
 import {
 	Controller,
 	Get,
@@ -8,6 +9,7 @@ import {
 	StreamableFile,
 } from "@nestjs/common";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
+import { MediaException } from "src/features/exception-handling/exceptions/media.exception";
 
 @Controller("/media")
 export class MediaController {
@@ -16,8 +18,13 @@ export class MediaController {
 	@HttpCode(HttpStatus.OK)
 	@Get("/file/:fileId")
 	public async getFile(@Param("fileId", ParseUUIDPipe) fileId: string) {
-		const file = await this.storageServices.getFile(fileId);
+		try {
+			const file = await this.storageServices.getFile(fileId);
 
-		return new StreamableFile(file);
+			return new StreamableFile(file);
+		} catch (e) {
+			if (e instanceof NoSuchKey) throw new MediaException.FileDoesNotExist();
+			throw e;
+		}
 	}
 }

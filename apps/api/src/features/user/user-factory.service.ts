@@ -18,7 +18,7 @@ export class UserFactoryService {
 	public createDto(user: User): UserDto {
 		const userDto = new UserDto();
 
-		userDto.id = user.id;
+		userDto.id = user.id ? user.id : (user as unknown as { _id: string })._id;
 		userDto.username = user.username;
 		userDto.email = user.email;
 		userDto.name = user.name;

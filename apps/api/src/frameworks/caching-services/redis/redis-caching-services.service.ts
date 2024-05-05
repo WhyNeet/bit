@@ -25,12 +25,17 @@ export class RedisCachingServices
 		await this.redis.connect();
 	}
 
-	public async get<V>(key: string): Promise<V | null> {
-		return (await this.redis.get(key)) as V | null;
+	public async get<V>(key: string, parse?: boolean): Promise<V | null> {
+		const value = (await this.redis.get(key)) as string | null;
+
+		return parse && value ? JSON.parse(value) : value;
 	}
 
-	public async set(key: string, value: string): Promise<undefined> {
-		await this.redis.set(key, value);
+	public async set<V>(key: string, value: V): Promise<undefined> {
+		const cachedValue =
+			typeof value === "string" ? value : JSON.stringify(value);
+
+		await this.redis.set(key, cachedValue);
 	}
 
 	public async delete(key: string): Promise<undefined> {

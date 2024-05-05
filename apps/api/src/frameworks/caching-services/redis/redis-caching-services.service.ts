@@ -32,13 +32,42 @@ export class RedisCachingServices
 	}
 
 	public async set<V>(key: string, value: V): Promise<undefined> {
-		const cachedValue =
-			typeof value === "string" ? value : JSON.stringify(value);
+		const cachedValue = this.getCachedValue(value);
 
 		await this.redis.set(key, cachedValue);
 	}
 
 	public async delete(key: string): Promise<undefined> {
 		await this.redis.del(key);
+	}
+
+	public async sadd<V>(key: string, value: V | V[]): Promise<undefined> {
+		const cachedValue = (value as V[]).map
+			? (value as V[]).map(this.getCachedValue)
+			: this.getCachedValue(value);
+
+		await this.redis.sAdd(key, cachedValue);
+	}
+
+	public async sget<V>(key: string, parse?: boolean): Promise<V[] | null> {
+		const result = await this.redis.sMembers(key);
+
+		return result && parse ? result.map((val) => JSON.parse(val)) : result;
+	}
+
+	public async shas<V>(key: string, value: V): Promise<boolean> {
+		const cachedValue = this.getCachedValue(value);
+
+		return await this.redis.sIsMember(key, cachedValue);
+	}
+
+	public async srem<V>(key: string, value: V): Promise<undefined> {
+		const cachedValue = this.getCachedValue(value);
+
+		await this.redis.sRem(key, cachedValue);
+	}
+
+	private getCachedValue<V>(value: V): string {
+		return typeof value === "string" ? value : JSON.stringify(value);
 	}
 }

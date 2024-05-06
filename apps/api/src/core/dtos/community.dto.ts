@@ -1,6 +1,5 @@
 import { IsOptional, IsString, Length, Matches } from "class-validator";
 import { ValidationError } from "../validation/error";
-import { UserDto } from "./user.dto";
 
 export class CreateCommunityDto {
 	@IsString({ message: ValidationError.MustBeAString })
@@ -25,14 +24,4 @@ export class UpdateCommunityDto {
 	@IsString({ message: ValidationError.MustBeAString })
 	@Length(1, 256, { message: ValidationError.MustBeBetweenChars(1, 256) })
 	description?: string;
-}
-
-export class CommunityDto {
-	id: string;
-	name: string;
-	description?: string;
-	owner: UserDto | string;
-	members: number;
-	createdAt: Date;
-	updatedAt: Date;
 }

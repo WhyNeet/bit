@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import { Community } from "./community.entity";
 import { User } from "./user.entity";
 
@@ -13,8 +12,8 @@ export class Post {
 	// other non-image attachments
 	files: string[];
 
-	author?: User | ObjectId | string;
-	community?: Community | ObjectId | string;
+	author?: User | string;
+	community?: Community | string;
 
 	likes: number;
 	dislikes: number;

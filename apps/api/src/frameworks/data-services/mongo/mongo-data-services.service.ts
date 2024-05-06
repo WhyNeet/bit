@@ -1,9 +1,8 @@
 import { Injectable, type OnApplicationBootstrap } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { Post } from "common";
 import type { Model } from "mongoose";
 import type { IDataServices } from "src/core/abstracts/data-services.abstract";
-import { IGenericRepository } from "src/core/abstracts/generic-repository.abstract";
-import { Post } from "src/core/entities/post.entity";
 import { Community, CommunityDocument } from "./model/community.model";
 import { PostDocument } from "./model/post.model";
 import {

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PostVectorData } from "src/core/entities/vector/post.entity";
+import { PostVectorData } from "common";
 
 @Injectable()
 export class VectorFactoryService {

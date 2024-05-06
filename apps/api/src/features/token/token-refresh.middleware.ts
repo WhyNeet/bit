@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
+import { TokenType } from "common";
 import { Request, Response } from "express";
-import { TokenType } from "src/core/entities/token.entity";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
 import { TokenEncryptionService } from "./token-encryption.service";
 import { TokenFactoryService } from "./token-factory.service";

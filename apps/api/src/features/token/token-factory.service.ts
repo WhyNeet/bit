@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Token } from "src/core/entities/token.entity";
+import { Token } from "common";
 
 @Injectable()
 export class TokenFactoryService {

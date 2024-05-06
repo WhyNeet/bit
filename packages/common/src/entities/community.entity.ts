@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import { User } from "./user.entity";
 
 export class Community {
@@ -6,7 +5,7 @@ export class Community {
 	name: string;
 	description?: string;
 
-	owner: User | ObjectId;
+	owner: User | string;
 	members: number;
 
 	createdAt: Date;

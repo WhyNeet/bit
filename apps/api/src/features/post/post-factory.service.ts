@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePostDto, PostDto, UpdatePostDto } from "src/core/dtos/post.dto";
-import { Post } from "src/core/entities/post.entity";
+import { Post, PostDto } from "common";
+import { CreatePostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { CommunityFactoryService } from "../community/community-factory.service";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { UserFactoryService } from "../user/user-factory.service";

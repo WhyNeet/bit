@@ -1,13 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ObjectId } from "mongoose";
 import {
 	UserCommunityRelation,
 	UserCommunityRelationType,
-} from "src/core/entities/relation/user-community.entity";
-import {
 	UserPostRelation,
 	UserPostRelationType,
-} from "src/core/entities/relation/user-post.entity";
+} from "common";
 
 @Injectable()
 export class RelationFactoryService {

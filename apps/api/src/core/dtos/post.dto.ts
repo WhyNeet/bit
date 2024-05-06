@@ -13,8 +13,6 @@ import {
 } from "nestjs-form-data";
 import { IsObjectId } from "../validation/decorators/ObjectId";
 import { ValidationError } from "../validation/error";
-import { CommunityDto } from "./community.dto";
-import { UserDto } from "./user.dto";
 
 export class CreatePostDto {
 	@IsString({ message: ValidationError.MustBeAString })
@@ -82,24 +80,4 @@ export class UpdatePostDto {
 	})
 	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
 	files: MemoryStoredFile[];
-}
-
-export class PostDto {
-	id: string;
-
-	title: string;
-	content: string;
-
-	images: string[];
-	files: string[];
-
-	author?: UserDto | string;
-	community?: CommunityDto | string;
-
-	likes: number;
-	// dislikes are only visible to authors
-	dislikes?: number;
-
-	createdAt: Date;
-	updatedAt: Date;
 }

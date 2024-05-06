@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { User } from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { CreateUserDto } from "src/core/dtos/user.dto";
-import { User } from "src/core/entities/user.entity";
 import { AuthException } from "../exception-handling/exceptions/auth.exception";
 import { UserFactoryService } from "./user-factory.service";
 

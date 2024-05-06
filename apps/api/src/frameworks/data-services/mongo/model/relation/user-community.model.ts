@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { UserCommunityRelationType } from "common";
 import { HydratedDocument, Schema as SchemaTypes } from "mongoose";
-import { UserCommunityRelationType } from "src/core/entities/relation/user-community.entity";
 import { Community } from "../community.model";
 import { User } from "../user.model";
 

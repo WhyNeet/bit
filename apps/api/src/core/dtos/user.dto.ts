@@ -29,12 +29,3 @@ export class UserCredentialsDto {
 	@Length(8, 72, { message: ValidationError.BadPasswordLength })
 	password: string;
 }
-
-export class UserDto {
-	id: string;
-	email: string;
-	username: string;
-	name: string;
-	createdAt: Date;
-	updatedAt: Date;
-}

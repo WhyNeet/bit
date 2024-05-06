@@ -2,25 +2,20 @@ import {
 	Body,
 	Controller,
 	Delete,
-	ForbiddenException,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Param,
-	ParseBoolPipe,
 	Patch,
 	Post,
-	Query,
 	UseGuards,
 } from "@nestjs/common";
-import { ObjectId } from "mongoose";
+import { ApiResponse, CommunityDto } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import {
-	CommunityDto,
 	CreateCommunityDto,
 	UpdateCommunityDto,
 } from "src/core/dtos/community.dto";
-import { ApiResponse } from "src/core/types/response/response.interface";
 import { CommunityFactoryService } from "src/features/community/community-factory.service";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";

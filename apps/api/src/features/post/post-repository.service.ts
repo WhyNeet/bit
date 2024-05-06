@@ -1,11 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { Post, UserPostRelation, UserPostRelationType } from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { UpdatePostDto } from "src/core/dtos/post.dto";
-import { Post } from "src/core/entities/post.entity";
-import {
-	UserPostRelation,
-	UserPostRelationType,
-} from "src/core/entities/relation/user-post.entity";
 import { RelationFactoryService } from "../relation/relation-factory.service";
 import { PostFactoryService } from "./post-factory.service";
 

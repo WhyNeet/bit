@@ -8,14 +8,9 @@ import {
 	Res,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { ApiResponse, TokenType, UserDto } from "common";
 import { Request, Response } from "express";
-import {
-	CreateUserDto,
-	UserCredentialsDto,
-	UserDto,
-} from "src/core/dtos/user.dto";
-import { TokenType } from "src/core/entities/token.entity";
-import { ApiResponse } from "src/core/types/response/response.interface";
+import { CreateUserDto, UserCredentialsDto } from "src/core/dtos/user.dto";
 import { AuthService } from "src/features/auth/auth.service";
 import { AuthException } from "src/features/exception-handling/exceptions/auth.exception";
 import { TokenEncryptionService } from "src/features/token/token-encryption.service";

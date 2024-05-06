@@ -11,15 +11,13 @@ import {
 	Query,
 	UseGuards,
 } from "@nestjs/common";
+import { ApiResponse, Community, PostDto, PostVectorData } from "common";
 import { FormDataRequest } from "nestjs-form-data";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-services.abstract";
 import { IVectorStorageServices } from "src/core/abstracts/vector-storage-services.abstract";
-import { CreatePostDto, PostDto, UpdatePostDto } from "src/core/dtos/post.dto";
-import { Community } from "src/core/entities/community.entity";
-import { PostVectorData } from "src/core/entities/vector/post.entity";
-import { ApiResponse } from "src/core/types/response/response.interface";
+import { CreatePostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { Token } from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
-import { Token } from "src/core/entities/token.entity";
 
 @Injectable()
 export class TokenRepositoryService {

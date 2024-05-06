@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import {
+	Community,
+	UserCommunityRelation,
+	UserCommunityRelationType,
+} from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import {
 	CreateCommunityDto,
 	UpdateCommunityDto,
 } from "src/core/dtos/community.dto";
-import { Community } from "src/core/entities/community.entity";
-import {
-	UserCommunityRelation,
-	UserCommunityRelationType,
-} from "src/core/entities/relation/user-community.entity";
 import { CommunityException } from "../exception-handling/exceptions/community.exception";
 import { RelationFactoryService } from "../relation/relation-factory.service";
 import { CommunityFactoryService } from "./community-factory.service";

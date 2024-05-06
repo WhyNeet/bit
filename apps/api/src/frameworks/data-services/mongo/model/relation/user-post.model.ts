@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { UserPostRelationType } from "common";
 import { HydratedDocument, Schema as SchemaTypes } from "mongoose";
-import { UserPostRelationType } from "src/core/entities/relation/user-post.entity";
 import { Post } from "../post.model";
 import { User } from "../user.model";
 

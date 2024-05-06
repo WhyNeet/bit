@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
+import { TokenType } from "common";
 import { ExtractJwt, Strategy, WithSecretOrKey } from "passport-jwt";
-import { TokenType } from "src/core/entities/token.entity";
 import { TokenRepositoryService } from "src/features/token/token-repository.service";
 import { CookiesExtractorService } from "../extractors/cookies-extractor.service";
 import { JwtPayload } from "../jwt/types/payload.interface";

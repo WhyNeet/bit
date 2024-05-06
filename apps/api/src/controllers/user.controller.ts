@@ -1,8 +1,6 @@
 import { Controller, Get, HttpCode, Param, UseGuards } from "@nestjs/common";
+import { ApiResponse, User, UserDto } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
-import { UserDto } from "src/core/dtos/user.dto";
-import { User } from "src/core/entities/user.entity";
-import { ApiResponse } from "src/core/types/response/response.interface";
 import { UserException } from "src/features/exception-handling/exceptions/user.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { UserFactoryService } from "src/features/user/user-factory.service";

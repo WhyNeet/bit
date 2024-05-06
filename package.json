@@ -6,6 +6,7 @@
 	"main": "index.js",
 	"scripts": {
 		"api": "pnpm --filter api",
+		"web": "pnpm --filter web",
 		"biome:check": "biome check --apply .",
 		"prepare": "husky",
 		"pkl:eval": "pkl eval apps/api/conf/dev.config.pkl -f yaml -o apps/api/conf/dev.config.yaml"

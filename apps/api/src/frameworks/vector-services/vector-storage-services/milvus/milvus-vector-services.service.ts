@@ -26,6 +26,22 @@ export class MilvusVectorServices
 	}
 
 	async onApplicationBootstrap() {
+		await this.createPostsCollection();
+
+		await this.milvus.loadCollection({
+			collection_name: "POSTS_EMBEDDINGS",
+		});
+	}
+
+	private async createPostsCollection() {
+		if (this.configService.get<boolean>("env.dev")) {
+			const isCreated = await this.milvus.hasCollection({
+				collection_name: "POSTS_EMBEDDINGS",
+			});
+
+			if (isCreated.value) return;
+		}
+
 		await this.milvus.createCollection({
 			collection_name: "POSTS_EMBEDDINGS",
 			fields: PostsSchema,
@@ -40,9 +56,6 @@ export class MilvusVectorServices
 				efConstruction: 200,
 				M: 100,
 			},
-		});
-		await this.milvus.loadCollection({
-			collection_name: "POSTS_EMBEDDINGS",
 		});
 	}
 

@@ -10,6 +10,11 @@ export class ApplicationFactory {
 	): Promise<INestApplication<M>> {
 		const app: INestApplication = await NestFactory.create(module);
 
+		app.enableCors({
+			origin: process.env.CORS_ORIGIN ?? "http://localhost:4200",
+			credentials: true,
+		});
+
 		app.setGlobalPrefix("/api");
 
 		app.useGlobalPipes(

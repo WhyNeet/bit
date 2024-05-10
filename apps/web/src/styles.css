@@ -13,7 +13,7 @@
         --accent: 98 76 251;
         
         --font-sans: "Inter Variable";
-        --font-display: "Space Mono";
+        --font-display: "Space Grotesk Variable";
     }
 
     .dark {
@@ -22,5 +22,23 @@
         --primary: 75 59 196;
         --secondary: 31 19 124;
         --accent: 27 4 180;
+    }
+}
+
+@layer components {
+    .button {
+        @apply rounded-full px-4 py-2
+    }
+
+    .button.primary {
+        @apply bg-primary
+    }
+
+    .button.secondary {
+        @apply bg-secondary
+    }
+
+    hr {
+        @apply h-[1px] w-full bg-text/10 border-none
     }
 }

@@ -222,9 +222,15 @@ importers:
       '@fontsource-variable/inter':
         specifier: ^5.0.18
         version: 5.0.18
-      '@fontsource/space-mono':
-        specifier: ^5.0.20
-        version: 5.0.20
+      '@fontsource-variable/space-grotesk':
+        specifier: ^5.0.18
+        version: 5.0.18
+      '@ng-icons/core':
+        specifier: ^27.4.0
+        version: 27.4.0
+      '@ng-icons/lucide':
+        specifier: ^27.4.0
+        version: 27.4.0
       '@ngrx/store':
         specifier: ^17.2.0
         version: 17.2.0(@angular/core@17.3.7(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1)
@@ -1735,8 +1741,8 @@ packages:
   '@fontsource-variable/inter@5.0.18':
     resolution: {integrity: sha512-rJzSrtJ3b7djiGFvRuTe6stDfbYJGhdQSfn2SI2WfXviee7Er0yKAHE5u7FU7OWVQQQ1x3+cxdmx9NdiAkcrcA==}
 
-  '@fontsource/space-mono@5.0.20':
-    resolution: {integrity: sha512-F+9Y/PA06mB6kXI6l8ub0vSR72x3wpzJtxAUoPpvJDu9nWADFIwunkfzSS9PyzFQOgAPPzuCfywTTG+GfQxqeg==}
+  '@fontsource-variable/space-grotesk@5.0.18':
+    resolution: {integrity: sha512-Z5uQmCjPdNobaFCtdA7aguerAQi4uvMRcUXhD+74N6Nq2Shxr0skvNzxB9mQVtkddGpB996RXipCDq9qzb525g==}
 
   '@grpc/grpc-js@1.10.6':
     resolution: {integrity: sha512-xP58G7wDQ4TCmN/cMUHh00DS7SRDv/+lC+xFLrTkMIN8h55X5NhZMLYbvy7dSELP15qlI6hPhNCRWVMtZMwqLA==}
@@ -2270,6 +2276,12 @@ packages:
         optional: true
       '@nestjs/platform-express':
         optional: true
+
+  '@ng-icons/core@27.4.0':
+    resolution: {integrity: sha512-M4Hz4JI2owd8brMTrwrQYJhVjHgGN768bSnhwucAka3mk7HQKeR/zp5ONq5AxPGnAk4UU2xwYhN1DGnETtAnIg==}
+
+  '@ng-icons/lucide@27.4.0':
+    resolution: {integrity: sha512-bm9niSPIvr+DbQZ8TqzN4EkI8WxWb0OaWJc1hTQhyWOL+Xd9+/ebYbXk4IynWs8NPCw+Ujtw/l5IEHI9DV564A==}
 
   '@ngrx/store-devtools@17.2.0':
     resolution: {integrity: sha512-ig0qr6hMexZGnrlxfHvZmu5CanRjH7hhx60XUbB5BdBvWJIIRaWKPLcsniiDUhljAD87gvzrrilbCTiML38+CA==}
@@ -9606,7 +9618,7 @@ snapshots:
 
   '@fontsource-variable/inter@5.0.18': {}
 
-  '@fontsource/space-mono@5.0.20': {}
+  '@fontsource-variable/space-grotesk@5.0.18': {}
 
   '@grpc/grpc-js@1.10.6':
     dependencies:
@@ -10099,6 +10111,14 @@ snapshots:
       tslib: 2.6.2
     optionalDependencies:
       '@nestjs/platform-express': 10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7)
+
+  '@ng-icons/core@27.4.0':
+    dependencies:
+      tslib: 2.6.2
+
+  '@ng-icons/lucide@27.4.0':
+    dependencies:
+      tslib: 2.6.2
 
   '@ngrx/store-devtools@17.2.0(@ngrx/store@17.2.0(@angular/core@17.3.7(rxjs@7.8.1)(zone.js@0.14.5))(rxjs@7.8.1))(rxjs@7.8.1)':
     dependencies:

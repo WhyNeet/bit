@@ -1,6 +1,6 @@
 <aside class="w-96 h-[calc(100vh-4rem)]">
     <nav class="py-10 px-10 flex flex-col items-stretch gap-4 font-semibold font-display tracking-wide h-full">
-        <a routerLink="/" class="flex items-center gap-3 " routerLinkActive="text-primary">
+        <a routerLink="/home" class="flex items-center gap-3 " routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideHome"></ng-icon>
             Home
         </a>
@@ -27,7 +27,7 @@
                     Settings
                 </a>
             } @else {
-                <a routerLink="/auth/login" class="flex items-center gap-3">
+                <a routerLink="/auth/sign-in" class="flex items-center gap-3">
                     <ng-icon size="22" name="lucideLogIn"></ng-icon>
                     Sign In
                 </a>

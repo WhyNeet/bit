@@ -12,6 +12,8 @@
         --secondary: 145 132 237;
         --accent: 98 76 251;
         
+        --border-radius: 0.5rem;
+
         --font-sans: "Inter Variable";
         --font-display: "Space Grotesk Variable";
     }

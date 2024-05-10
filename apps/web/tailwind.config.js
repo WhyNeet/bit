@@ -17,6 +17,9 @@ module.exports = {
 				secondary: "rgb(var(--secondary))",
 				accent: "rgb(var(--accent))",
 			},
+			borderRadius: {
+				default: "var(--border-radius)",
+			},
 		},
 	},
 	plugins: [],

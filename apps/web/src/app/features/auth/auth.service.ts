@@ -1,4 +1,3 @@
-import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store } from "@ngrx/store";
@@ -14,8 +13,6 @@ export class AuthService {
 	constructor(
 		private httpClient: HttpClient,
 		private store: Store,
-		// biome-ignore lint/complexity/noBannedTypes: Angular platform ID
-		@Inject(PLATFORM_ID) private platformId: Object,
 	) {}
 
 	public register(
@@ -64,8 +61,6 @@ export class AuthService {
 	}
 
 	public getCurrentUser(): void {
-		if (isPlatformServer(this.platformId)) return;
-
 		this.httpClient
 			.get(`${apiBaseUrl}/users/me`, {
 				withCredentials: true,

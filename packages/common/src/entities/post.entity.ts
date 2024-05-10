@@ -15,8 +15,8 @@ export class Post {
 	author?: User | string;
 	community?: Community | string;
 
-	likes: number;
-	dislikes: number;
+	upvotes: number;
+	downvotes: number;
 
 	createdAt: Date;
 	updatedAt: Date;

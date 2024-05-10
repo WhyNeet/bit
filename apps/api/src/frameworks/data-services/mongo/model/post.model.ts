@@ -27,10 +27,10 @@ export class Post {
 	community?: Community;
 
 	@Prop({ required: true })
-	likes: number;
+	upvotes: number;
 
 	@Prop({ required: true })
-	dislikes: number;
+	downvotes: number;
 
 	createdAt: Date;
 	updatedAt: Date;

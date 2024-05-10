@@ -27,8 +27,8 @@ export class PostFactoryService {
 		post.community = createPostDto.community;
 		post.images = images;
 		post.files = files;
-		post.likes = 0;
-		post.dislikes = 0;
+		post.upvotes = 0;
+		post.downvotes = 0;
 
 		return post;
 	}
@@ -49,13 +49,13 @@ export class PostFactoryService {
 			post.community,
 			this.communityFactoryService.createDto.bind(this.communityFactoryService),
 		);
-		dto.likes = post.likes;
-		// dislikes are only visible to post author
-		dto.dislikes =
+		dto.upvotes = post.upvotes;
+		// downvotes are only visible to post author
+		dto.downvotes =
 			requesterId &&
 			requesterId ===
 				(typeof dto.author === "string" ? dto.author : dto.author.id)
-				? post.dislikes
+				? post.upvotes
 				: undefined;
 		dto.createdAt = post.createdAt;
 		dto.updatedAt = post.updatedAt;

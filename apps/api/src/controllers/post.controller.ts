@@ -103,12 +103,12 @@ export class PostController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@PostRequest("/:postId/like")
+	@PostRequest("/:postId/upvote")
 	public async likePost(
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
-		await this.postRepositoryService.likePost(postId, payload.sub);
+		await this.postRepositoryService.upvotePost(postId, payload.sub);
 
 		return {
 			data: null,
@@ -117,12 +117,12 @@ export class PostController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@Delete("/:postId/like")
+	@Delete("/:postId/upvote")
 	public async removePostLike(
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
-		await this.postRepositoryService.removePostLike(postId, payload.sub);
+		await this.postRepositoryService.removePostUpvote(postId, payload.sub);
 
 		return {
 			data: null,
@@ -131,12 +131,12 @@ export class PostController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@PostRequest("/:postId/dislike")
+	@PostRequest("/:postId/downvote")
 	public async dislikePost(
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
-		await this.postRepositoryService.dislikePost(postId, payload.sub);
+		await this.postRepositoryService.downvotePost(postId, payload.sub);
 
 		return {
 			data: null,
@@ -145,12 +145,12 @@ export class PostController {
 
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
-	@Delete("/:postId/dislike")
+	@Delete("/:postId/downvote")
 	public async removePostDislike(
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<null> {
-		await this.postRepositoryService.removePostDislike(postId, payload.sub);
+		await this.postRepositoryService.removePostDownvote(postId, payload.sub);
 
 		return {
 			data: null,
@@ -218,7 +218,7 @@ export class PostController {
 			includeFields,
 		);
 
-		if (!cachedAllowedCommunities.length)
+		if (!cachedAllowedCommunities.length && allowedCommunities.length)
 			await this.cachingServices.sadd(
 				`userCommunities:${payload.sub}`,
 				allowedCommunities,
@@ -249,7 +249,7 @@ export class PostController {
 		};
 	}
 
-	@HttpCode(HttpStatus.CREATED)
+	@HttpCode(HttpStatus.OK)
 	@UseGuards(JwtAuthGuard)
 	@FormDataRequest()
 	@Patch("/:postId")

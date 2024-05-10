@@ -53,88 +53,107 @@ export class PostRepositoryService {
 		return await this.dataServices.posts.update({ _id: postId }, post);
 	}
 
-	public async likePost(
+	public async upvotePost(
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
 		const relation = await this.dataServices.userPostRelations.get({
 			post: postId,
 			user: userId,
+			type: {
+				// only find a relation with upvote/downvote
+				// there can be many types of relations, but there is only one instance of upvote/downvote relation
+				$in: [UserPostRelationType.Upvote, UserPostRelationType.Downvote],
+			},
 		});
 
-		if (relation?.type === UserPostRelationType.Like) return null;
+		// if post is already upvoted, return
+		if (relation?.type === UserPostRelationType.Upvote) return null;
 		const post = await this.dataServices.posts.update(
 			{ _id: postId },
-			{ $inc: { likes: 1 } },
+			{ $inc: { upvotes: 1 } },
 		);
+
+		// if post does not exist, return
 		if (!post) return null;
 
-		if (relation?.type === UserPostRelationType.Dislike) {
+		// if post is downvoted, but upvote was pressed, remove the downvote (post upvotes is already increased)
+		if (relation?.type === UserPostRelationType.Downvote) {
 			await this.dataServices.posts.update(
 				{ _id: postId },
-				{ $inc: { dislikes: -1 } },
+				{ $inc: { downvotes: -1 } },
 			);
 			return await this.dataServices.userPostRelations.update(
-				{ user: userId, post: postId, type: UserPostRelationType.Dislike },
-				{ type: UserPostRelationType.Like },
+				{ user: userId, post: postId, type: UserPostRelationType.Downvote },
+				{ type: UserPostRelationType.Upvote },
 			);
 		}
 
+		// if post was not downvoted before, create an upvote relation
 		return await this.dataServices.userPostRelations.create(
 			this.relationFactoryService.createUserPostRelation(
 				userId,
 				postId,
-				UserPostRelationType.Like,
+				UserPostRelationType.Upvote,
 			),
 		);
 	}
 
-	public async removePostLike(
+	public async removePostUpvote(
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
 		const relation = await this.dataServices.userPostRelations.delete({
 			user: userId,
 			post: postId,
-			type: UserPostRelationType.Like,
+			type: UserPostRelationType.Upvote,
 		});
 
+		// if post upvote does not exist, return (=> upvotes are not decremented)
 		if (!relation) return null;
 
+		// decrement upvotes
 		await this.dataServices.posts.update(
 			{ _id: postId },
-			{ $inc: { likes: -1 } },
+			{ $inc: { upvotes: -1 } },
 		);
 
 		return relation;
 	}
 
-	public async dislikePost(
+	public async downvotePost(
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
 		const relation = await this.dataServices.userPostRelations.get({
 			user: userId,
 			post: postId,
+			type: {
+				$in: [UserPostRelationType.Upvote, UserPostRelationType.Downvote],
+			},
 		});
 
-		if (relation?.type === UserPostRelationType.Dislike) return null;
+		// if post is already downvoted, return
+		if (relation?.type === UserPostRelationType.Downvote) return null;
 
+		// increment downvotes
 		const post = await this.dataServices.posts.update(
 			{ _id: postId },
-			{ $inc: { dislikes: 1 } },
+			{ $inc: { downvotes: 1 } },
 		);
 
+		// if post does not exist, return
 		if (!post) return null;
 
-		if (relation?.type === UserPostRelationType.Like) {
+		// if post is already upvoted, replace that upvote with a downvote
+		if (relation?.type === UserPostRelationType.Upvote) {
 			await this.dataServices.posts.update(
 				{ _id: postId },
-				{ $inc: { likes: -1 } },
+				{ $inc: { upvotes: -1 } },
 			);
 			return await this.dataServices.userPostRelations.update(
-				{ user: userId, post: postId, type: UserPostRelationType.Like },
-				{ type: UserPostRelationType.Dislike },
+				{ user: userId, post: postId, type: UserPostRelationType.Upvote },
+				{ type: UserPostRelationType.Downvote },
 			);
 		}
 
@@ -142,26 +161,28 @@ export class PostRepositoryService {
 			this.relationFactoryService.createUserPostRelation(
 				userId,
 				postId,
-				UserPostRelationType.Dislike,
+				UserPostRelationType.Downvote,
 			),
 		);
 	}
 
-	public async removePostDislike(
+	public async removePostDownvote(
 		postId: string,
 		userId: string,
 	): Promise<UserPostRelation | null> {
 		const relation = await this.dataServices.userPostRelations.delete({
 			user: userId,
 			post: postId,
-			type: UserPostRelationType.Dislike,
+			type: UserPostRelationType.Downvote,
 		});
 
+		// if post is not downvoted, return
 		if (!relation) return null;
 
+		// remove a downvote if such relation existed
 		await this.dataServices.posts.update(
 			{ _id: postId },
-			{ $inc: { dislikes: -1 } },
+			{ $inc: { downvotes: -1 } },
 		);
 
 		return relation;

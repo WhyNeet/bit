@@ -35,9 +35,9 @@ export class PostDto {
 	author?: UserDto | string;
 	community?: CommunityDto | string;
 
-	likes: number;
+	upvotes: number;
 	// dislikes are only visible to authors
-	dislikes?: number;
+	downvotes?: number;
 
 	createdAt: Date;
 	updatedAt: Date;

@@ -1,9 +1,11 @@
-import { Community } from "common/entities/community.entity";
-import { Post } from "common/entities/post.entity";
-import { UserCommunityRelation } from "common/entities/relation/user-community.entity";
-import { UserPostRelation } from "common/entities/relation/user-post.entity";
-import { Token } from "common/entities/token.entity";
-import type { User } from "common/entities/user.entity";
+import {
+	Community,
+	Post,
+	Token,
+	User,
+	UserCommunityRelation,
+	UserPostRelation,
+} from "common";
 import type { IGenericRepository } from "./generic-repository.abstract";
 
 export abstract class IDataServices {

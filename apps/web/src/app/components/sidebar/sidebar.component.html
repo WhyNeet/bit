@@ -1,8 +1,12 @@
-<aside class="w-72 h-[calc(100vh-4rem)]">
+<aside class="w-96 h-[calc(100vh-4rem)]">
     <nav class="py-10 px-10 flex flex-col items-stretch gap-4 font-semibold font-display tracking-wide h-full">
         <a routerLink="/" class="flex items-center gap-3 " routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideHome"></ng-icon>
             Home
+        </a>
+        <a routerLink="/trending" class="flex items-center gap-3 " routerLinkActive="text-primary">
+            <ng-icon size="22" name="lucideFlame"></ng-icon>
+            Trending
         </a>
         <a routerLink="/messages" class="flex items-center gap-3" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideMessageCircle"></ng-icon>
@@ -17,12 +21,21 @@
             <ng-icon size="22" name="lucideCog"></ng-icon>
             Settings
         </a>
-        @if (user$ | async; as user) {
-            <hr class="my-1" />
-            <a routerLink="/account" class="flex items-center gap-3" routerLinkActive="text-primary">
-                <ng-icon size="22" name="lucideCog"></ng-icon>
-                Settings
-            </a>
+        <hr />
+        @if (isUserLoading$ | async) {
+            <app-ui-skeleton class="w-full h-10 rounded-default"></app-ui-skeleton>
+        } @else {
+            @if (user$ | async; as user) {
+                <a routerLink="/account" class="flex items-center gap-3" routerLinkActive="text-primary">
+                    <ng-icon size="22" name="lucideCog"></ng-icon>
+                    Settings
+                </a>
+            } @else {
+                <a routerLink="/auth/login" class="flex items-center gap-3">
+                    <ng-icon size="22" name="lucideLogIn"></ng-icon>
+                    Sign In
+                </a>
+            }
         }
         <span class="flex-1"></span>
         <hr class="my-1" />

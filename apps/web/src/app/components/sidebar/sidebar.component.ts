@@ -9,7 +9,6 @@ import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
 	lucideBell,
 	lucideCog,
-	lucideFlame,
 	lucideHome,
 	lucideLogIn,
 	lucideMessageCircle,
@@ -43,7 +42,6 @@ import { SwitchComponent } from "../ui/switch/switch.component";
 			lucideBell,
 			lucideCog,
 			lucideLogIn,
-			lucideFlame,
 		}),
 	],
 	templateUrl: "./sidebar.component.html",

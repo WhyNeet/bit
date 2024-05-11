@@ -1,0 +1,11 @@
+.stepper-item {
+    @apply w-20 border-b-4 border-b-text/20 transition-all overflow-hidden bg-gradient-to-t from-text/5 to-transparent
+}
+
+.stepper-item.active {
+    @apply border-b-primary from-primary/20
+}
+
+.stepper-label {
+    @apply w-full h-full font-medium font-display
+}

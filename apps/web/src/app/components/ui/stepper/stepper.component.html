@@ -1,0 +1,9 @@
+<div [classList]="['flex items-stretch h-6 gap-2', class].join(' ')">
+    @for (step of steps; track $index) {
+        <button class="stepper-item text-sm" [class.active]="selectedIndex === $index" (click)="selectStepByIndex($index)">
+            <div class="stepper-label">
+                {{ step.label }}
+            </div>
+        </button>
+    }
+</div>

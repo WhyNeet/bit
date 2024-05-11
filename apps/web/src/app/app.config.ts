@@ -6,6 +6,7 @@ import {
 	provideClientHydration,
 	withHttpTransferCacheOptions,
 } from "@angular/platform-browser";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideStore } from "@ngrx/store";
 import { provideStoreDevtools } from "@ngrx/store-devtools";
 import { routes } from "./app.routes";
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
 		provideStore(reducers),
 		provideHttpClient(),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+		provideAnimations(),
 	],
 };

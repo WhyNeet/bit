@@ -3,13 +3,17 @@
 }
 
 .cdk-overlay-backdrop {
-    @apply fixed inset-0 z-50 backdrop-blur pointer-events-auto
+    @apply fixed inset-0 z-40 backdrop-blur pointer-events-auto opacity-0 transition-opacity
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+    @apply opacity-100
 }
 
 .cdk-global-overlay-wrapper {
-    @apply absolute inset-0 pointer-events-none flex items-center justify-center
+    @apply absolute inset-0 pointer-events-none flex items-center justify-center z-50
 }
 
 .cdk-overlay-pane {
-    @apply z-50 pointer-events-auto min-w-96 bg-background px-6 py-6 rounded-default border border-text/10
+    @apply z-50 pointer-events-auto
 }

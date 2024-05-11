@@ -18,6 +18,7 @@ import { UserDto } from "common";
 import { Observable, map } from "rxjs";
 import { ThemeService } from "../../features/theme/theme.service";
 import { selectIsUserLoading, selectUser } from "../../state/user/selectors";
+import { AuthButtonComponent } from "../auth-button/auth-button.component";
 import { LogoComponent } from "../logo/logo.component";
 import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
 import { SwitchComponent } from "../ui/switch/switch.component";
@@ -33,6 +34,7 @@ import { SwitchComponent } from "../ui/switch/switch.component";
 		CommonModule,
 		SwitchComponent,
 		SkeletonComponent,
+		AuthButtonComponent,
 	],
 	providers: [ThemeService],
 	viewProviders: [

@@ -1,5 +1,5 @@
 <aside>
-    <nav class="sidebar-block">
+    <nav class="sidebar-block pt-10 mb-4">
         <a routerLink="/home" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideHome"></ng-icon>
             Home
@@ -8,7 +8,7 @@
             <ng-icon size="22" name="lucideMessageCircle"></ng-icon>
             Messages
         </a>
-        <hr class="my-1" />
+        <hr />
         <a routerLink="/notifications" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideBell"></ng-icon>
             Notifications
@@ -18,25 +18,28 @@
             Settings
         </a>
         <hr />
+    </nav>
+    <div class="sidebar-block">
         @if (isUserLoading$ | async) {
             <app-ui-skeleton class="w-full h-10 rounded-default"></app-ui-skeleton>
         } @else {
             @if (user$ | async; as user) {
                 <a routerLink="/account" class="sidebar-item" routerLinkActive="text-primary">
-                    <ng-icon size="22" name="lucideCog"></ng-icon>
-                    Settings
+                    Account
                 </a>
             } @else {
-                <a routerLink="/auth/sign-in" class="sidebar-item">
-                    <ng-icon size="22" name="lucideLogIn"></ng-icon>
+                <app-auth-button class="w-full">
+                    <div class="sidebar-item">
+                        <ng-icon size="22" name="lucideLogIn"></ng-icon>
                     Sign In
-                </a>
+                    </div>
+                </app-auth-button>
             }
         }
-    </nav>
+    </div>
     <span class="flex-1"></span>
-    <div class="sidebar-block">
-        <hr class="my-1" />
+    <div class="sidebar-block pb-10">
+        <hr />
         <button (click)="toggleTheme()" class="sidebar-item justify-between">
             Dark Theme
             <app-ui-switch class="pointer-events-none" [value]="isDarkTheme$ | async"></app-ui-switch>

@@ -3,7 +3,11 @@ aside {
 }
 
 .sidebar-block {
-    @apply p-10 flex flex-col items-stretch gap-4 font-semibold font-display tracking-wide
+    @apply px-10 flex flex-col gap-4 items-stretch font-semibold font-display tracking-wide
+}
+
+.sidebar-block > hr {
+    @apply my-1
 }
 
 .sidebar-item {

@@ -16,6 +16,7 @@ module.exports = {
 				primary: "rgb(var(--primary))",
 				secondary: "rgb(var(--secondary))",
 				accent: "rgb(var(--accent))",
+				error: "rgb(var(--error))",
 			},
 			borderRadius: {
 				default: "var(--border-radius)",

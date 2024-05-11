@@ -11,5 +11,5 @@
 }
 
 .cdk-overlay-pane {
-    @apply z-50 pointer-events-auto
+    @apply z-50 pointer-events-auto min-w-96 bg-background px-6 py-6 rounded-default border border-text/10
 }

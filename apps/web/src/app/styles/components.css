@@ -1,0 +1,3 @@
+.input {
+    @apply px-4 py-2 rounded-default bg-text/10 focus:border-primary border border-text/5 outline-none transition-colors
+}

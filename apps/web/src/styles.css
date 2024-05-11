@@ -1,18 +1,19 @@
-@import url("./app/styles/dialog.css");
+@import "./app/styles/dialog.css";
+@import "./app/styles/typography.css";
+@import "./app/styles/components.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-
     :root {
         --text: 5 5 6;
         --background: 246 245 250;
         --primary: 76 60 196;
         --secondary: 145 132 237;
         --accent: 98 76 251;
+        --error: 239 68 68; 
         
         --border-radius: 0.5rem;
 

@@ -1,0 +1,11 @@
+h1.type {
+    @apply text-2xl font-bold font-display tracking-tight
+}
+
+p.type.label {
+    @apply text-sm font-medium font-display text-text/60
+}
+
+p.type.error {
+    @apply text-sm font-medium font-display text-error
+}

@@ -1,19 +1,19 @@
-<aside class="w-96 h-[calc(100vh-4rem)]">
-    <nav class="py-10 px-10 flex flex-col items-stretch gap-4 font-semibold font-display tracking-wide h-full">
-        <a routerLink="/home" class="flex items-center gap-3 " routerLinkActive="text-primary">
+<aside>
+    <nav class="sidebar-block">
+        <a routerLink="/home" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideHome"></ng-icon>
             Home
         </a>
-        <a routerLink="/messages" class="flex items-center gap-3" routerLinkActive="text-primary">
+        <a routerLink="/messages" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideMessageCircle"></ng-icon>
             Messages
         </a>
         <hr class="my-1" />
-        <a routerLink="/notifications" class="flex items-center gap-3" routerLinkActive="text-primary">
+        <a routerLink="/notifications" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideBell"></ng-icon>
             Notifications
         </a>
-        <a routerLink="/settings" class="flex items-center gap-3" routerLinkActive="text-primary">
+        <a routerLink="/settings" class="sidebar-item" routerLinkActive="text-primary">
             <ng-icon size="22" name="lucideCog"></ng-icon>
             Settings
         </a>
@@ -22,22 +22,24 @@
             <app-ui-skeleton class="w-full h-10 rounded-default"></app-ui-skeleton>
         } @else {
             @if (user$ | async; as user) {
-                <a routerLink="/account" class="flex items-center gap-3" routerLinkActive="text-primary">
+                <a routerLink="/account" class="sidebar-item" routerLinkActive="text-primary">
                     <ng-icon size="22" name="lucideCog"></ng-icon>
                     Settings
                 </a>
             } @else {
-                <a routerLink="/auth/sign-in" class="flex items-center gap-3">
+                <a routerLink="/auth/sign-in" class="sidebar-item">
                     <ng-icon size="22" name="lucideLogIn"></ng-icon>
                     Sign In
                 </a>
             }
         }
-        <span class="flex-1"></span>
+    </nav>
+    <span class="flex-1"></span>
+    <div class="sidebar-block">
         <hr class="my-1" />
-        <button (click)="toggleTheme()" class="flex items-center justify-between">
+        <button (click)="toggleTheme()" class="sidebar-item justify-between">
             Dark Theme
             <app-ui-switch class="pointer-events-none" [value]="isDarkTheme$ | async"></app-ui-switch>
         </button>
-    </nav>
+    </div>
 </aside>

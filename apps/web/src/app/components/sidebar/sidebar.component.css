@@ -1,0 +1,11 @@
+aside {
+    @apply w-96 h-[calc(100vh-4rem)] flex flex-col
+}
+
+.sidebar-block {
+    @apply p-10 flex flex-col items-stretch gap-4 font-semibold font-display tracking-wide
+}
+
+.sidebar-item {
+    @apply flex items-center gap-3
+}

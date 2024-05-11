@@ -45,6 +45,7 @@ import { SwitchComponent } from "../ui/switch/switch.component";
 		}),
 	],
 	templateUrl: "./sidebar.component.html",
+	styleUrl: "./sidebar.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {

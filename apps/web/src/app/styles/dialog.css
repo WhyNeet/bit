@@ -1,0 +1,15 @@
+.cdk-overlay-container {
+    @apply fixed inset-0 z-50 pointer-events-none
+}
+
+.cdk-overlay-backdrop {
+    @apply fixed inset-0 z-50 backdrop-blur pointer-events-auto
+}
+
+.cdk-global-overlay-wrapper {
+    @apply absolute inset-0 pointer-events-none flex items-center justify-center
+}
+
+.cdk-overlay-pane {
+    @apply z-50 pointer-events-auto
+}

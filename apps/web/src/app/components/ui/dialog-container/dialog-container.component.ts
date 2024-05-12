@@ -25,7 +25,7 @@ import { dialogAnimations } from "../../../animations/dialog.animations";
 })
 export class DialogContainerComponent extends CdkDialogContainer {
 	@HostBinding() class =
-		"block p-6 rounded-default bg-background border border-text/10";
+		"block rounded-default bg-background border border-text/10 relative min-w-96";
 
 	@HostBinding("@dialogEnterLeave")
 	protected animationState: "void" | "open" | "closed" = "open";

@@ -1,1 +1,5 @@
-hello, world!
+@if (isLogin()) {
+    <app-dialog-auth-login />
+} @else {
+    <app-dialog-auth-signup />
+}

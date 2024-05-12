@@ -1,12 +1,10 @@
-import { CdkStep, CdkStepLabel } from "@angular/cdk/stepper";
 import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
-import { StepperComponent } from "../../ui/stepper/stepper.component";
 
 @Component({
 	selector: "app-dialog-auth-login",
 	standalone: true,
-	imports: [StepperComponent, CdkStep, CdkStepLabel, ReactiveFormsModule],
+	imports: [ReactiveFormsModule],
 	providers: [],
 	templateUrl: "./auth-dialog-login.component.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,11 +1,12 @@
 import { AnimationEvent } from "@angular/animations";
 import { CdkDialogContainer, DialogModule } from "@angular/cdk/dialog";
-import { PortalModule } from "@angular/cdk/portal";
+import { CdkPortalOutlet } from "@angular/cdk/portal";
 import {
 	ChangeDetectionStrategy,
 	Component,
 	HostBinding,
 	HostListener,
+	ViewEncapsulation,
 } from "@angular/core";
 import { EventEmitter } from "@angular/core";
 import { dialogAnimations } from "../../../animations/dialog.animations";
@@ -13,19 +14,21 @@ import { dialogAnimations } from "../../../animations/dialog.animations";
 @Component({
 	selector: "app-ui-dialog-container",
 	standalone: true,
-	imports: [DialogModule, PortalModule],
+	imports: [DialogModule, CdkPortalOutlet],
 	providers: [],
 	animations: [dialogAnimations],
 	template: `
-        <div class="p-6 rounded-default bg-background border border-text/10">
-            <ng-template cdkPortalOutlet></ng-template>
-        </div>
+        <ng-template cdkPortalOutlet />
     `,
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.Default,
+	encapsulation: ViewEncapsulation.None,
 })
 export class DialogContainerComponent extends CdkDialogContainer {
+	@HostBinding() class =
+		"block p-6 rounded-default bg-background border border-text/10";
+
 	@HostBinding("@dialogEnterLeave")
-	private animationState: "void" | "open" | "closed" = "open";
+	protected animationState: "void" | "open" | "closed" = "open";
 
 	animationStateChanged = new EventEmitter<AnimationEvent>();
 

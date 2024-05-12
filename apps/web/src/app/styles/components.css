@@ -3,7 +3,7 @@ input.input {
 }
 
 button.primary {
-    @apply px-4 py-2 rounded-default bg-primary hover:bg-primary/90 font-medium font-display transition-colors
+    @apply px-4 py-2 rounded-default bg-primary hover:bg-primary/90 font-medium font-display transition-colors text-white
 }
 
 button.primary:active {
@@ -11,5 +11,5 @@ button.primary:active {
 }
 
 button.primary[disabled] {
-    @apply bg-primary/60 text-text/80
+    @apply bg-primary/60 text-white/60
 }

@@ -15,7 +15,7 @@ export class AnimatedDialogRef {
 				take(1),
 			)
 			.subscribe((evt) => {
-				evt.preventDefault();
+				evt.stopPropagation();
 				this.close();
 			});
 	}
@@ -39,5 +39,7 @@ export class AnimatedDialogRef {
 			.subscribe(() => this.dialogRef.close());
 
 		containerInstance.startExitAnimation();
+
+		console.log("close");
 	}
 }

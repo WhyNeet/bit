@@ -1,11 +1,8 @@
-import { Dialog } from "@angular/cdk/dialog";
-import {
-	ChangeDetectionStrategy,
-	Component,
-	Input,
-	ViewEncapsulation,
-} from "@angular/core";
+import { Dialog, DialogRef } from "@angular/cdk/dialog";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AuthDialogComponent } from "../auth-dialog/auth-dialog.component";
+import { AnimatedDialogRef } from "../ui/dialog-container/dialog-animated-ref";
+import { DialogContainerComponent } from "../ui/dialog-container/dialog-container.component";
 
 @Component({
 	selector: "app-auth-button",
@@ -18,7 +15,6 @@ import { AuthDialogComponent } from "../auth-dialog/auth-dialog.component";
         </button>
     `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.None,
 })
 export class AuthButtonComponent {
 	@Input() class = "";
@@ -26,6 +22,21 @@ export class AuthButtonComponent {
 	constructor(private dialog: Dialog) {}
 
 	protected openAuthDialog() {
-		this.dialog.open(AuthDialogComponent, {});
+		let animatedDialogRef: AnimatedDialogRef;
+
+		const ref = this.dialog.open<unknown>(AuthDialogComponent, {
+			container: DialogContainerComponent,
+			disableClose: true,
+			closeOnOverlayDetachments: true,
+			providers(dialogRef, config, container) {
+				animatedDialogRef = new AnimatedDialogRef(dialogRef);
+				return [
+					{
+						provide: AnimatedDialogRef,
+						useValue: animatedDialogRef,
+					},
+				];
+			},
+		});
 	}
 }

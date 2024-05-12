@@ -3,7 +3,7 @@
     <app-ui-tabs-tab title="Register"></app-ui-tabs-tab>
 </app-ui-tabs>
 <app-ui-dialog-content>
-    <div class="relative" #tabs [@paneChange]="{ value: tab(), params: { startHeight: $any(tabs).clientHeight, enterStart: enterStart(), leaveEnd: leaveEnd() } }">
+    <div class="relative" #tabs [@heightChange]="{ value: tab(), params: { startHeight: $any(tabs).clientHeight, enterStart: enterStart(), leaveEnd: leaveEnd() } }">
         @if (tab() === 0) {
             <app-dialog-auth-login class="block w-full" />
         } @else {

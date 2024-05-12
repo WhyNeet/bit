@@ -9,7 +9,7 @@ import {
 	ViewEncapsulation,
 } from "@angular/core";
 import { EventEmitter } from "@angular/core";
-import { dialogAnimations } from "../../../animations/dialog.animations";
+import { dialogAnimations } from "../../../animations/dialog.animation";
 
 @Component({
 	selector: "app-ui-dialog-container",

@@ -1,17 +1,10 @@
 import {
-	animate,
-	group,
-	query,
-	style,
-	transition,
-	trigger,
-} from "@angular/animations";
-import {
 	ChangeDetectionStrategy,
 	Component,
 	computed,
 	signal,
 } from "@angular/core";
+import { heightChangeAnmation } from "../../animations/height.animation";
 import { DialogContent } from "../ui/dialog-container/dialog-content.component";
 import { TabComponent } from "../ui/tabs/tab/tab.component";
 import { TabsComponent } from "../ui/tabs/tabs.component";
@@ -29,55 +22,7 @@ import { AuthDialogSignupComponent } from "./register/auth-dialog-register.compo
 		DialogContent,
 	],
 	providers: [],
-	animations: [
-		trigger("paneChange", [
-			transition(
-				"* => *",
-				[
-					query(":self", [style({ height: "{{startHeight}}px" })]),
-					query(":enter", [
-						style({
-							opacity: 0,
-							transform: "translateX({{enterStart}})",
-						}),
-					]),
-					query(
-						":leave",
-						[
-							style({
-								opacity: 1,
-								position: "absolute",
-								transform: "translateX(0)",
-							}),
-							animate(
-								"0.2s ease-in-out",
-								style({
-									opacity: 0,
-									transform: "translateX({{leaveEnd}})",
-								}),
-							),
-						],
-						{ optional: true },
-					),
-					group(
-						[
-							query(":self", [
-								animate("0.2s ease-in-out", style({ height: "*" })),
-							]),
-							query(":enter", [
-								animate(
-									"0.2s ease-in-out",
-									style({ opacity: 1, transform: "translateX(0)" }),
-								),
-							]),
-						],
-						{ params: { startHeight: 0 } },
-					),
-				],
-				{ params: { enterStart: "", leaveEnd: "" } },
-			),
-		]),
-	],
+	animations: [heightChangeAnmation],
 	templateUrl: "./auth-dialog.component.html",
 	styleUrl: "./auth-dialog.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,

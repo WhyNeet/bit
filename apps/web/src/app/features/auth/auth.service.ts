@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { CreateUserDto, UserCredentialsDto, UserDto } from "common";
 import { catchError, map, throwError } from "rxjs";

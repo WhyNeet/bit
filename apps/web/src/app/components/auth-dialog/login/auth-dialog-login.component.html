@@ -1,7 +1,7 @@
 <div class="flex flex-col items-stretch">
     <h1 class="type">Welcome Back!</h1>
     <p class="mb-6 type label">Let's pick up where we left off.</p>
-    <input class="input" placeholder="john.doe@example.com" [formControl]="email" />
+    <input class="input" placeholder="Email" [formControl]="email" />
     @if (email.invalid && (email.touched || email.dirty)) {
         @if (email.hasError("required")) {
             <p class="type error">Email is required.</p>

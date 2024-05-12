@@ -10,5 +10,5 @@ import { Component, HostBinding } from "@angular/core";
     `,
 })
 export class DialogContent {
-	@HostBinding() class = "p-6 block relative overflow-hidden";
+	@HostBinding() class = "p-6 block overflow-hidden";
 }

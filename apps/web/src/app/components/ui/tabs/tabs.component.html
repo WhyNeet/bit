@@ -1,0 +1,7 @@
+<div class="flex items-stretch justify-stretch p-2">
+    @for (tab of tabs; track $index) {
+        <button class="tab" [class.active]="selectedIndex === $index" (click)="selectIndex($index)">
+            {{ tab.title }}
+        </button>
+    }
+</div>

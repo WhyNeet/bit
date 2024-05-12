@@ -1,0 +1,7 @@
+.tab {
+    @apply font-display font-medium text-sm rounded-default px-2 py-2 w-full transition-colors
+}
+
+.tab.active {
+    @apply bg-text/10
+}

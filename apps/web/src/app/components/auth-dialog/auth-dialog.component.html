@@ -1,5 +1,13 @@
-@if (isLogin()) {
-    <app-dialog-auth-login />
-} @else {
-    <app-dialog-auth-signup />
-}
+<app-ui-tabs (onSelectionChange)="tab.set($event)">
+    <app-ui-tabs-tab title="Sign In"></app-ui-tabs-tab>
+    <app-ui-tabs-tab title="Register"></app-ui-tabs-tab>
+</app-ui-tabs>
+<app-ui-dialog-content>
+    <div #tabs [@paneChange]="{ value: tab(), params: { startHeight: $any(tabs).clientHeight, enterStart: enterStart(), leaveEnd: leaveEnd() } }">
+        @if (tab() === 0) {
+            <app-dialog-auth-login class="block" />
+        } @else {
+            <app-dialog-auth-signup class="block" />
+        }
+    </div>
+</app-ui-dialog-content>

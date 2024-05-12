@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 	imports: [],
 	providers: [],
 	template: `
-
+		register
     `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

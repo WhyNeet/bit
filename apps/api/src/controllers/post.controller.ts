@@ -60,11 +60,11 @@ export class PostController {
 
 		const images = (createPostDto.images ?? []).map((f) => ({
 			body: f.buffer,
-			fileName: crypto.randomUUID(),
+			fileName: `post/${crypto.randomUUID()}`,
 		}));
 		const files = (createPostDto.files ?? []).map((f) => ({
 			body: f.buffer,
-			fileName: crypto.randomUUID(),
+			fileName: `post/${crypto.randomUUID()}`,
 		}));
 
 		for (const image of images)

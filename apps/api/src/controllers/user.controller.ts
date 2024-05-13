@@ -1,6 +1,18 @@
-import { Controller, Get, HttpCode, Param, UseGuards } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Param,
+	Post,
+	UploadedFile,
+	UseGuards,
+	UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiResponse, User, UserDto } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
+import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { UserException } from "src/features/exception-handling/exceptions/user.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { UserFactoryService } from "src/features/user/user-factory.service";
@@ -15,6 +27,7 @@ export class UserController {
 		private userRepositoryService: UserRepositoryService,
 		private userFactoryService: UserFactoryService,
 		private cachingServices: ICachingServices,
+		private storageServices: IStorageServices,
 	) {}
 
 	@HttpCode(200)
@@ -65,6 +78,23 @@ export class UserController {
 
 		return {
 			data: this.userFactoryService.createDto(user),
+		};
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@UseInterceptors(FileInterceptor("file"))
+	@Post("/avatar")
+	public async setUserAvatar(
+		@UploadedFile() file: Express.Multer.File,
+		@Token() payload: JwtPayload,
+	): ApiResponse<null> {
+		const fileName = `avatar/${payload.sub}`;
+
+		await this.storageServices.putFile(fileName, file.buffer);
+
+		return {
+			data: null,
 		};
 	}
 }

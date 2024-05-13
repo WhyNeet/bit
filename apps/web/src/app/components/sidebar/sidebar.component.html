@@ -1,20 +1,20 @@
 <aside>
     <nav class="sidebar-block pt-10 mb-4">
         <a routerLink="/home" class="sidebar-item" routerLinkActive="text-primary">
-            <ng-icon size="22" name="lucideHome"></ng-icon>
+            <ng-icon size="24" name="lucideHome"></ng-icon>
             Home
         </a>
         <a routerLink="/messages" class="sidebar-item" routerLinkActive="text-primary">
-            <ng-icon size="22" name="lucideMessageCircle"></ng-icon>
+            <ng-icon size="24" name="lucideMessageCircle"></ng-icon>
             Messages
         </a>
         <hr />
         <a routerLink="/notifications" class="sidebar-item" routerLinkActive="text-primary">
-            <ng-icon size="22" name="lucideBell"></ng-icon>
+            <ng-icon size="24" name="lucideBell"></ng-icon>
             Notifications
         </a>
         <a routerLink="/settings" class="sidebar-item" routerLinkActive="text-primary">
-            <ng-icon size="22" name="lucideCog"></ng-icon>
+            <ng-icon size="24" name="lucideCog"></ng-icon>
             Settings
         </a>
         <hr />
@@ -25,12 +25,16 @@
         } @else {
             @if (user$ | async; as user) {
                 <a routerLink="/account" class="sidebar-item" routerLinkActive="text-primary">
+                    <div class="h-6 w-6 rounded-full overflow-hidden relative flex items-center justify-center">
+                        <ng-icon size="24" name="lucideUserRound" />
+                        <img [ngSrc]="userService.getCurrentUserAvatarUrl()" class="absolute inset-0" height="24" width="24" onerror="this.style.display='none'" />
+                    </div>
                     Account
                 </a>
             } @else {
                 <app-auth-button class="w-full">
                     <div class="sidebar-item">
-                        <ng-icon size="22" name="lucideLogIn"></ng-icon>
+                        <ng-icon size="24" name="lucideLogIn"></ng-icon>
                     Sign In
                     </div>
                 </app-auth-button>

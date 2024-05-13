@@ -1,17 +1,27 @@
+import { CommonModule } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	Component,
 	OnDestroy,
 	OnInit,
+	signal,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
+import { CreateUserDto, ErrorResponse } from "common";
+import { Observable, Subscription } from "rxjs";
+import { appear } from "../../../animations/appear.animation";
+import { disappear } from "../../../animations/disappear.animation";
+import { dynamicHeight } from "../../../animations/height.animation";
+import { AuthService } from "../../../features/auth/auth.service";
 import { SessionStorageService } from "../../../features/storage/session-storage.service";
+import { ProgressSpinnerComponent } from "../../ui/progress-spinner/progress-spinner.component";
 
 @Component({
 	selector: "app-dialog-auth-signup",
 	standalone: true,
-	imports: [ReactiveFormsModule],
+	imports: [ReactiveFormsModule, ProgressSpinnerComponent, CommonModule],
 	providers: [SessionStorageService],
+	animations: [dynamicHeight, appear, disappear],
 	templateUrl: "./auth-dialog-register.component.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -45,17 +55,54 @@ export class AuthDialogSignupComponent implements OnInit, OnDestroy {
 		],
 	});
 
-	constructor(private sessionStorage: SessionStorageService) {}
+	protected error$: Observable<ErrorResponse | null>;
+	protected isLoading = signal(false);
+
+	constructor(
+		private sessionStorage: SessionStorageService,
+		private authService: AuthService,
+	) {
+		this.error$ = this.authService.getError();
+	}
+
+	protected register() {
+		if (
+			this.email.invalid ||
+			this.password.invalid ||
+			this.name.invalid ||
+			this.username.invalid
+		)
+			return;
+
+		this.isLoading.set(true);
+
+		this.authService.register(
+			new CreateUserDto(
+				this.email.value as string,
+				this.username.value as string,
+				this.password.value as string,
+				this.name.value as string,
+			),
+		);
+	}
+
+	private sub?: Subscription;
 
 	ngOnInit(): void {
 		this.email.setValue(this.sessionStorage.getItem("email") ?? "");
 		this.name.setValue(this.sessionStorage.getItem("name") ?? "");
 		this.username.setValue(this.sessionStorage.getItem("username") ?? "");
+
+		this.sub = this.error$.subscribe((e) =>
+			e ? this.isLoading.set(false) : null,
+		);
 	}
 
 	ngOnDestroy(): void {
 		this.sessionStorage.setItem("email", this.email.value ?? "");
 		this.sessionStorage.setItem("username", this.username.value ?? "");
 		this.sessionStorage.setItem("name", this.name.value ?? "");
+
+		this.sub?.unsubscribe();
 	}
 }

@@ -53,5 +53,19 @@
 
     <span class="h-8"></span>
 
-    <button class="primary" [disabled]="email.invalid || password.invalid || username.invalid || name.invalid">Register</button>
+    <button class="primary flex items-center justify-center gap-2" (click)="register()" [disabled]="email.invalid || password.invalid || username.invalid || name.invalid || isLoading()">
+        @if (isLoading()) {
+            <app-ui-progress-spinner class="h-5 w-5" />
+        }
+        Register
+    </button>
+
+    <div #dynamic [@dynamicHeight]="{ value: error$ | async, params: { startHeight: dynamic.clientHeight } }">
+        @if (error$ | async; as error) {
+            <div class="px-4 py-3 rounded-default border border-error bg-error/40 mt-4">
+                <div class="font-display font-medium">{{ error.title }}</div>
+                <p class="text-sm">{{ error.detail }}</p>
+            </div>
+        }
+    </div>
 </div>

@@ -5,8 +5,8 @@ import { filter, take } from "rxjs";
 import { DialogContainerComponent } from "./dialog-container.component";
 
 @Injectable({ providedIn: "root" })
-export class AnimatedDialogRef {
-	constructor(private dialogRef: DialogRef<unknown, unknown>) {
+export class AnimatedDialogRef<R> {
+	constructor(private dialogRef: DialogRef<R, unknown>) {
 		dialogRef.backdropClick.pipe(take(1)).subscribe(() => this.close());
 
 		dialogRef.keydownEvents
@@ -20,7 +20,7 @@ export class AnimatedDialogRef {
 			});
 	}
 
-	public close() {
+	public close(result?: R) {
 		const containerInstance = this.dialogRef
 			.containerInstance as DialogContainerComponent;
 
@@ -36,7 +36,7 @@ export class AnimatedDialogRef {
 				filter((evt) => evt.phaseName === "done" && evt.toState === "closed"),
 				take(1),
 			)
-			.subscribe(() => this.dialogRef.close());
+			.subscribe(() => this.dialogRef.close(result));
 
 		containerInstance.startExitAnimation();
 	}

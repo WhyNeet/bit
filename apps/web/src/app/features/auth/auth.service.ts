@@ -1,8 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { CreateUserDto, UserCredentialsDto, UserDto } from "common";
-import { catchError, map, throwError } from "rxjs";
+import {
+	CreateUserDto,
+	ErrorResponse,
+	UserCredentialsDto,
+	UserDto,
+} from "common";
+import { Subject, catchError, map, throwError } from "rxjs";
 import { apiBaseUrl } from "../../misc/env";
 import { loggedIn, loggedOut } from "../../state/user/actions";
 
@@ -15,18 +20,14 @@ export class AuthService {
 		private store: Store,
 	) {}
 
-	public register(
-		email: string,
-		username: string,
-		password: string,
-		name: string,
-	): void {
-		const createUserDto: CreateUserDto = {
-			email,
-			name,
-			password,
-			username,
-		};
+	private error$ = new Subject<ErrorResponse | null>();
+
+	public getError() {
+		return this.error$.asObservable();
+	}
+
+	public register(createUserDto: CreateUserDto): void {
+		this.error$.next(null);
 
 		this.httpClient
 			.post(`${apiBaseUrl}/auth/register`, createUserDto, {
@@ -35,17 +36,15 @@ export class AuthService {
 			.pipe(
 				map((result: unknown) => (result as { data: UserDto }).data),
 				catchError((err) => {
-					return throwError(() => err.error);
+					this.error$.next(err.error);
+					return throwError(() => err);
 				}),
 			)
 			.subscribe((user) => this.store.dispatch(loggedIn({ user })));
 	}
 
-	public login(email: string, password: string): void {
-		const userCredentialsDto: UserCredentialsDto = {
-			email,
-			password,
-		};
+	public login(userCredentialsDto: UserCredentialsDto): void {
+		this.error$.next(null);
 
 		this.httpClient
 			.post(`${apiBaseUrl}/auth/login`, userCredentialsDto, {
@@ -54,6 +53,7 @@ export class AuthService {
 			.pipe(
 				map((result: unknown) => (result as { data: UserDto }).data),
 				catchError((err) => {
+					this.error$.next(err.error);
 					return throwError(() => err.error);
 				}),
 			)

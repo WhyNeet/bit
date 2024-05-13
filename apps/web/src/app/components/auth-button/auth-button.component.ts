@@ -1,4 +1,4 @@
-import { Dialog, DialogRef } from "@angular/cdk/dialog";
+import { Dialog } from "@angular/cdk/dialog";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { AuthDialogComponent } from "../auth-dialog/auth-dialog.component";
 import { AnimatedDialogRef } from "../ui/dialog-container/dialog-animated-ref";
@@ -22,7 +22,7 @@ export class AuthButtonComponent {
 	constructor(private dialog: Dialog) {}
 
 	protected openAuthDialog() {
-		let animatedDialogRef: AnimatedDialogRef;
+		let animatedDialogRef: AnimatedDialogRef<unknown>;
 
 		const ref = this.dialog.open<unknown>(AuthDialogComponent, {
 			container: DialogContainerComponent,

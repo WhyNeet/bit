@@ -7,7 +7,7 @@
             <p class="type error">Email is required.</p>
         } @else if (email.hasError("email")) {
             <p class="type error">Must be a valid email.</p>
-        }
+        } 
     }
 
     <span class="h-4"></span>
@@ -25,5 +25,20 @@
 
     <span class="h-8"></span>
 
-    <button class="primary" [disabled]="email.invalid || password.invalid">Sign In</button>
+    <button class="primary flex items-center gap-2 justify-center" (click)="login()" [disabled]="email.invalid || password.invalid || isLoading()">
+        @if (isLoading()) {
+            <app-ui-progress-spinner class="h-5 w-5" />
+        }
+        Sign In
+    </button>
+
+
+    <div #dynamic [@dynamicHeight]="{ value: error$ | async, params: { startHeight: dynamic.clientHeight } }">
+        @if (error$ | async; as error) {
+            <div class="px-4 py-3 rounded-default border border-error bg-error/40 mt-4">
+                <div class="font-display font-medium">{{ error.title }}</div>
+                <p class="text-sm">{{ error.detail }}</p>
+            </div>
+        }
+    </div>
 </div>

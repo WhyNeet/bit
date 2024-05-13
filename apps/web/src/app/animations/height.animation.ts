@@ -27,7 +27,7 @@ export const heightChangeAnmation = trigger("heightChange", [
 						transform: "translateX(0)",
 					}),
 					animate(
-						"0.2s ease-in-out",
+						"150ms ease-in-out",
 						style({
 							opacity: 0,
 							transform: "translateX({{leaveEnd}})",
@@ -38,10 +38,12 @@ export const heightChangeAnmation = trigger("heightChange", [
 			),
 			group(
 				[
-					query(":self", [animate("0.2s ease-in-out", style({ height: "*" }))]),
+					query(":self", [
+						animate("150ms ease-in-out", style({ height: "*" })),
+					]),
 					query(":enter", [
 						animate(
-							"0.2s ease-in-out",
+							"150ms ease-in-out",
 							style({ opacity: 1, transform: "translateX(0)" }),
 						),
 					]),
@@ -50,5 +52,18 @@ export const heightChangeAnmation = trigger("heightChange", [
 			),
 		],
 		{ params: { enterStart: "0", leaveEnd: "0" } },
+	),
+]);
+
+export const dynamicHeight = trigger("dynamicHeight", [
+	transition(
+		"* <=> *",
+		[
+			query(":self", [
+				style({ height: "{{startHeight}}px" }),
+				animate("150ms ease-in-out", style({ height: "*" })),
+			]),
+		],
+		{ params: { startHeigth: 0 } },
 	),
 ]);

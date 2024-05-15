@@ -12,12 +12,16 @@ export const heightChangeAnmation = trigger("heightChange", [
 		"* => *",
 		[
 			query(":self", [style({ height: "{{startHeight}}px" })]),
-			query(":enter", [
-				style({
-					opacity: 0,
-					transform: "translateX({{enterStart}})",
-				}),
-			]),
+			query(
+				":enter",
+				[
+					style({
+						opacity: 0,
+						transform: "translateX({{enterStart}})",
+					}),
+				],
+				{ optional: true },
+			),
 			query(
 				":leave",
 				[
@@ -41,12 +45,16 @@ export const heightChangeAnmation = trigger("heightChange", [
 					query(":self", [
 						animate("150ms ease-in-out", style({ height: "*" })),
 					]),
-					query(":enter", [
-						animate(
-							"150ms ease-in-out",
-							style({ opacity: 1, transform: "translateX(0)" }),
-						),
-					]),
+					query(
+						":enter",
+						[
+							animate(
+								"150ms ease-in-out",
+								style({ opacity: 1, transform: "translateX(0)" }),
+							),
+						],
+						{ optional: true },
+					),
 				],
 				{ params: { startHeight: 0 } },
 			),

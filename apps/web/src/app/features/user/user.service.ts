@@ -1,13 +1,11 @@
-import { Inject, Injectable } from "@angular/core";
-import { API_BASE_URL } from "../../misc/tokens";
+import { Injectable } from "@angular/core";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
 	providedIn: "root",
 })
 export class UserService {
-	constructor(@Inject(API_BASE_URL) private apiBaseUrl: string) {}
-
 	public getCurrentUserAvatarUrl(): string {
-		return `${this.apiBaseUrl}/media/avatar`;
+		return `${environment.API_BASE_URL}/media/avatar`;
 	}
 }

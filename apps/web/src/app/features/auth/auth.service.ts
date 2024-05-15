@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import {
 	CreateUserDto,
@@ -8,7 +8,7 @@ import {
 	UserDto,
 } from "common";
 import { Subject, catchError, map, throwError } from "rxjs";
-import { API_BASE_URL } from "../../misc/tokens";
+import { environment } from "../../../environments/environment";
 import { loggedIn, loggedOut } from "../../state/user/actions";
 
 @Injectable({
@@ -18,7 +18,6 @@ export class AuthService {
 	constructor(
 		private httpClient: HttpClient,
 		private store: Store,
-		@Inject(API_BASE_URL) private apiBaseUrl: string,
 	) {}
 
 	private error$ = new Subject<ErrorResponse | null>();
@@ -31,7 +30,7 @@ export class AuthService {
 		this.error$.next(null);
 
 		this.httpClient
-			.post(`${this.apiBaseUrl}/auth/register`, createUserDto, {
+			.post(`${environment.API_BASE_URL}/auth/register`, createUserDto, {
 				withCredentials: true,
 			})
 			.pipe(
@@ -48,7 +47,7 @@ export class AuthService {
 		this.error$.next(null);
 
 		this.httpClient
-			.post(`${this.apiBaseUrl}/auth/login`, userCredentialsDto, {
+			.post(`${environment.API_BASE_URL}/auth/login`, userCredentialsDto, {
 				withCredentials: true,
 			})
 			.pipe(
@@ -63,7 +62,7 @@ export class AuthService {
 
 	public getCurrentUser(): void {
 		this.httpClient
-			.get(`${this.apiBaseUrl}/users/me`, {
+			.get(`${environment.API_BASE_URL}/users/me`, {
 				withCredentials: true,
 			})
 			.pipe(

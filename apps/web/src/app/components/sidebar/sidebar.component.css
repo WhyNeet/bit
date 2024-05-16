@@ -3,7 +3,7 @@ aside {
 }
 
 .sidebar-block {
-    @apply px-10 flex flex-col gap-4 items-stretch font-semibold font-display tracking-wide
+    @apply px-10 flex flex-col items-stretch font-semibold font-display tracking-wide
 }
 
 .sidebar-block > hr {
@@ -11,5 +11,9 @@ aside {
 }
 
 .sidebar-item {
-    @apply flex items-center gap-3
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-default
+}
+
+.sidebar-item.active {
+    @apply bg-text/10 text-primary
 }

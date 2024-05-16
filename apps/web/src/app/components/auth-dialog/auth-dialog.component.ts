@@ -1,12 +1,13 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
+	OnDestroy,
 	afterNextRender,
 	computed,
 	signal,
 } from "@angular/core";
 import { Store, select } from "@ngrx/store";
-import { map } from "rxjs";
+import { Subscription, map } from "rxjs";
 import { heightChangeAnmation } from "../../animations/height.animation";
 import { selectUser } from "../../state/user/selectors";
 import { AnimatedDialogRef } from "../ui/dialog-container/dialog-animated-ref";
@@ -32,22 +33,28 @@ import { AuthDialogSignupComponent } from "./register/auth-dialog-register.compo
 	styleUrl: "./auth-dialog.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthDialogComponent {
+export class AuthDialogComponent implements OnDestroy {
 	protected tab = signal(0);
 	protected enterStart = computed(() => (this.tab() === 1 ? "100%" : "-100%"));
 	protected leaveEnd = computed(() => (this.tab() === 1 ? "-100%" : "100%"));
+
+	private sub: Subscription | null = null;
 
 	constructor(
 		private store: Store,
 		private dialogRef: AnimatedDialogRef<unknown>,
 	) {
 		afterNextRender(() => {
-			this.store
+			this.sub = this.store
 				.pipe(
 					select(selectUser),
 					map((user) => !!user),
 				)
 				.subscribe((hasUser) => (hasUser ? this.dialogRef.close() : null));
 		});
+	}
+
+	ngOnDestroy(): void {
+		this.sub?.unsubscribe();
 	}
 }

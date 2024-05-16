@@ -8,11 +8,11 @@
 
 @layer base {
     :root {
-        --text: 5 5 6;
-        --background: 246 245 250;
-        --primary: 76 60 196;
-        --secondary: 145 132 237;
-        --accent: 98 76 251;
+        --text: 21 19 21;
+        --background: 246 244 246;
+        --primary: 82 62 86;
+        --secondary: 188 159 193;
+        --accent: 124 76 133;
         --error: 239 68 68; 
         
         --border-radius: 0.5rem;
@@ -22,11 +22,11 @@
     }
 
     .dark {
-        --text: 249 249 250;
-        --background: 6 5 10;
-        --primary: 75 59 196;
-        --secondary: 31 19 124;
-        --accent: 27 4 180;
+        --text: 236 234 236;
+        --background: 10 8 10;
+        --primary: 189 170 193;
+        --secondary: 90 62 95;
+        --accent: 171 124 179;
     }
 }
 

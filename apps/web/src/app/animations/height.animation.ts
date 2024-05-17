@@ -6,6 +6,7 @@ import {
 	transition,
 	trigger,
 } from "@angular/animations";
+import { cubic, sine } from "./easings";
 
 export const heightChangeAnmation = trigger("heightChange", [
 	transition(
@@ -31,7 +32,7 @@ export const heightChangeAnmation = trigger("heightChange", [
 						transform: "translateX(0)",
 					}),
 					animate(
-						"150ms ease-in-out",
+						`150ms ${sine}`,
 						style({
 							opacity: 0,
 							transform: "translateX({{leaveEnd}})",
@@ -42,14 +43,12 @@ export const heightChangeAnmation = trigger("heightChange", [
 			),
 			group(
 				[
-					query(":self", [
-						animate("150ms ease-in-out", style({ height: "*" })),
-					]),
+					query(":self", [animate(`150ms ${sine}`, style({ height: "*" }))]),
 					query(
 						":enter",
 						[
 							animate(
-								"150ms ease-in-out",
+								`150ms ${sine}`,
 								style({ opacity: 1, transform: "translateX(0)" }),
 							),
 						],
@@ -69,7 +68,7 @@ export const dynamicHeight = trigger("dynamicHeight", [
 		[
 			query(":self", [
 				style({ height: "{{startHeight}}px" }),
-				animate("150ms ease-in-out", style({ height: "*" })),
+				animate(`150ms ${sine}`, style({ height: "*" })),
 			]),
 		],
 		{ params: { startHeigth: 0 } },

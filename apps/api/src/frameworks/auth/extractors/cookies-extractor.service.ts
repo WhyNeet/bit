@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { TokenType } from "common/entities/token.entity";
+import { TokenType } from "common";
 import type { Request } from "express";
 
 @Injectable()

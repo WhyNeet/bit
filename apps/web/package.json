@@ -30,7 +30,12 @@
 		"@ngrx/store-devtools": "17.2.0",
 		"common": "workspace:^",
 		"express": "^4.18.2",
-		"lexical": "^0.15.0",
+		"prosemirror-commands": "^1.5.2",
+		"prosemirror-history": "^1.4.0",
+		"prosemirror-keymap": "^1.2.2",
+		"prosemirror-schema-basic": "^1.2.2",
+		"prosemirror-state": "^1.4.3",
+		"prosemirror-view": "^1.33.6",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0",
 		"zone.js": "~0.14.3"

@@ -12,16 +12,23 @@ import { Observable, Subscription } from "rxjs";
 import { appear } from "../../../animations/appear.animation";
 import { disappear } from "../../../animations/disappear.animation";
 import { dynamicHeight } from "../../../animations/height.animation";
+import { label } from "../../../animations/label.animation";
 import { AuthService } from "../../../features/auth/auth.service";
 import { SessionStorageService } from "../../../features/storage/session-storage.service";
+import { ErrorLabelDirective } from "../../ui/form/error-label/error-label.directive";
 import { ProgressSpinnerComponent } from "../../ui/progress-spinner/progress-spinner.component";
 
 @Component({
 	selector: "app-dialog-auth-signup",
 	standalone: true,
-	imports: [ReactiveFormsModule, ProgressSpinnerComponent, CommonModule],
+	imports: [
+		ReactiveFormsModule,
+		ProgressSpinnerComponent,
+		CommonModule,
+		ErrorLabelDirective,
+	],
 	providers: [SessionStorageService],
-	animations: [dynamicHeight, appear, disappear],
+	animations: [dynamicHeight, appear, disappear, label],
 	templateUrl: "./auth-dialog-register.component.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

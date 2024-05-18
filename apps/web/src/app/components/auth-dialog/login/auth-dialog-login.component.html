@@ -4,9 +4,9 @@
     <input class="input" placeholder="Email" [formControl]="email" />
     @if (email.invalid && (email.touched || email.dirty)) {
         @if (email.hasError("required")) {
-            <p class="type error">Email is required.</p>
+            <p formErrorLabel>Email is required.</p>
         } @else if (email.hasError("email")) {
-            <p class="type error">Must be a valid email.</p>
+            <p formErrorLabel>Must be a valid email.</p>
         } 
     }
 
@@ -15,11 +15,11 @@
     <input class="input" placeholder="Password" type="password" [formControl]="password" />
     @if (password.invalid && (password.touched || password.dirty)) {
         @if (password.hasError("required")) {
-            <p class="type error">Password is required.</p>
+            <p formErrorLabel>Password is required.</p>
         } @else if (password.hasError("minlength")) {
-            <p class="type error">Must be at least 8 characters long.</p>
+            <p formErrorLabel>Must be at least 8 characters long.</p>
         } @else if (password.hasError("maxlength")) {
-            <p class="type error">Must be at most 72 characters long.</p>
+            <p formErrorLabel>Must be at most 72 characters long.</p>
         }
     }
 

@@ -1,4 +1,5 @@
 import { animate, style, transition, trigger } from "@angular/animations";
+import { sine } from "./easings";
 
 export const appear = trigger("appear", [
 	transition(":enter", [

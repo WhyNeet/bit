@@ -5,12 +5,14 @@ import {
 	ViewChild,
 	afterNextRender,
 } from "@angular/core";
-import { baseKeymap } from "prosemirror-commands";
+import { baseKeymap, toggleMark } from "prosemirror-commands";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
-import { schema } from "prosemirror-schema-basic";
+import { Mark, MarkType } from "prosemirror-model";
+import { marks, schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { placeholder } from "./plugins/placeholder.plugin";
 
 @Component({
 	selector: "app-editor",
@@ -23,6 +25,8 @@ import { EditorView } from "prosemirror-view";
 export class EditorComponent {
 	@ViewChild("root") editorRoot!: ElementRef;
 
+	private view!: EditorView;
+
 	constructor() {
 		afterNextRender(() => {
 			const state = EditorState.create({
@@ -31,9 +35,28 @@ export class EditorComponent {
 					history(),
 					keymap({ "Mod-z": undo, "Mod-y": redo }),
 					keymap(baseKeymap),
+					placeholder("What's on your mind?"),
+					keymap({
+						"Mod-b": (state, dispatch) => {
+							const markType = state.schema.marks["strong"];
+							return toggleMark(markType)(state, dispatch);
+						},
+					}),
 				],
 			});
-			const view = new EditorView(this.editorRoot.nativeElement, { state });
+
+			this.view = new EditorView(this.editorRoot.nativeElement, {
+				state: state,
+			});
 		});
+	}
+
+	protected bold() {
+		const { state, dispatch } = this.view;
+
+		this.view.focus();
+
+		const markType = state.schema.marks["strong"];
+		toggleMark(markType)(state, dispatch);
 	}
 }

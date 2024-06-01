@@ -5,11 +5,12 @@ import {
 	ViewChild,
 	afterNextRender,
 } from "@angular/core";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideBold, lucideSendHorizontal } from "@ng-icons/lucide";
 import { baseKeymap, toggleMark } from "prosemirror-commands";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
-import { Mark, MarkType } from "prosemirror-model";
-import { marks, schema } from "prosemirror-schema-basic";
+import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { placeholder } from "./plugins/placeholder.plugin";
@@ -17,9 +18,11 @@ import { placeholder } from "./plugins/placeholder.plugin";
 @Component({
 	selector: "app-editor",
 	standalone: true,
-	imports: [],
+	imports: [NgIcon],
 	providers: [],
+	viewProviders: [provideIcons({ lucideSendHorizontal, lucideBold })],
 	templateUrl: "./editor.component.html",
+	styleUrl: "./editor.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent {
@@ -39,6 +42,10 @@ export class EditorComponent {
 					keymap({
 						"Mod-b": (state, dispatch) => {
 							const markType = state.schema.marks["strong"];
+							return toggleMark(markType)(state, dispatch);
+						},
+						"Mod-i": (state, dispatch) => {
+							const markType = state.schema.marks["em"];
 							return toggleMark(markType)(state, dispatch);
 						},
 					}),

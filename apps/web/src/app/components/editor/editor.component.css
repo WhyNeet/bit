@@ -1,0 +1,12 @@
+.editor {
+    @apply flex-1;
+}
+
+::ng-deep .ProseMirror {
+    @apply h-full outline-none;
+}
+
+::ng-deep .ProseMirror[data-placeholder]::before {
+    content: attr(data-placeholder);
+    @apply absolute pointer-events-none;
+}

@@ -6,7 +6,7 @@ import {
 	transition,
 	trigger,
 } from "@angular/animations";
-import { cubic, sine } from "./easings";
+import { sine } from "./easings";
 
 export const heightChangeAnmation = trigger("heightChange", [
 	transition(
@@ -29,6 +29,7 @@ export const heightChangeAnmation = trigger("heightChange", [
 					style({
 						opacity: 1,
 						position: "absolute",
+						inset: 0,
 						transform: "translateX(0)",
 					}),
 					animate(

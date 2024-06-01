@@ -1,21 +1,20 @@
 import { Plugin } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
+import { EditorView } from "prosemirror-view";
 
-export const placeholder = (text: string) => {
+export function placeholder(text: string) {
+	const update = (view: EditorView) => {
+		if (view.state.doc.textContent) {
+			view.dom.removeAttribute("data-placeholder");
+		} else {
+			view.dom.setAttribute("data-placeholder", text);
+		}
+	};
+
 	return new Plugin({
-		props: {
-			decorations(state) {
-				const doc = state.doc;
-				if (
-					doc.childCount === 1 &&
-					doc.firstChild?.isTextblock &&
-					doc.firstChild?.content.size === 0
-				)
-					return DecorationSet.create(doc, [
-						Decoration.widget(1, document.createTextNode(text)),
-					]);
-				return null;
-			},
+		view(view) {
+			update(view);
+
+			return { update };
 		},
 	});
-};
+}

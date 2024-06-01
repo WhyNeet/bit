@@ -51,12 +51,12 @@ export class EditorComponent {
 		});
 	}
 
-	protected bold() {
+	protected toggleMark(mark: string) {
 		const { state, dispatch } = this.view;
 
 		this.view.focus();
 
-		const markType = state.schema.marks["strong"];
+		const markType = state.schema.marks[mark];
 		toggleMark(markType)(state, dispatch);
 	}
 }

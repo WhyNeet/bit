@@ -1,19 +1,30 @@
 <div class="editor" #root></div>
 
-<div
-    class="bg-text/5 p-1.5 flex items-center h-12"
-    (click)="toggleMark('strong')"
->
+<div class="bg-text/5 p-1.5 flex items-center h-12">
     <div class="flex gap-2 items-stretch h-full text-text/60">
         <button
             class="aspect-square rounded-default flex items-center justify-center transition-colors"
+            (click)="toggleMark('strong')"
         >
             <ng-icon name="lucideBold" size="22" />
+        </button>
+        <button
+            class="aspect-square rounded-default flex items-center justify-center transition-colors"
+            (click)="toggleMark('em')"
+        >
+            <ng-icon name="lucideItalic" size="22" />
+        </button>
+        <button
+            class="aspect-square rounded-default flex items-center justify-center transition-colors"
+            (click)="toggleMark('code')"
+        >
+            <ng-icon name="lucideCode" size="22" />
         </button>
     </div>
     <span class="flex-1"></span>
     <button
         class="p-2 flex items-center justify-center text-text/80 hover:text-accent transition-colors"
+        (click)="handleSendClick"
     >
         <ng-icon name="lucideSendHorizontal" size="22" />
     </button>

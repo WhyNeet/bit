@@ -4,12 +4,19 @@ import {
 	ElementRef,
 	ViewChild,
 	afterNextRender,
+	output,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideBold, lucideSendHorizontal } from "@ng-icons/lucide";
+import {
+	lucideBold,
+	lucideCode,
+	lucideItalic,
+	lucideSendHorizontal,
+} from "@ng-icons/lucide";
 import { baseKeymap, toggleMark } from "prosemirror-commands";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
+import { defaultMarkdownSerializer } from "prosemirror-markdown";
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
@@ -20,13 +27,22 @@ import { placeholder } from "./plugins/placeholder.plugin";
 	standalone: true,
 	imports: [NgIcon],
 	providers: [],
-	viewProviders: [provideIcons({ lucideSendHorizontal, lucideBold })],
+	viewProviders: [
+		provideIcons({
+			lucideSendHorizontal,
+			lucideBold,
+			lucideCode,
+			lucideItalic,
+		}),
+	],
 	templateUrl: "./editor.component.html",
 	styleUrl: "./editor.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent {
 	@ViewChild("root") editorRoot!: ElementRef;
+
+	onSend = output<string>();
 
 	private view!: EditorView;
 
@@ -65,5 +81,9 @@ export class EditorComponent {
 
 		const markType = state.schema.marks[mark];
 		toggleMark(markType)(state, dispatch);
+	}
+
+	protected handleSendClick() {
+		this.onSend.emit(defaultMarkdownSerializer.serialize(this.view.state.doc));
 	}
 }

@@ -1,12 +1,16 @@
 .editor {
-    @apply flex-1;
+    @apply flex-1 p-4;
 }
 
 ::ng-deep .ProseMirror {
-    @apply h-full outline-none;
+    @apply h-full outline-none whitespace-pre-wrap;
 }
 
 ::ng-deep .ProseMirror[data-placeholder]::before {
     content: attr(data-placeholder);
-    @apply absolute pointer-events-none;
+    @apply absolute pointer-events-none font-display text-text/60;
+}
+
+::ng-deep .ProseMirror a {
+    @apply text-accent;
 }

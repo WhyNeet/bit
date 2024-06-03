@@ -1,5 +1,6 @@
+import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { State, Store } from "@ngrx/store";
 import { PostDto } from "common";
 import { catchError, map, throwError } from "rxjs";
@@ -13,6 +14,8 @@ export class PostsService {
 	constructor(
 		private store: Store,
 		private httpClient: HttpClient,
+		// biome-ignore lint/complexity/noBannedTypes: Angular
+		@Inject(PLATFORM_ID) private platformId: Object,
 	) {}
 
 	public getLatestPosts(include?: string[]) {
@@ -32,6 +35,10 @@ export class PostsService {
 	}
 
 	public getHomePosts(include?: string[]) {
+		// home posts require user cookies
+		// and cannot be fetched on the server
+		if (isPlatformServer(this.platformId)) return;
+
 		this.httpClient
 			.get(
 				`${environment.API_BASE_URL}/posts/home?include=${include?.join(",")}`,

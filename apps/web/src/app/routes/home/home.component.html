@@ -1,3 +1,5 @@
 <div class="py-10 pr-10">
+    @if (isLoggedIn | async) {
     <app-post-form />
+    }
 </div>

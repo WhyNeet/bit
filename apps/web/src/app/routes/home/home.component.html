@@ -2,4 +2,22 @@
     @if (isLoggedIn | async) {
     <app-post-form />
     }
+    <!-- @if (isLoading | async) {
+    <app-ui-skeleton class="w-full h-20 rounded-default"></app-ui-skeleton>
+    } @else {
+        @for (post of (posts | async); track post) {
+            <div>{{ post.title }}</div>
+        }
+    } -->
+
+    <div class="flex gap-2">
+        <button [classList]="['section-item', currentSection() === 'latest' ? 'bg-secondary/20' : 'hover:bg-text/10 text-text/80'].join(' ')" (click)="setSection('latest')">
+            <ng-icon [class]="currentSection() === 'latest' ? 'text-primary' : ''"  name="lucideHistory" size="24" />
+            Latest
+        </button>
+        <button [classList]="['section-item', currentSection() === 'following' ? 'bg-secondary/20' : 'hover:bg-text/10 text-text/80'].join(' ')" (click)="setSection('following')">
+            <ng-icon [class]="currentSection() === 'following' ? 'text-primary' : ''"  name="lucideHeart" size="24" />
+            Following
+        </button>
+    </div>
 </div>

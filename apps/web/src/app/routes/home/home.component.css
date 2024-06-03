@@ -1,0 +1,7 @@
+.section-item {
+    @apply px-4 py-2 rounded-default flex items-center gap-2 font-display font-semibold transition-colors;
+}
+
+.section-item>ng-icon {
+    @apply transition-colors;
+}

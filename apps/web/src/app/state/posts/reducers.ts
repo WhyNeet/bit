@@ -9,9 +9,14 @@ export const initialState: PostsState = {
 
 export const reducers = createReducer(
 	initialState,
-	on(homePostsFetched, (state, action) => ({ ...state, home: action.posts })),
+	on(homePostsFetched, (state, action) => ({
+		...state,
+		home: action.posts,
+		isLoading: false,
+	})),
 	on(latestPostsFetched, (state, action) => ({
 		...state,
 		latest: action.posts,
+		isLoading: false,
 	})),
 );

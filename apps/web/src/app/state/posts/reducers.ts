@@ -1,22 +1,51 @@
 import { createReducer, on } from "@ngrx/store";
-import { homePostsFetched, latestPostsFetched } from "./actions";
+import { homePostsFetched, latestPostsFetched, postsFetching } from "./actions";
 import { PostsState } from "./postsState.interface";
 
 export const initialState: PostsState = {
-	home: null,
-	latest: null,
+	home: {
+		isLoading: false,
+		posts: null,
+	},
+	latest: {
+		isLoading: false,
+		posts: null,
+	},
 };
 
 export const reducers = createReducer(
 	initialState,
 	on(homePostsFetched, (state, action) => ({
 		...state,
-		home: action.posts,
-		isLoading: false,
+		home: {
+			...state.home,
+			isLoading: false,
+			posts: [...(state.home.posts ?? []), action.posts],
+		},
 	})),
 	on(latestPostsFetched, (state, action) => ({
 		...state,
-		latest: action.posts,
-		isLoading: false,
+		latest: {
+			...state.latest,
+			isLoading: false,
+			posts: [...(state.latest.posts ?? []), action.posts],
+		},
 	})),
+	on(postsFetching, (state, action) =>
+		action.section === "home"
+			? {
+					...state,
+					home: {
+						...state.home,
+						isLoading: true,
+					},
+				}
+			: {
+					...state,
+					latest: {
+						...state.latest,
+						isLoading: true,
+					},
+				},
+	),
 );

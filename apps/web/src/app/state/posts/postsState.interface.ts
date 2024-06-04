@@ -1,6 +1,11 @@
 import { PostDto } from "common";
 
 export interface PostsState {
-	home: PostDto[] | null;
-	latest: PostDto[] | null;
+	home: Posts;
+	latest: Posts;
+}
+
+export interface Posts {
+	posts: PostDto[][] | null;
+	isLoading: boolean;
 }

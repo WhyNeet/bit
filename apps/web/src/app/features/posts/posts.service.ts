@@ -5,7 +5,10 @@ import { Store } from "@ngrx/store";
 import { PostDto } from "common";
 import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
-import { latestPostsFetched } from "../../state/posts/actions";
+import {
+	homePostsFetched,
+	latestPostsFetched,
+} from "../../state/posts/actions";
 
 @Injectable({
 	providedIn: "root",
@@ -54,6 +57,6 @@ export class PostsService {
 					return throwError(() => err);
 				}),
 			)
-			.subscribe((posts) => this.store.dispatch(latestPostsFetched({ posts })));
+			.subscribe((posts) => this.store.dispatch(homePostsFetched({ posts })));
 	}
 }

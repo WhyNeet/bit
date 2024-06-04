@@ -186,8 +186,8 @@ export class PostController {
 		@Pagination() pageData: PageData,
 	): ApiResponse<PostDto[]> {
 		const posts = await this.postRepositoryService.getLatestPosts(
-			pageData.perPage ?? 20,
 			pageData.page ?? 0,
+			pageData.perPage ?? 20,
 			undefined,
 			includeFields,
 		);
@@ -221,8 +221,8 @@ export class PostController {
 					).map((c) => c.community.toString());
 
 		const posts = await this.postRepositoryService.getLatestPosts(
-			pageData.perPage ?? 20,
 			pageData.page ?? 0,
+			pageData.perPage ?? 20,
 			allowedCommunities,
 			includeFields,
 		);

@@ -18,8 +18,8 @@ export class PostRepositoryService {
 	}
 
 	public async getLatestPosts(
-		perPage: number,
 		page: number,
+		perPage: number,
 		communities?: string[],
 		populate?: string[],
 	): Promise<Post[]> {

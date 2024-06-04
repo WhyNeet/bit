@@ -16,7 +16,7 @@
 		}
 	},
 	"files": {
-		"ignore": ["*/node_modules", "*/dist", ".zed/*"]
+		"ignore": ["*/node_modules", "*/dist", ".zed/*", ".angular/*", "volumes"]
 	},
 	"javascript": {
 		"parser": {

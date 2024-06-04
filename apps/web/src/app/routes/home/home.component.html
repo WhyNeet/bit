@@ -1,23 +1,22 @@
 <div class="py-10 pr-10">
-    @if (isLoggedIn | async) {
+    @if (isLoggedIn$ | async) {
     <app-post-form />
+    <div class="mb-4"></div>
     }
-    <!-- @if (isLoading | async) {
-    <app-ui-skeleton class="w-full h-20 rounded-default"></app-ui-skeleton>
-    } @else {
-        @for (post of (posts | async); track post) {
-            <div>{{ post.title }}</div>
-        }
-    } -->
-
     <div class="flex gap-2">
-        <button [classList]="['section-item', currentSection() === 'latest' ? 'bg-secondary/20' : 'hover:bg-text/10 text-text/80'].join(' ')" (click)="setSection('latest')">
+        <button [classList]="['section-item', currentSection() === 'latest' ? 'bg-secondary/20' : 'hover:bg-text/5 text-text/80'].join(' ')" (click)="setSection('latest')">
             <ng-icon [class]="currentSection() === 'latest' ? 'text-primary' : ''"  name="lucideHistory" size="24" />
             Latest
         </button>
-        <button [classList]="['section-item', currentSection() === 'following' ? 'bg-secondary/20' : 'hover:bg-text/10 text-text/80'].join(' ')" (click)="setSection('following')">
+        <button [classList]="['section-item', currentSection() === 'following' ? 'bg-secondary/20' : 'hover:bg-text/5 text-text/80'].join(' ')" (click)="setSection('following')">
             <ng-icon [class]="currentSection() === 'following' ? 'text-primary' : ''"  name="lucideHeart" size="24" />
             Following
         </button>
     </div>
+
+    @if (currentSection() === "latest") {
+    <app-posts-list [posts]="(latestPosts$ | async)!.posts" [isLoading]="(latestPosts$ | async)!.isLoading" [fetchMore]="fetchMoreLatest.bind(this)" />
+    } @else {
+    <app-posts-list [posts]="(followingPosts$ | async)!.posts" [isLoading]="(followingPosts$ | async)!.isLoading" [fetchMore]="fetchMoreFollowing.bind(this)" />
+    }
 </div>

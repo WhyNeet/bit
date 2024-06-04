@@ -8,6 +8,7 @@ import { environment } from "../../../environments/environment";
 import {
 	homePostsFetched,
 	latestPostsFetched,
+	postsFetching,
 } from "../../state/posts/actions";
 
 @Injectable({
@@ -21,12 +22,14 @@ export class PostsService {
 		@Inject(PLATFORM_ID) private platformId: Object,
 	) {}
 
-	public getLatestPosts(include?: string[]) {
+	public getLatestPosts(page: number, perPage: number, include?: string[]) {
+		this.store.dispatch(postsFetching({ section: "latest" }));
+
 		this.httpClient
 			.get(
 				`${environment.API_BASE_URL}/posts/latest?include=${
 					include?.join(",") ?? ""
-				}`,
+				}&page=${page}&perPage=${perPage}`,
 			)
 			.pipe(
 				map((res) => (res as { data: PostDto[] }).data),
@@ -37,16 +40,18 @@ export class PostsService {
 			.subscribe((posts) => this.store.dispatch(latestPostsFetched({ posts })));
 	}
 
-	public getHomePosts(include?: string[]) {
+	public getHomePosts(page: number, perPage: number, include?: string[]) {
 		// home posts require user cookies
 		// and cannot be fetched on the server
 		if (isPlatformServer(this.platformId)) return;
+
+		this.store.dispatch(postsFetching({ section: "home" }));
 
 		this.httpClient
 			.get(
 				`${environment.API_BASE_URL}/posts/home?include=${
 					include?.join(",") ?? ""
-				}`,
+				}&page=${page}&perPage=${perPage}`,
 				{
 					withCredentials: true,
 				},

@@ -1,9 +1,9 @@
 <div class="py-10 pr-10">
     @if (isLoggedIn$ | async) {
     <app-post-form />
-    <div class="mb-4"></div>
+    <div class="mb-8"></div>
     }
-    <div class="flex gap-2">
+    <div class="flex gap-2 mb-4">
         <button [classList]="['section-item', currentSection() === 'latest' ? 'bg-secondary/20' : 'hover:bg-text/5 text-text/80'].join(' ')" (click)="setSection('latest')">
             <ng-icon [class]="currentSection() === 'latest' ? 'text-primary' : ''"  name="lucideHistory" size="24" />
             Latest

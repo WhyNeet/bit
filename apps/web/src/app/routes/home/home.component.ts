@@ -12,7 +12,6 @@ import { PostDto } from "common";
 import { Observable, filter, map, take } from "rxjs";
 import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { PostListComponent } from "../../components/post-list/post-list.component";
-import { SkeletonComponent } from "../../components/ui/skeleton/skeleton.component";
 import { PostsService } from "../../features/posts/posts.service";
 import {
 	selectHomePosts,
@@ -25,13 +24,7 @@ export type Section = "latest" | "following";
 @Component({
 	selector: "app-page-home",
 	standalone: true,
-	imports: [
-		PostFormComponent,
-		CommonModule,
-		SkeletonComponent,
-		NgIcon,
-		PostListComponent,
-	],
+	imports: [PostFormComponent, CommonModule, NgIcon, PostListComponent],
 	templateUrl: "./home.component.html",
 	styleUrl: "./home.component.css",
 	viewProviders: [provideIcons({ lucideHistory, lucideHeart })],

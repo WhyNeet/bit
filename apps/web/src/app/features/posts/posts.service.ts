@@ -1,7 +1,7 @@
 import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { State, Store } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { PostDto } from "common";
 import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -21,9 +21,9 @@ export class PostsService {
 	public getLatestPosts(include?: string[]) {
 		this.httpClient
 			.get(
-				`${environment.API_BASE_URL}/posts/latest?include=${include?.join(
-					",",
-				)}`,
+				`${environment.API_BASE_URL}/posts/latest?include=${
+					include?.join(",") ?? ""
+				}`,
 			)
 			.pipe(
 				map((res) => (res as { data: PostDto[] }).data),
@@ -41,7 +41,9 @@ export class PostsService {
 
 		this.httpClient
 			.get(
-				`${environment.API_BASE_URL}/posts/home?include=${include?.join(",")}`,
+				`${environment.API_BASE_URL}/posts/home?include=${
+					include?.join(",") ?? ""
+				}`,
 				{
 					withCredentials: true,
 				},

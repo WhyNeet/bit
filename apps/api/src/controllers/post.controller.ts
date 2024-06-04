@@ -6,6 +6,7 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
+	ParseIntPipe,
 	Patch,
 	Post as PostRequest,
 	Query,
@@ -20,6 +21,8 @@ import { IVectorStorageServices } from "src/core/abstracts/vector-storage-servic
 import { CreatePostDto, UpdatePostDto } from "src/core/dtos/post.dto";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
+import { PageData } from "src/features/decorators/pagination/page-data.interface";
+import { Pagination } from "src/features/decorators/pagination/pagination.decorator";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { PostException } from "src/features/exception-handling/exceptions/post.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
@@ -180,8 +183,11 @@ export class PostController {
 	@Get("/latest")
 	public async getLatestPosts(
 		@IncludeFields() includeFields: string[],
+		@Pagination() pageData: PageData,
 	): ApiResponse<PostDto[]> {
 		const posts = await this.postRepositoryService.getLatestPosts(
+			pageData.perPage ?? 20,
+			pageData.page ?? 0,
 			undefined,
 			includeFields,
 		);
@@ -199,6 +205,7 @@ export class PostController {
 	public async getHomePosts(
 		@IncludeFields() includeFields: string[],
 		@Token() payload: JwtPayload,
+		@Pagination() pageData: PageData,
 	): ApiResponse<PostDto[]> {
 		const cachedAllowedCommunities = await this.cachingServices.sget<string>(
 			`userCommunities:${payload.sub}`,
@@ -214,6 +221,8 @@ export class PostController {
 					).map((c) => c.community.toString());
 
 		const posts = await this.postRepositoryService.getLatestPosts(
+			pageData.perPage ?? 20,
+			pageData.page ?? 0,
 			allowedCommunities,
 			includeFields,
 		);

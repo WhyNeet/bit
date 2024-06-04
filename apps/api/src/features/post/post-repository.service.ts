@@ -18,14 +18,16 @@ export class PostRepositoryService {
 	}
 
 	public async getLatestPosts(
+		perPage: number,
+		page: number,
 		communities?: string[],
 		populate?: string[],
 	): Promise<Post[]> {
 		return await this.dataServices.posts.getAll(
 			communities ? { community: { $in: communities } } : {},
 			{ createdAt: "desc" },
-			20,
-			0,
+			perPage,
+			perPage * page,
 			populate,
 		);
 	}

@@ -1,5 +1,11 @@
-@if (isLoading()) {
-<div>loading posts</div>
+@if (isLoading$ | async) {
+    @for (_ of [].constructor(5); track $index) {
+        <app-ui-skeleton class="w-full h-28 rounded-default mb-4" />
+    }
 } @else {
-<div>posts loaded, count: {{ posts()?.length }}</div>
+    @for (batch of (posts$ | async); track $index) {
+        @for (post of batch; track post.id) {
+            <app-ui-post [post]="$any(post)" />
+        }
+    }
 }

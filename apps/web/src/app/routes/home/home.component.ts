@@ -62,10 +62,10 @@ export class HomeComponent {
 	}
 
 	protected fetchMoreLatest(page: number, perPage: number) {
-		this.postsService.getLatestPosts(page, perPage);
+		this.postsService.getLatestPosts(page, perPage, ["author"]);
 	}
 
 	protected fetchMoreFollowing(page: number, perPage: number) {
-		this.postsService.getHomePosts(page, perPage);
+		this.postsService.getHomePosts(page, perPage, ["author"]);
 	}
 }

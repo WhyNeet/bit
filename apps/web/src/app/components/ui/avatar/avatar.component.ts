@@ -15,8 +15,8 @@ import { lucideUserRound } from "@ng-icons/lucide";
 	providers: [],
 	viewProviders: [provideIcons({ lucideUserRound })],
 	template: `
-  <div [style]="{ height: size() ?? 24 + 'px' }" class="relative flex items-center justify-center aspect-square">
-    <ng-icon [size]="iconSize()" name="lucideUserRound" />
+  <div [style]="{ height: (size() ?? 24) + 'px' }" class="relative flex items-center justify-center aspect-square rounded-full {{ withBackground() ? 'bg-text/5' : '' }}">
+    <ng-icon size="24" name="lucideUserRound" />
     <img [ngSrc]="src()" class="absolute inset-0 rounded-full" [height]="iconSize()" [width]="iconSize()" onerror="this.style.display='none'" />
   </div>
   `,
@@ -25,6 +25,9 @@ import { lucideUserRound } from "@ng-icons/lucide";
 export class AvatarComponent {
 	src = input.required<string>();
 	size = input<number>();
+	withBackground = input<boolean>();
 
-	protected iconSize = computed(() => (this.size() ?? 24).toString());
+	protected iconSize = computed(() => {
+		return (this.size() ?? 24).toString();
+	});
 }

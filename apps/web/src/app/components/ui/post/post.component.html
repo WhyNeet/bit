@@ -1,0 +1,20 @@
+<div class="border border-text/10 rounded-default p-4">
+    <div class="flex gap-4 mb-4">
+        <app-ui-avatar [src]="userService.getUserAvatarUrl(post.author.id)" [size]="48" [withBackground]="true" />
+        <div>
+            <div class="font-display font-semibold">{{ post.author.name }}</div>
+            <div class="text-sm text-text/80 font-medium font-display">{{ timeElapsed }}</div>
+        </div>
+    </div>
+    <div class="mb-4">{{ post.content }}</div>
+    <div class="flex items-center gap-4 px-4 py-2 rounded-default bg-text/5 w-fit">
+        <button class="flex items-center gap-2 text-text/80">
+            <ng-icon size="18" name="lucideThumbsUp" />
+            {{ post.upvotes }}
+        </button>
+        <button class="flex items-center gap-2 text-text/80">
+            <ng-icon size="18" name="lucideThumbsDown" />
+            {{ post.downvotes }}
+        </button>
+    </div>
+</div>

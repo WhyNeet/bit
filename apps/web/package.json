@@ -29,6 +29,7 @@
 		"@ngrx/store": "^17.2.0",
 		"@ngrx/store-devtools": "17.2.0",
 		"common": "workspace:^",
+		"dayjs": "^1.11.11",
 		"express": "^4.18.2",
 		"prosemirror-commands": "^1.5.2",
 		"prosemirror-history": "^1.4.0",

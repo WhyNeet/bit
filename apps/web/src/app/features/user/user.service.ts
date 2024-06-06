@@ -8,4 +8,8 @@ export class UserService {
 	public getCurrentUserAvatarUrl(): string {
 		return `${environment.API_BASE_URL}/media/avatar`;
 	}
+
+	public getUserAvatarUrl(userId: string): string {
+		return `${environment.API_BASE_URL}/media/avatar/${userId}`;
+	}
 }

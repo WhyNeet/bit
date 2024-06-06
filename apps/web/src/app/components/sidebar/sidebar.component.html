@@ -25,10 +25,11 @@
         } @else {
             @if (user$ | async; as user) {
                 <a routerLink="/account" class="sidebar-item" routerLinkActive="active">
-                    <div class="h-6 w-6 rounded-full overflow-hidden relative flex items-center justify-center">
+                    <!-- <div class="h-6 w-6 rounded-full overflow-hidden relative flex items-center justify-center">
                         <ng-icon size="24" name="lucideUserRound" />
                         <img [ngSrc]="userService.getCurrentUserAvatarUrl()" class="absolute inset-0" height="24" width="24" onerror="this.style.display='none'" />
-                    </div>
+                    </div> -->
+                    <app-ui-avatar [src]="userService.getCurrentUserAvatarUrl()"></app-ui-avatar>
                     Account
                 </a>
             } @else {

@@ -22,6 +22,7 @@ import { UserService } from "../../features/user/user.service";
 import { selectIsUserLoading, selectUser } from "../../state/user/selectors";
 import { AuthButtonComponent } from "../auth-button/auth-button.component";
 import { LogoComponent } from "../logo/logo.component";
+import { AvatarComponent } from "../ui/avatar/avatar.component";
 import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
 import { SwitchComponent } from "../ui/switch/switch.component";
 
@@ -38,6 +39,7 @@ import { SwitchComponent } from "../ui/switch/switch.component";
 		SkeletonComponent,
 		AuthButtonComponent,
 		NgOptimizedImage,
+		AvatarComponent,
 	],
 	providers: [ThemeService, UserService],
 	viewProviders: [

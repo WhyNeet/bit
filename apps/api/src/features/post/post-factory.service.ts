@@ -33,7 +33,7 @@ export class PostFactoryService {
 		return post;
 	}
 
-	public createDto(post: Post, requesterId?: string): PostDto {
+	public createDto(post: Post): PostDto {
 		const dto = new PostDto();
 
 		dto.id = post.id;
@@ -50,13 +50,7 @@ export class PostFactoryService {
 			this.communityFactoryService.createDto.bind(this.communityFactoryService),
 		);
 		dto.upvotes = post.upvotes;
-		// downvotes are only visible to post author
-		dto.downvotes =
-			requesterId &&
-			requesterId ===
-				(typeof dto.author === "string" ? dto.author : dto.author.id)
-				? post.upvotes
-				: undefined;
+		dto.downvotes = post.downvotes;
 		dto.createdAt = post.createdAt;
 		dto.updatedAt = post.updatedAt;
 

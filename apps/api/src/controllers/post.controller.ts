@@ -101,7 +101,7 @@ export class PostController {
 		);
 
 		return {
-			data: this.postFactoryService.createDto(post, payload.sub),
+			data: this.postFactoryService.createDto(post),
 		};
 	}
 
@@ -196,8 +196,8 @@ export class PostController {
 		);
 
 		return {
-			data: posts.map((post) =>
-				this.postFactoryService.createDto(post, payload.sub),
+			data: posts.map(
+				this.postFactoryService.createDto.bind(this.postFactoryService),
 			),
 		};
 	}
@@ -237,8 +237,8 @@ export class PostController {
 			);
 
 		return {
-			data: posts.map((post) =>
-				this.postFactoryService.createDto(post, payload.sub),
+			data: posts.map(
+				this.postFactoryService.createDto.bind(this.postFactoryService),
 			),
 		};
 	}

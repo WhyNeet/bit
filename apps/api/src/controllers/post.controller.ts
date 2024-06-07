@@ -31,6 +31,7 @@ import { PostRepositoryService } from "src/features/post/post-repository.service
 import { VectorFactoryService } from "src/features/vector/vector-factory.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
+import { OptionalJwtAuthGuard } from "src/frameworks/auth/guards/optional-jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
 
 @Controller("/posts")
@@ -180,10 +181,12 @@ export class PostController {
 	}
 
 	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get("/latest")
 	public async getLatestPosts(
 		@IncludeFields() includeFields: string[],
 		@Pagination() pageData: PageData,
+		@Token() payload?: JwtPayload,
 	): ApiResponse<PostDto[]> {
 		const posts = await this.postRepositoryService.getLatestPosts(
 			pageData.page ?? 0,
@@ -193,8 +196,8 @@ export class PostController {
 		);
 
 		return {
-			data: posts.map(
-				this.postFactoryService.createDto.bind(this.postFactoryService),
+			data: posts.map((post) =>
+				this.postFactoryService.createDto(post, payload.sub),
 			),
 		};
 	}

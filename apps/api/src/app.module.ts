@@ -3,6 +3,7 @@ import { NestjsFormDataModule as FormDataModule } from "nestjs-form-data";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { AuthController } from "./controllers/auth.controller";
 import { CommunityController } from "./controllers/community.controller";
+import { CurrentUserController } from "./controllers/current-user.controller";
 import { MediaController } from "./controllers/media.controller";
 import { PostController } from "./controllers/post.controller";
 import { UserController } from "./controllers/user.controller";
@@ -19,6 +20,7 @@ import { FrameworksModule } from "./frameworks/frameworks.module";
 	controllers: [
 		AuthController,
 		UserController,
+		CurrentUserController,
 		CommunityController,
 		PostController,
 		MediaController,

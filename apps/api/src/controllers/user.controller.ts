@@ -15,7 +15,7 @@ export class UserController {
 	) {}
 
 	@HttpCode(200)
-	@Get("/:userId")
+	@Get("/user/:userId")
 	public async getUserById(
 		@Param("userId", ParseObjectIdPipe.stringified()) userId: string,
 	): ApiResponse<UserDto> {

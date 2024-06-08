@@ -19,8 +19,8 @@ import { FrameworksModule } from "./frameworks/frameworks.module";
 	],
 	controllers: [
 		AuthController,
-		UserController,
 		CurrentUserController,
+		UserController,
 		CommunityController,
 		PostController,
 		MediaController,

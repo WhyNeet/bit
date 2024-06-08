@@ -34,7 +34,7 @@ export class CurrentUserController {
 
 	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
-	@Get("/me")
+	@Get("")
 	public async getCurrentUser(
 		@Token() token: JwtPayload,
 	): ApiResponse<UserDto> {

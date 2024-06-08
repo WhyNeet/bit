@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { loggedIn, loggedOut } from "./actions";
+import { loggedIn, loggedOut, userCommunitiesFetched } from "./actions";
 import { UserState } from "./userState.interface";
 
 export const initialState: UserState = {
@@ -16,4 +16,8 @@ export const reducers = createReducer(
 		user: action.user,
 	})),
 	on(loggedOut, (_) => ({ communities: null, isLoading: false, user: null })),
+	on(userCommunitiesFetched, (state, action) => ({
+		...state,
+		communities: action.communities,
+	})),
 );

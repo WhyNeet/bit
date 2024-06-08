@@ -6,7 +6,7 @@ import {
 	OnInit,
 } from "@angular/core";
 import { PostDto } from "common";
-import { Observable, filter, map, take } from "rxjs";
+import { Observable, map, take, takeWhile } from "rxjs";
 import { PostComponent } from "../ui/post/post.component";
 import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
 
@@ -30,7 +30,7 @@ export class PostListComponent implements OnInit {
 		this.data
 			.pipe(
 				map((data) => data.posts),
-				filter((posts) => !posts),
+				takeWhile((posts) => !posts),
 				take(1),
 			)
 			.subscribe(() => this.fetchMore(0, 20));

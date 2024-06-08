@@ -7,3 +7,7 @@ export const selectIsUserLoading = createSelector(
 	selectFeature,
 	(user) => user.isLoading,
 );
+export const selectUserCommunities = createSelector(
+	selectFeature,
+	(user) => user.communities,
+);

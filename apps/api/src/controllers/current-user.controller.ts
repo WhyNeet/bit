@@ -3,7 +3,6 @@ import {
 	Get,
 	HttpCode,
 	HttpStatus,
-	Param,
 	Post,
 	UploadedFile,
 	UseGuards,
@@ -67,7 +66,7 @@ export class CurrentUserController {
 			`userCommunities:${payload.sub}`,
 		);
 
-		const communities =
+		const communitiesIds =
 			cachedCommunities.length > 0
 				? cachedCommunities
 				: (
@@ -75,6 +74,9 @@ export class CurrentUserController {
 							payload.sub,
 						)
 					).map((c) => c.community.toString());
+
+		const communities =
+			await this.communityRepositoryService.getCommunities(communitiesIds);
 
 		return {
 			data: communities.map(

@@ -35,6 +35,15 @@ export class CommunityRepositoryService {
 		);
 	}
 
+	public async getCommunities(ids: string[], max = 100): Promise<Community[]> {
+		return await this.dataServices.communities.getAll(
+			{ _id: { $in: ids } },
+			undefined,
+			max,
+			0,
+		);
+	}
+
 	public async getCommunityById(
 		id: string,
 		include?: string[],

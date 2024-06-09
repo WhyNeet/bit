@@ -1,3 +1,8 @@
 <div class="w-full rounded-default bg-text/5 overflow-hidden">
+    <div class="px-4 pt-4">
+        @if (publishOptions$ | async; as items) {
+            <app-ui-dropdown [items]="publishOptions$ | async" />
+        }
+    </div>
     <app-editor class="h-full flex flex-col" />
 </div>

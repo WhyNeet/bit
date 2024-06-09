@@ -8,10 +8,12 @@
             <ng-icon [class]="currentSection() === 'latest' ? 'text-primary' : ''"  name="lucideHistory" size="24" />
             Latest
         </button>
-        <button [classList]="['section-item', currentSection() === 'following' ? 'bg-secondary/20' : 'hover:bg-text/5 text-text/80'].join(' ')" (click)="setSection('following')">
-            <ng-icon [class]="currentSection() === 'following' ? 'text-primary' : ''"  name="lucideHeart" size="24" />
-            Following
-        </button>
+        @if (isLoggedIn$ | async) {
+            <button [classList]="['section-item', currentSection() === 'following' ? 'bg-secondary/20' : 'hover:bg-text/5 text-text/80'].join(' ')" (click)="setSection('following')">
+                <ng-icon [class]="currentSection() === 'following' ? 'text-primary' : ''"  name="lucideHeart" size="24" />
+                Following
+            </button>
+        }
     </div>
 
     @if (currentSection() === "latest") {

@@ -15,5 +15,5 @@
 }
 
 .cdk-overlay-pane {
-    @apply z-50 pointer-events-auto
+    @apply z-50 pointer-events-auto absolute
 }

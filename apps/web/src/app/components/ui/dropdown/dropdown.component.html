@@ -1,0 +1,18 @@
+<button cdkOverlayOrigin #trigger="cdkOverlayOrigin" class="flex items-center gap-2 rounded-default bg-text/5 border border-text/10 pr-2 pl-3 py-1" (click)="toggle()">
+    {{ currentItem()?.label }}
+    <ng-icon name="lucideChevronDown" />
+</button>
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen()">
+    <div class="p-1 bg-text/5 backdrop-blur rounded-default border border-text/10 min-w-48">
+        @for (item of items(); track item.label) {
+        <app-ui-dropdown-item (onSelect)="setCurrentItemFn($index)">
+            @if (isWithIcon(item)) {
+                <ng-icon [svg]="item.icon" icon />
+            } @else {
+                <app-ui-avatar [src]="$any(currentItem()).imageUrl" customIcon="lucideUsersRound" icon />
+            }
+            {{ item.label }}
+        </app-ui-dropdown-item>
+        }
+    </div>
+</ng-template>

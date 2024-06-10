@@ -4,6 +4,7 @@ import {
 	ElementRef,
 	ViewChild,
 	afterNextRender,
+	input,
 	output,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -43,6 +44,7 @@ export class EditorComponent {
 	@ViewChild("root") editorRoot!: ElementRef;
 
 	onSend = output<string>();
+	disabled = input<boolean>(false);
 
 	private view!: EditorView;
 
@@ -84,6 +86,8 @@ export class EditorComponent {
 	}
 
 	protected handleSendClick() {
+		if (this.disabled()) return;
+
 		this.onSend.emit(defaultMarkdownSerializer.serialize(this.view.state.doc));
 	}
 }

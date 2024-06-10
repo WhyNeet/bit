@@ -12,7 +12,7 @@
 
 ::ng-deep .ProseMirror[data-placeholder]::before {
     content: attr(data-placeholder);
-    @apply absolute pointer-events-none font-display text-text/60;
+    @apply absolute pointer-events-none text-text/60;
 }
 
 ::ng-deep .ProseMirror a {

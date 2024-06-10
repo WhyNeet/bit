@@ -1,14 +1,18 @@
+import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { CommonModule } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	afterNextRender,
+	signal,
 } from "@angular/core";
+import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { CommunityDto } from "common";
 import { Observable, map, take, takeWhile } from "rxjs";
 import { CommunityService } from "../../features/community/community.service";
+import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
 import { selectUserCommunities } from "../../state/user/selectors";
 import { EditorComponent } from "../editor/editor.component";
@@ -20,7 +24,13 @@ import {
 @Component({
 	selector: "app-post-form",
 	standalone: true,
-	imports: [EditorComponent, DropdownComponent, CommonModule],
+	imports: [
+		EditorComponent,
+		DropdownComponent,
+		CommonModule,
+		CdkTextareaAutosize,
+		ReactiveFormsModule,
+	],
 	providers: [],
 	templateUrl: "./post-form.component.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,10 +38,19 @@ import {
 export class PostFormComponent {
 	private userCommunities$!: Observable<CommunityDto[] | null>;
 	protected publishOptions$!: Observable<DropdownItem[]>;
+	protected title = new FormControl("", {
+		validators: [
+			Validators.required,
+			Validators.minLength(1),
+			Validators.maxLength(255),
+		],
+	});
+	private community = signal<string | null>(null);
 
 	constructor(
 		private store: Store,
 		private userService: UserService,
+		private postsService: PostsService,
 		private communityService: CommunityService,
 		private cdr: ChangeDetectorRef,
 	) {
@@ -58,5 +77,16 @@ export class PostFormComponent {
 
 			this.publishOptions$.subscribe(() => this.cdr.detectChanges());
 		});
+	}
+
+	protected handleSend(content: string) {
+		// biome-ignore lint/style/noNonNullAssertion: not null
+		this.postsService.createPost(
+			this.title.value!,
+			content,
+			[],
+			[],
+			this.community() ?? undefined,
+		);
 	}
 }

@@ -1,26 +1,34 @@
 import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { Store } from "@ngrx/store";
-import { PostDto } from "common";
+import { Store, select } from "@ngrx/store";
+import { PostDto, UserDto } from "common";
 import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
 	homePostsFetched,
 	latestPostsFetched,
+	postCreated,
 	postsFetching,
 } from "../../state/posts/actions";
+import { selectUser } from "../../state/user/selectors";
 
 @Injectable({
 	providedIn: "root",
 })
 export class PostsService {
+	private user!: UserDto | null;
+
 	constructor(
 		private store: Store,
 		private httpClient: HttpClient,
 		// biome-ignore lint/complexity/noBannedTypes: Angular
 		@Inject(PLATFORM_ID) private platformId: Object,
-	) {}
+	) {
+		this.store.pipe(select(selectUser)).subscribe((user) => {
+			this.user = user;
+		});
+	}
 
 	public getLatestPosts(page: number, perPage: number, include?: string[]) {
 		this.store.dispatch(postsFetching({ section: "latest" }));
@@ -84,6 +92,15 @@ export class PostsService {
 			.post(`${environment.API_BASE_URL}/posts/create`, post, {
 				withCredentials: true,
 			})
-			.subscribe(console.log);
+			.subscribe((post) =>
+				this.store.dispatch(
+					postCreated({
+						post: {
+							...(post as { data: PostDto }).data,
+							author: this.user ?? undefined,
+						},
+					}),
+				),
+			);
 	}
 }

@@ -3,5 +3,5 @@ export class PostVectorData {
 	title: string;
 	vector: number[];
 	author: string;
-	community: string;
+	community: string | undefined;
 }

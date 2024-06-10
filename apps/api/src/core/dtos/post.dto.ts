@@ -23,9 +23,10 @@ export class CreatePostDto {
 	@MinLength(1, { message: ValidationError.MustBeAtLeastChars(1) })
 	content: string;
 
+	@IsOptional()
 	@IsString({ message: ValidationError.MustBeAString })
 	@IsObjectId({ message: ValidationError.MustBeAnObjectId })
-	community: string;
+	community: string | undefined;
 
 	@IsOptional()
 	@IsFiles({ message: ValidationError.MustBeAFile })

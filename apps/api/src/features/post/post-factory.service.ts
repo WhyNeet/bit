@@ -45,10 +45,14 @@ export class PostFactoryService {
 			post.author,
 			this.userFactoryService.createDto.bind(this.userFactoryService),
 		);
-		dto.community = RelationDtoHelper.createFromRelation(
-			post.community,
-			this.communityFactoryService.createDto.bind(this.communityFactoryService),
-		);
+		dto.community = post.community
+			? RelationDtoHelper.createFromRelation(
+					post.community,
+					this.communityFactoryService.createDto.bind(
+						this.communityFactoryService,
+					),
+				)
+			: undefined;
 		dto.upvotes = post.upvotes;
 		dto.downvotes = post.downvotes;
 		dto.createdAt = post.createdAt;

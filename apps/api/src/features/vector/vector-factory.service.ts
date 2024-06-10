@@ -8,7 +8,7 @@ export class VectorFactoryService {
 		title: string,
 		vector: number[],
 		author: string,
-		community: string,
+		community: string | undefined,
 	): PostVectorData {
 		const data = new PostVectorData();
 

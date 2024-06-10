@@ -23,7 +23,7 @@ export class Post {
 	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
 	author?: User;
 
-	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "Community" })
+	@Prop({ required: false, type: SchemaTypes.Types.ObjectId, ref: "Community" })
 	community?: Community;
 
 	@Prop({ required: true })

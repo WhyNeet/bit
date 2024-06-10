@@ -55,12 +55,14 @@ export class PostController {
 		@Body() createPostDto: CreatePostDto,
 		@Token() payload: JwtPayload,
 	): ApiResponse<PostDto> {
-		const community = await this.communityRepositoryService.getCommunityById(
-			createPostDto.community,
-			[],
-			"_id",
-		);
-		if (!community) throw new CommunityException.CommunityDoesNotExist();
+		if (createPostDto.community) {
+			const community = await this.communityRepositoryService.getCommunityById(
+				createPostDto.community,
+				[],
+				"_id",
+			);
+			if (!community) throw new CommunityException.CommunityDoesNotExist();
+		}
 
 		const images = (createPostDto.images ?? []).map((f) => ({
 			body: f.buffer,
@@ -95,7 +97,7 @@ export class PostController {
 					post.title,
 					titleVector,
 					payload.sub,
-					post.community.toString(),
+					post.community?.toString(),
 				),
 			],
 		);

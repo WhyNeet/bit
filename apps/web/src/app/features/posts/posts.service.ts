@@ -64,4 +64,26 @@ export class PostsService {
 			)
 			.subscribe((posts) => this.store.dispatch(homePostsFetched({ posts })));
 	}
+
+	public createPost(
+		title: string,
+		content: string,
+		images: Blob[],
+		files: Blob[],
+		community?: string,
+	) {
+		const post = new FormData();
+
+		post.set("title", title);
+		post.set("content", content);
+		if (community) post.set("community", community);
+		for (const image of images) post.append("images", image);
+		for (const file of files) post.append("files", file);
+
+		this.httpClient
+			.post(`${environment.API_BASE_URL}/posts/create`, post, {
+				withCredentials: true,
+			})
+			.subscribe(console.log);
+	}
 }

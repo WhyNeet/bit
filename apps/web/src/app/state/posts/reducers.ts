@@ -1,5 +1,10 @@
 import { createReducer, on } from "@ngrx/store";
-import { homePostsFetched, latestPostsFetched, postsFetching } from "./actions";
+import {
+	homePostsFetched,
+	latestPostsFetched,
+	postCreated,
+	postsFetching,
+} from "./actions";
 import { PostsState } from "./postsState.interface";
 
 export const initialState: PostsState = {
@@ -48,4 +53,15 @@ export const reducers = createReducer(
 					},
 				},
 	),
+	on(postCreated, (state, action) => ({
+		...state,
+		home: {
+			...state.home,
+			posts: [[action.post], ...(state.home.posts ?? [])],
+		},
+		latest: {
+			...state.latest,
+			posts: [[action.post], ...(state.latest.posts ?? [])],
+		},
+	})),
 );

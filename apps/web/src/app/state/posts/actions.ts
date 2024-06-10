@@ -15,3 +15,8 @@ export const postsFetching = createAction(
 	"[Posts] Fetching Posts",
 	props<{ section: "home" | "latest" }>(),
 );
+
+export const postCreated = createAction(
+	"[Posts] Post Created",
+	props<{ post: PostDto }>(),
+);

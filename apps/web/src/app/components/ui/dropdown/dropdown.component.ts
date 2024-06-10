@@ -1,9 +1,7 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
-import { NgOptimizedImage } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	Component,
-	Input,
 	computed,
 	effect,
 	input,
@@ -12,7 +10,6 @@ import {
 } from "@angular/core";
 import { NgIcon, injectNgIconLoader, provideIcons } from "@ng-icons/core";
 import { lucideChevronDown } from "@ng-icons/lucide";
-import { Observable } from "rxjs";
 import { AvatarComponent } from "../avatar/avatar.component";
 import { DropdownItemComponent } from "./dropdown-item.component";
 
@@ -49,16 +46,6 @@ export class DropdownComponent {
 	// biome-ignore lint/style/noNonNullAssertion: not null
 	protected loadIcon = injectNgIconLoader()!;
 
-	constructor() {
-		effect(
-			() => {
-				this.onSelectionChange.emit(this.currentItemIndex());
-				this.isOpen.set(false);
-			},
-			{ allowSignalWrites: true },
-		);
-	}
-
 	protected toggle() {
 		this.isOpen.set(!this.isOpen());
 	}
@@ -75,7 +62,9 @@ export class DropdownComponent {
 		return typeof (item as Record<string, string>)?.["imageUrl"] === "string";
 	}
 
-	protected setCurrentItemFn(idx: number) {
-		return () => this.currentItemIndex.set(idx);
+	protected setCurrentItem(idx: number) {
+		this.currentItemIndex.set(idx);
+		this.onSelectionChange.emit(this.currentItemIndex());
+		this.isOpen.set(false);
 	}
 }

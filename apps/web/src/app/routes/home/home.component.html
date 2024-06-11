@@ -1,4 +1,12 @@
-<div class="py-10 pr-10">
+<div class="pb-10 pr-10 flex flex-col max-h-screen overflow-y-scroll relative">
+    <app-ui-gradient-blur class="block rotate-180 h-16 fixed inset-0 top-0" />
+    <div class="sticky inset-x-0 top-0 min-h-16 flex items-center">
+        <div class="flex items-center flex-row-reverse gap-2 font-display bg-background/60 rounded-default backdrop-blur px-3 py-2 w-96 focus-within:border-primary border border-transparent transition-colors">
+            <input class="w-full placeholder:text-text/40 bg-transparent outline-none caret-text/60 peer" placeholder="Search" />
+            <ng-icon name="lucideSearch" size="20" class="text-text/40 peer-focus:text-primary transition-colors"></ng-icon>
+        </div>
+    </div>
+
     @if (isLoggedIn$ | async) {
     <app-post-form />
     <div class="mb-8"></div>

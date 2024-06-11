@@ -12,6 +12,7 @@ import { PostDto } from "common";
 import { Observable, filter, map, take } from "rxjs";
 import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { PostListComponent } from "../../components/post-list/post-list.component";
+import { GradientBlurComponent } from "../../components/ui/blur/gradient-blur.component";
 import { PostsService } from "../../features/posts/posts.service";
 import {
 	selectHomePosts,
@@ -24,7 +25,13 @@ export type Section = "latest" | "following";
 @Component({
 	selector: "app-page-home",
 	standalone: true,
-	imports: [PostFormComponent, CommonModule, NgIcon, PostListComponent],
+	imports: [
+		PostFormComponent,
+		CommonModule,
+		NgIcon,
+		PostListComponent,
+		GradientBlurComponent,
+	],
 	templateUrl: "./home.component.html",
 	styleUrl: "./home.component.css",
 	viewProviders: [provideIcons({ lucideHistory, lucideHeart })],

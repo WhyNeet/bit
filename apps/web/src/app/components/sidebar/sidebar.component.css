@@ -1,12 +1,12 @@
 aside {
-    @apply w-96 h-[calc(100vh-4rem)] flex flex-col
+    @apply w-96 flex flex-col h-screen
 }
 
 .sidebar-block {
     @apply px-10 flex flex-col items-stretch font-semibold font-display tracking-wide
 }
 
-.sidebar-block > hr {
+.sidebar-block>hr {
     @apply my-1
 }
 

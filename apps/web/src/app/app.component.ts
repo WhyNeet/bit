@@ -4,14 +4,13 @@ import {
 	afterNextRender,
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./components/header/header.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { AuthService } from "./features/auth/auth.service";
 
 @Component({
 	selector: "app-root",
 	standalone: true,
-	imports: [RouterOutlet, SidebarComponent, HeaderComponent],
+	imports: [RouterOutlet, SidebarComponent],
 	providers: [AuthService],
 	templateUrl: "./app.component.html",
 	styleUrl: "./app.component.css",

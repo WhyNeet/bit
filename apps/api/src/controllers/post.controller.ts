@@ -18,7 +18,11 @@ import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-services.abstract";
 import { IVectorStorageServices } from "src/core/abstracts/vector-storage-services.abstract";
-import { CreatePostDto, UpdatePostDto } from "src/core/dtos/post.dto";
+import {
+	CreatePostDto,
+	PostsSearchQueryDto,
+	UpdatePostDto,
+} from "src/core/dtos/post.dto";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { IncludeFields } from "src/features/decorators/includeFields.decorator";
 import { PageData } from "src/features/decorators/pagination/page-data.interface";
@@ -166,10 +170,11 @@ export class PostController {
 	@HttpCode(HttpStatus.OK)
 	@Get("/search")
 	public async searchPosts(
-		@Query("q") query: string,
+		@Query() postsSearchQueryDto: PostsSearchQueryDto,
 	): ApiResponse<PostVectorData[]> {
-		const queryVector =
-			await this.vectorEmbeddingServices.createEmbedding(query);
+		const queryVector = await this.vectorEmbeddingServices.createEmbedding(
+			postsSearchQueryDto.query,
+		);
 		const results =
 			await this.vectorStorageServices.searchVectorData<PostVectorData>(
 				"POSTS_EMBEDDINGS",

@@ -1,5 +1,6 @@
 import {
 	ArrayMaxSize,
+	IsNotEmpty,
 	IsOptional,
 	IsString,
 	Length,
@@ -81,4 +82,10 @@ export class UpdatePostDto {
 	})
 	@ArrayMaxSize(3, { message: ValidationError.TooManyFiles(3) })
 	files: MemoryStoredFile[];
+}
+
+export class PostsSearchQueryDto {
+	@IsString({ message: ValidationError.MustBeAString })
+	@IsNotEmpty({ message: ValidationError.MustBeAtLeastChars(1) })
+	query: string;
 }

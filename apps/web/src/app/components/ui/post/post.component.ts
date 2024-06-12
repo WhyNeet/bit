@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { UserService } from "../../../features/user/user.service";
 import { AvatarComponent } from "../avatar/avatar.component";
+import { markdown } from "./markdown.conf";
 
 dayjs.extend(relativeTime);
 
@@ -27,10 +28,12 @@ export class PostComponent implements OnInit {
 	constructor(protected userService: UserService) {}
 
 	@Input() post!: PostDto & { author: UserDto };
+	protected renderedContent!: string;
 
 	protected timeElapsed = "";
 
 	ngOnInit(): void {
 		this.timeElapsed = dayjs(this.post.createdAt).fromNow();
+		this.renderedContent = markdown.render(this.post.content);
 	}
 }

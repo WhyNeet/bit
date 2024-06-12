@@ -6,7 +6,7 @@
             <div class="text-sm text-text/80 font-medium font-display">{{ timeElapsed }}</div>
         </div>
     </div>
-    <div class="mb-4">{{ post.content }}</div>
+    <div class="mb-4" [innerHtml]="renderedContent"></div>
     <div class="flex items-center gap-4 px-4 py-2 rounded-default bg-text/5 w-fit">
         <button class="flex items-center gap-2 text-text/80">
             <ng-icon size="18" name="lucideThumbsUp" />

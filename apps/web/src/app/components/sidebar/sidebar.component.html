@@ -1,8 +1,8 @@
 <aside>
-    <div class="w-full pl-10 h-16 flex items-center z-50">
+    <div class="w-full h-16 flex items-center z-50">
         <app-logo></app-logo>
     </div>
-    <nav class="sidebar-block pt-10 mb-4">
+    <nav class="sidebar-block pt-10">
         <a routerLink="/home" class="sidebar-item" routerLinkActive="active">
             <ng-icon size="24" name="lucideHome"></ng-icon>
             Home
@@ -11,7 +11,9 @@
             <ng-icon size="24" name="lucideMessageCircle"></ng-icon>
             Messages
         </a>
-        <hr />
+    </nav>
+    <hr />
+    <nav class="sidebar-block">
         <a routerLink="/notifications" class="sidebar-item" routerLinkActive="active">
             <ng-icon size="24" name="lucideBell"></ng-icon>
             Notifications

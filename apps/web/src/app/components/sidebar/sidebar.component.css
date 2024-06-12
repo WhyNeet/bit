@@ -1,13 +1,13 @@
 aside {
-    @apply w-96 flex flex-col h-screen
+    @apply w-96 flex flex-col h-screen px-10
 }
 
 .sidebar-block {
-    @apply px-10 flex flex-col items-stretch font-semibold font-display tracking-wide
+    @apply flex flex-col items-stretch font-semibold font-display tracking-wide
 }
 
-.sidebar-block>hr {
-    @apply my-1
+hr {
+    @apply my-2
 }
 
 .sidebar-item {

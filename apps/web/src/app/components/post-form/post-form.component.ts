@@ -80,8 +80,8 @@ export class PostFormComponent {
 	}
 
 	protected handleSend(content: string) {
-		// biome-ignore lint/style/noNonNullAssertion: not null
 		this.postsService.createPost(
+			// biome-ignore lint/style/noNonNullAssertion: not null
 			this.title.value!,
 			content,
 			[],

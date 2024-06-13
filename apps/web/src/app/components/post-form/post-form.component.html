@@ -1,7 +1,7 @@
 <div class="w-full rounded-default bg-text/5 overflow-hidden">
     <div class="px-4 pt-4">
-        @if (publishOptions$ | async; as items) {
-            <app-ui-dropdown [items]="publishOptions$ | async" />
+        @if (publishOptions().length) {
+            <app-ui-dropdown (onSelectionChange)="onPublisherSelectionChange($event)" [items]="publishOptions()" />
         }
     </div>
     <textarea cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="2" placeholder="Title" class="placeholder:text-text/60 bg-transparent resize-none w-full px-4 outline-none mt-4 text-lg -mb-2 font-display" [formControl]="title"></textarea>

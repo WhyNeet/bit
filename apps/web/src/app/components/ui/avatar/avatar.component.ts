@@ -19,9 +19,9 @@ import { lucideUserRound } from "@ng-icons/lucide";
 	template: `
   <div [style]="{ height: (size() ?? 24) + 'px' }" class="relative flex items-center justify-center aspect-square rounded-full {{ withBackground() ? 'bg-text/5' : '' }}">
     @if (customIcon()) {
-      <ng-icon size="24" [svg]="customSvg()" />
+      <ng-icon [size]="iconSize()" [svg]="customSvg()" />
     } @else {
-      <ng-icon size="24" name="lucideUserRound" />
+      <ng-icon [size]="iconSize()" name="lucideUserRound" />
     }
     <img [ngSrc]="src()" class="absolute inset-0 rounded-full" [height]="iconSize()" [width]="iconSize()" onerror="this.style.display='none'" />
   </div>

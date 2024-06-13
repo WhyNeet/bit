@@ -47,7 +47,7 @@ export class DropdownComponent {
 	protected loadIcon = injectNgIconLoader()!;
 
 	protected toggle() {
-		this.isOpen.set(!this.isOpen());
+		this.isOpen.update((prev) => !prev);
 	}
 
 	protected isWithIcon(

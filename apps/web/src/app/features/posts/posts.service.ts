@@ -92,11 +92,17 @@ export class PostsService {
 			.post(`${environment.API_BASE_URL}/posts/create`, post, {
 				withCredentials: true,
 			})
+			.pipe(
+				map((res) => (res as { data: PostDto }).data),
+				catchError((err) => {
+					return throwError(() => err);
+				}),
+			)
 			.subscribe((post) =>
 				this.store.dispatch(
 					postCreated({
 						post: {
-							...(post as { data: PostDto }).data,
+							...post,
 							author: this.user ?? undefined,
 						},
 					}),

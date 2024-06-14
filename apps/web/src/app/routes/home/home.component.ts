@@ -6,13 +6,14 @@ import {
 	signal,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideHeart, lucideHistory } from "@ng-icons/lucide";
+import { lucideCommand, lucideHeart, lucideHistory } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
 import { PostDto } from "common";
 import { Observable, filter, map, take } from "rxjs";
 import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { PostListComponent } from "../../components/post-list/post-list.component";
 import { GradientBlurComponent } from "../../components/ui/blur/gradient-blur.component";
+import { KBDComponent } from "../../components/ui/kbd/kbd.component";
 import { PostsService } from "../../features/posts/posts.service";
 import {
 	selectHomePosts,
@@ -31,10 +32,11 @@ export type Section = "latest" | "following";
 		NgIcon,
 		PostListComponent,
 		GradientBlurComponent,
+		KBDComponent,
 	],
 	templateUrl: "./home.component.html",
 	styleUrl: "./home.component.css",
-	viewProviders: [provideIcons({ lucideHistory, lucideHeart })],
+	viewProviders: [provideIcons({ lucideHistory, lucideHeart, lucideCommand })],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {

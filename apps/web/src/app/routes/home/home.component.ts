@@ -12,8 +12,10 @@ import { PostDto } from "common";
 import { Observable, filter, map, take } from "rxjs";
 import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { PostListComponent } from "../../components/post-list/post-list.component";
+import { SearchPanelComponent } from "../../components/search-panel/search-panel.component";
 import { GradientBlurComponent } from "../../components/ui/blur/gradient-blur.component";
 import { KBDComponent } from "../../components/ui/kbd/kbd.component";
+import { DialogService } from "../../features/dialog/dialog.service";
 import { PostsService } from "../../features/posts/posts.service";
 import {
 	selectHomePosts,
@@ -56,6 +58,7 @@ export class HomeComponent {
 	constructor(
 		private store: Store,
 		private postsService: PostsService,
+		private dialogService: DialogService,
 	) {
 		this.isLoggedIn$ = this.store.pipe(
 			select(selectUser),
@@ -76,5 +79,9 @@ export class HomeComponent {
 
 	protected fetchMoreFollowing(page: number, perPage: number) {
 		this.postsService.getHomePosts(page, perPage, ["author", "community"]);
+	}
+
+	protected openSearch() {
+		this.dialogService.open(SearchPanelComponent);
 	}
 }

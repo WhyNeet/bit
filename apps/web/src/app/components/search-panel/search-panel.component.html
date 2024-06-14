@@ -1,0 +1,16 @@
+<div class="px-4 py-3 border-b border-b-text/10 flex items-center gap-2 w-[40vw]">
+    <ng-icon name="lucideSearch" class="text-text/60" size="18" />
+    <input [ngModel]="searchQuery | async" (ngModelChange)="searchQueryChanged($event)" class="w-full placeholder:text-text/40 bg-transparent outline-none caret-text/60 peer" placeholder="Search" />
+</div>
+<app-ui-dialog-content>
+    @if (isLoading$ | async) {
+        <app-ui-progress-spinner />
+    } @else {
+        @if (searchResults$ | async; as results) {
+            found {{ results.length }} results
+        } @else {
+            <h2 class="font-display font-bold">Recent searches</h2>
+            <p class="text-sm text-text/60">No search history</p>
+        }
+    }
+</app-ui-dialog-content>

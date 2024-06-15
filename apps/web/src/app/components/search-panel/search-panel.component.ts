@@ -15,6 +15,7 @@ import {
 	filter,
 	map,
 	switchMap,
+	takeWhile,
 } from "rxjs";
 import { SearchService } from "../../features/search/search.service";
 import { UserService } from "../../features/user/user.service";
@@ -51,6 +52,7 @@ export class SearchPanelComponent implements OnDestroy {
 
 	protected isLoading$: Observable<boolean>;
 	protected searchResults$: Observable<PostVectorData[] | null>;
+	protected history$: Observable<string[] | null>;
 
 	constructor(
 		private store: Store,
@@ -79,6 +81,18 @@ export class SearchPanelComponent implements OnDestroy {
 				),
 			),
 		);
+
+		this.history$ = this.searchService.getHistory();
+
+		this.searchResults$
+			.pipe(
+				takeWhile(() => !this.sub.closed),
+				debounceTime(1000),
+				map(() => this.searchQuery.getValue()),
+				map((query) => query.trim()),
+				filter((query) => !!query.length),
+			)
+			.subscribe((query) => this.searchService.saveToHistory(query));
 	}
 
 	protected searchQueryChanged(query: string) {

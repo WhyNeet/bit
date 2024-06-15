@@ -2,13 +2,28 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { PostVectorData } from "common";
-import { catchError, map, tap, throwError } from "rxjs";
+import {
+	Observable,
+	catchError,
+	filter,
+	map,
+	startWith,
+	tap,
+	throwError,
+} from "rxjs";
 import { environment } from "../../../environments/environment";
 import { searchFinished, searchLoading } from "../../state/search/actions";
 import { LocalStorageService } from "../storage/local-storage.service";
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
+	private historyReplaySubject: Observable<string[] | null> =
+		this.localStorageService.getChanges().pipe(
+			filter((change) => change.key === "searchHistory"),
+			map((change) => change.value as string[]),
+			startWith(this.getSavedHistory()),
+		);
+
 	constructor(
 		private httpClient: HttpClient,
 		private store: Store,
@@ -42,9 +57,13 @@ export class SearchService {
 		this.localStorageService.setItem("searchHistory", [query, ...history]);
 	}
 
-	public getHistory() {
+	private getSavedHistory() {
 		const storedHistory = this.localStorageService.getItem("searchHistory");
 
 		return storedHistory ? JSON.parse(storedHistory) : null;
+	}
+
+	public getHistory() {
+		return this.historyReplaySubject;
 	}
 }

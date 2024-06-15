@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideSearch, lucideX } from "@ng-icons/lucide";
+import { lucideSearch, lucideX, lucideXCircle } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
 import { PostVectorData } from "common";
 import dayjs from "dayjs";
@@ -41,7 +41,7 @@ dayjs.extend(relativeTime);
 		AvatarComponent,
 	],
 	providers: [],
-	viewProviders: [provideIcons({ lucideSearch, lucideX })],
+	viewProviders: [provideIcons({ lucideSearch, lucideX, lucideXCircle })],
 	templateUrl: "./search-panel.component.html",
 	styleUrl: "./search-panel.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,10 @@
     <ng-icon name="lucideSearch" class="text-text/60" size="18" />
     <input [ngModel]="searchQuery | async" (ngModelChange)="searchQueryChanged($event)" class="w-full placeholder:text-text/40 bg-transparent outline-none caret-text/60 peer" placeholder="Search" />
     @if (isLoading$ | async) {
-        <app-ui-progress-spinner class="h-4 w-4 text-text/60" />
+        <app-ui-progress-spinner class="h-4 w-4 text-text/60 mr-4" />
+    }
+    @if ((searchQuery | async)?.length) {
+        <ng-icon name="lucideXCircle" size="18" class="text-text/60 min-w-[18px] cursor-pointer" (click)="searchQuery.next('')" />
     }
 </div>
 <app-ui-dialog-content>

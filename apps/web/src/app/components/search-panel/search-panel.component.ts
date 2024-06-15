@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideSearch } from "@ng-icons/lucide";
+import { lucideSearch, lucideX } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
 import { PostVectorData } from "common";
 import dayjs from "dayjs";
@@ -41,7 +41,7 @@ dayjs.extend(relativeTime);
 		AvatarComponent,
 	],
 	providers: [],
-	viewProviders: [provideIcons({ lucideSearch })],
+	viewProviders: [provideIcons({ lucideSearch, lucideX })],
 	templateUrl: "./search-panel.component.html",
 	styleUrl: "./search-panel.component.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,6 +101,15 @@ export class SearchPanelComponent implements OnDestroy {
 
 	protected getTimeElapsed(since: Date) {
 		return dayjs(since).fromNow();
+	}
+
+	protected onHistoryItemClick(item: string) {
+		this.searchQuery.next(item);
+	}
+
+	protected removeHistoryItem(event: Event, idx: number) {
+		event.stopPropagation();
+		this.searchService.removeHistoryItem(idx);
 	}
 
 	ngOnDestroy(): void {

@@ -63,6 +63,20 @@ export class SearchService {
 		return storedHistory ? JSON.parse(storedHistory) : null;
 	}
 
+	public removeHistoryItem(idx: number) {
+		const storedHistory = this.localStorageService.getItem("searchHistory");
+
+		if (!storedHistory)
+			throw new Error("Cannot remove item from history: no history stored.");
+
+		const history = JSON.parse(storedHistory) as string[];
+		history.splice(idx, 1);
+
+		history.length
+			? this.localStorageService.setItem("searchHistory", history)
+			: this.localStorageService.removeItem("searchHistory");
+	}
+
 	public getHistory() {
 		return this.historyReplaySubject;
 	}

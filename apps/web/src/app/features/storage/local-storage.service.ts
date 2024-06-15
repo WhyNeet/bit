@@ -14,6 +14,10 @@ export class LocalStorageService {
 		this.storageChange$.next({ key, value });
 	}
 
+	public removeItem(key: string) {
+		window.localStorage.removeItem(key);
+	}
+
 	public getItem(key: string) {
 		return window.localStorage.getItem(key);
 	}

@@ -1,16 +1,29 @@
 <div class="px-4 py-3 border-b border-b-text/10 flex items-center gap-2 w-[40vw]">
     <ng-icon name="lucideSearch" class="text-text/60" size="18" />
     <input [ngModel]="searchQuery | async" (ngModelChange)="searchQueryChanged($event)" class="w-full placeholder:text-text/40 bg-transparent outline-none caret-text/60 peer" placeholder="Search" />
+    @if (isLoading$ | async) {
+        <app-ui-progress-spinner class="h-4 w-4 text-text/60" />
+    }
 </div>
 <app-ui-dialog-content>
-    @if (isLoading$ | async) {
-        <app-ui-progress-spinner />
+    @if (searchResults$ | async; as results) {
+        <h2>Posts</h2>
+        <div class="flex flex-col items-stretch">
+            @for (result of searchResults$ | async; track result.id) {
+                <button class="px-4 py-2 rounded-default hover:bg-text/10 transition-colors text-left">
+                    <div class="text-sm font-display text-text/80">
+                        @if (result.community) {
+                            {{ "@" }}{{ result.author.username }} for {{ result.community.name }}
+                        } @else {
+                            {{ "@" }}{{ result.author.username }}
+                        }
+                    </div>
+                    <div class="font-display font-semibold">{{ result.title }}</div>
+                </button>
+            }
+        </div >
     } @else {
-        @if (searchResults$ | async; as results) {
-            found {{ results.length }} results
-        } @else {
-            <h2 class="font-display font-bold">Recent searches</h2>
-            <p class="text-sm text-text/60">No search history</p>
-        }
+        <h2>Recent searches</h2>
+        <p class="text-sm text-text/60">No search history</p>
     }
 </app-ui-dialog-content>

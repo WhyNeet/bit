@@ -15,11 +15,15 @@ export class SearchService {
 		private localStorageService: LocalStorageService,
 	) {}
 
-	public search(query: string) {
+	public search(query: string, include?: string[]) {
 		this.store.dispatch(searchLoading());
 
 		this.httpClient
-			.get(`${environment.API_BASE_URL}/posts/search?query=${query}`)
+			.get(
+				`${environment.API_BASE_URL}/posts/search?query=${query}&include=${
+					include?.join(",") ?? ""
+				}`,
+			)
 			.pipe(
 				map((data) => (data as { data: PostVectorData[] }).data),
 				catchError((err) => {

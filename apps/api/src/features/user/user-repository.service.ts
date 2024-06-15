@@ -28,6 +28,10 @@ export class UserRepositoryService {
 		}
 	}
 
+	public async getUsersById(ids: string[], limit?: number): Promise<User[]> {
+		return this.dataServices.users.getAll({ _id: { $in: ids } }, {}, limit, 0);
+	}
+
 	public getUserById(id: string): Promise<User | null> {
 		return this.dataServices.users.getById(id);
 	}

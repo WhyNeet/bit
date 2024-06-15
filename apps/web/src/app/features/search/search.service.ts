@@ -25,14 +25,13 @@ export class SearchService {
 				catchError((err) => {
 					return throwError(() => err);
 				}),
-				tap(() => this.saveToHistory(query)),
 			)
 			.subscribe((results) =>
 				this.store.dispatch(searchFinished({ posts: results })),
 			);
 	}
 
-	private saveToHistory(query: string) {
+	public saveToHistory(query: string) {
 		const storedHistory = this.localStorageService.getItem("searchHistory");
 		const history: string[] = storedHistory ? JSON.parse(storedHistory) : [];
 

@@ -9,7 +9,8 @@ export class RelationHelperService {
 		fetchIds: (ids: string[], limit: number) => Promise<unknown[]>,
 	) {
 		const ids = data.reduce((acc, val) => {
-			acc.add((val as unknown)[field]);
+			const fieldVal = (val as unknown)[field];
+			fieldVal ? acc.add(fieldVal) : null;
 			return acc;
 		}, new Set()) as Set<string>;
 		const entities = await fetchIds([...ids], data.length);
@@ -21,8 +22,7 @@ export class RelationHelperService {
 			new Map(),
 		) as Map<string, (typeof entities)[0]>;
 
-		// biome-ignore lint/suspicious/noExplicitAny: TS
 		for (const obj of data)
-			obj[field] = entitiesMap.get(obj[field] as string) as any;
+			obj[field] = entitiesMap.get(obj[field] as string) as T[keyof T];
 	}
 }

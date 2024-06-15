@@ -32,10 +32,11 @@ import { PostException } from "src/features/exception-handling/exceptions/post.e
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { PostFactoryService } from "src/features/post/post-factory.service";
 import { PostRepositoryService } from "src/features/post/post-repository.service";
+import { RelationHelperService } from "src/features/relation/relation-helper.service";
+import { UserRepositoryService } from "src/features/user/user-repository.service";
 import { VectorFactoryService } from "src/features/vector/vector-factory.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
-import { OptionalJwtAuthGuard } from "src/frameworks/auth/guards/optional-jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
 
 @Controller("/posts")
@@ -49,6 +50,8 @@ export class PostController {
 		private vectorStorageServices: IVectorStorageServices,
 		private vectorFactoryService: VectorFactoryService,
 		private cachingServices: ICachingServices,
+		private relationHelperService: RelationHelperService,
+		private userRepositoryService: UserRepositoryService,
 	) {}
 
 	@HttpCode(HttpStatus.CREATED)
@@ -171,29 +174,53 @@ export class PostController {
 	@Get("/search")
 	public async searchPosts(
 		@Query() postsSearchQueryDto: PostsSearchQueryDto,
+		@IncludeFields() includeFields: string[],
 	): ApiResponse<PostVectorData[]> {
 		const queryVector = await this.vectorEmbeddingServices.createEmbedding(
 			postsSearchQueryDto.query,
 		);
-		const results =
+		const results = (
 			await this.vectorStorageServices.searchVectorData<PostVectorData>(
 				"POSTS_EMBEDDINGS",
 				queryVector,
 				10,
+			)
+		).map((res) => ({
+			...res,
+			community: res.community === "undefined" ? undefined : res.community,
+		}));
+
+		const includeAuthor = includeFields.includes("author");
+		const includeCommunity = includeFields.includes("community");
+
+		if (includeAuthor)
+			await this.relationHelperService.replaceIdField(
+				results,
+				"author",
+				(ids, limit) => this.userRepositoryService.getUsersById(ids, limit),
+			);
+		if (includeCommunity)
+			await this.relationHelperService.replaceIdField(
+				results,
+				"community",
+				(ids, limit) =>
+					this.communityRepositoryService.getCommunities(ids, limit),
 			);
 
 		return {
-			data: results,
+			data: results.map(
+				this.vectorFactoryService.createPostVectorDataDto.bind(
+					this.vectorFactoryService,
+				),
+			),
 		};
 	}
 
 	@HttpCode(HttpStatus.OK)
-	@UseGuards(OptionalJwtAuthGuard)
 	@Get("/latest")
 	public async getLatestPosts(
 		@IncludeFields() includeFields: string[],
 		@Pagination() pageData: PageData,
-		@Token() payload?: JwtPayload,
 	): ApiResponse<PostDto[]> {
 		const posts = await this.postRepositoryService.getLatestPosts(
 			pageData.page ?? 0,

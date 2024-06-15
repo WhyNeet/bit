@@ -41,4 +41,10 @@ export class SearchService {
 
 		this.localStorageService.setItem("searchHistory", [query, ...history]);
 	}
+
+	public getHistory() {
+		const storedHistory = this.localStorageService.getItem("searchHistory");
+
+		return storedHistory ? JSON.parse(storedHistory) : null;
+	}
 }

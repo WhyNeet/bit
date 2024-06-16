@@ -11,7 +11,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { CommunityDto, UserDto } from "common";
-import { Observable, map, take, takeWhile } from "rxjs";
+import { Observable, map, take, takeWhile, tap } from "rxjs";
 import { CommunityService } from "../../features/community/community.service";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
@@ -78,7 +78,6 @@ export class PostFormComponent {
 						(c) =>
 							({
 								label: c.name,
-								imageUrl: this.communityService.getCommunityIconUrl(c.id),
 								icon: "lucideUsersRound",
 							}) as DropdownItem,
 					),
@@ -91,6 +90,7 @@ export class PostFormComponent {
 					},
 					...communities,
 				]),
+				tap(console.log),
 			),
 		) as WritableSignal<DropdownItem[]>;
 	}

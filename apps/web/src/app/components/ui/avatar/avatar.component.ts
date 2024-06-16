@@ -23,13 +23,15 @@ import { lucideUserRound } from "@ng-icons/lucide";
     } @else {
       <ng-icon [size]="iconSize()" name="lucideUserRound" />
     }
-    <img [ngSrc]="src()" class="absolute inset-0 rounded-full" [height]="iconSize()" [width]="iconSize()" onerror="this.style.display='none'" />
+    @if (src()) {
+      <img [ngSrc]="src()!" class="absolute inset-0 rounded-full" [height]="+iconSize() + 10" [width]="+iconSize() + 10" onerror="this.style.display='none'" />
+    }
   </div>
   `,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent implements OnInit {
-	src = input.required<string>();
+	src = input<string>();
 	size = input<number>();
 	withBackground = input<boolean>();
 	customIcon = input<string>();
@@ -49,6 +51,6 @@ export class AvatarComponent implements OnInit {
 	}
 
 	protected iconSize = computed(() => {
-		return (this.size() ?? 24).toString();
+		return ((this.size() ?? 24) - 2).toString();
 	});
 }

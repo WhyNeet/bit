@@ -7,7 +7,7 @@ import {
 	output,
 	signal,
 } from "@angular/core";
-import { NgIcon, injectNgIconLoader, provideIcons } from "@ng-icons/core";
+import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideChevronDown } from "@ng-icons/lucide";
 import { AvatarComponent } from "../avatar/avatar.component";
 import { DropdownItemComponent } from "./dropdown-item.component";
@@ -41,9 +41,6 @@ export class DropdownComponent {
 	);
 
 	protected isOpen = signal(false);
-
-	// biome-ignore lint/style/noNonNullAssertion: not null
-	protected loadIcon = injectNgIconLoader()!;
 
 	protected toggle() {
 		this.isOpen.update((prev) => !prev);

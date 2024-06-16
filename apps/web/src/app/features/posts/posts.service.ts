@@ -109,4 +109,14 @@ export class PostsService {
 				),
 			);
 	}
+
+	public getPost(id: string, include?: string[]) {
+		return this.httpClient
+			.get(
+				`${environment.API_BASE_URL}/posts/${id}?include=${
+					include?.join(",") ?? ""
+				}`,
+			)
+			.pipe(map((res) => (res as { data: PostDto }).data));
+	}
 }

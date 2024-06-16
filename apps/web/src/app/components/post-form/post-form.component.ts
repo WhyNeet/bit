@@ -11,8 +11,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { CommunityDto, UserDto } from "common";
-import { Observable, map, take, takeWhile, tap } from "rxjs";
-import { CommunityService } from "../../features/community/community.service";
+import { map, take, takeWhile } from "rxjs";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
 import { selectUser, selectUserCommunities } from "../../state/user/selectors";
@@ -53,7 +52,6 @@ export class PostFormComponent {
 		private store: Store,
 		private userService: UserService,
 		private postsService: PostsService,
-		private communityService: CommunityService,
 	) {
 		this.currentUser = toSignal(
 			this.store.pipe(select(selectUser)),
@@ -90,7 +88,6 @@ export class PostFormComponent {
 					},
 					...communities,
 				]),
-				tap(console.log),
 			),
 		) as WritableSignal<DropdownItem[]>;
 	}

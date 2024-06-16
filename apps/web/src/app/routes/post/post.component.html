@@ -1,0 +1,31 @@
+<div class="pt-16">
+@if (post$ | async; as post) {
+
+    <div class="flex gap-2">
+        <a routerLink="/" class="h-10 w-10 rounded-default hover:bg-text/10 aspect-square transition-colors flex items-center justify-center">
+            <ng-icon name="lucideChevronLeft" size="24" />
+        </a>
+        <div>
+            <div class="flex gap-2 items-center mb-4">
+                <app-ui-avatar [src]="userService.getUserAvatarUrl(post.author.id)" [size]="40" />
+                <div>
+                    <div class="font-display flex gap-2 items-center">
+                        {{ "@" }}{{ post.author!.username }}
+                        <div class="h-1 w-1 rounded-full bg-text/20"></div>
+                        <div class="text-text/80">{{ timeElapsed(post.createdAt) }}</div >
+                    </div>
+                    @if (post.community) {
+                        <div class="text-sm font-display text-text/80">
+                            for {{ post.community.name }}
+                        </div>
+                    }
+                </div>
+            </div>
+            <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
+            <div class="mb-4" [innerHtml]="post.renderedContent"></div >
+            <app-ui-post-footer [post]="post" />
+        </div>
+    </div>
+
+}
+</div>

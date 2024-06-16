@@ -11,19 +11,5 @@
     </div>
     <h2 class="font-bold text-lg font-display mb-1">{{ post.title }}</h2>
     <div [innerHtml]="renderedContent" class="mb-4 text-text/90"></div>
-    <div class="flex gap-2">
-        <div class="footer-item-group">
-            <button class="flex items-center gap-2 text-text/80">
-                <ng-icon size="16" name="lucideThumbsUp" />
-                {{ post.upvotes }}
-            </button>
-            <button class="flex items-center gap-2 text-text/80">
-                <ng-icon size="16" name="lucideThumbsDown" />
-                {{ post.downvotes }}
-            </button>
-        </div>
-        <a routerLink="/post/{{ post.id }}" class="footer-item-group">
-            <ng-icon size="16" name="lucideExternalLink" />
-        </a>
-    </div >
+    <app-ui-post-footer [post]="post" />
 </div>

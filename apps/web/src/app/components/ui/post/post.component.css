@@ -1,0 +1,3 @@
+.footer-item-group {
+    @apply flex items-center gap-4 px-4 py-2 rounded-default bg-text/5 w-fit text-sm font-display;
+}

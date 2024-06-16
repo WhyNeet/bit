@@ -6,12 +6,12 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
-	ParseIntPipe,
 	Patch,
 	Post as PostRequest,
 	Query,
 	UseGuards,
 } from "@nestjs/common";
+import { UserPostRelationType } from "common";
 import { ApiResponse, Community, PostDto, PostVectorData } from "common";
 import { FormDataRequest } from "nestjs-form-data";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
@@ -37,6 +37,7 @@ import { UserRepositoryService } from "src/features/user/user-repository.service
 import { VectorFactoryService } from "src/features/vector/vector-factory.service";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
+import { OptionalJwtAuthGuard } from "src/frameworks/auth/guards/optional-jwt.guard";
 import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
 
 @Controller("/posts")
@@ -278,10 +279,12 @@ export class PostController {
 	}
 
 	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get("/:postId")
 	public async getPostById(
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@IncludeFields() includeFields: string[],
+		@Token() payload?: JwtPayload,
 	): ApiResponse<PostDto> {
 		const post = await this.postRepositoryService.getPostById(
 			postId,
@@ -290,8 +293,25 @@ export class PostController {
 
 		if (!post) throw new PostException.PostDoesNotExist();
 
+		const dto = this.postFactoryService.createDto(post);
+
+		if (payload) {
+			const postId = dto.id;
+			const userId = payload.sub;
+
+			const relationType =
+				await this.postRepositoryService.getUserPostRelationType(
+					postId,
+					userId,
+				);
+			const isLiked = relationType
+				? relationType === UserPostRelationType.Upvote
+				: undefined;
+			dto.isLiked = isLiked;
+		}
+
 		return {
-			data: this.postFactoryService.createDto(post),
+			data: dto,
 		};
 	}
 

@@ -193,4 +193,16 @@ export class PostRepositoryService {
 	public async deletePost(postId: string): Promise<Post | null> {
 		return await this.dataServices.posts.delete({ _id: postId });
 	}
+
+	public async getUserPostRelationType(postId: string, userId: string) {
+		return (
+			await this.dataServices.userPostRelations.get({
+				post: postId,
+				user: userId,
+				type: {
+					$in: [UserPostRelationType.Downvote, UserPostRelationType.Upvote],
+				},
+			})
+		)?.type;
+	}
 }

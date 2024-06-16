@@ -42,7 +42,7 @@ export type Section = "latest" | "following";
 	viewProviders: [provideIcons({ lucideHistory, lucideHeart, lucideCommand })],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent {
+export class HomePageComponent {
 	@HostBinding() class = "flex-auto";
 	protected isLoggedIn$: Observable<boolean>;
 	protected latestPosts$: Observable<{

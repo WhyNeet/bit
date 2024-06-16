@@ -1,6 +1,9 @@
 <main class="h-screen w-screen">
     <div class="flex items-stretch w-full justify-stretch">
         <app-sidebar></app-sidebar>
-        <router-outlet></router-outlet>
-    </div>
+        <div class="w-full h-screen overflow-hidden relative">
+            <app-search-bar />
+            <router-outlet></router-outlet>
+        </div>
+    </div >
 </main>

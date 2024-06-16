@@ -3,20 +3,15 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	HostBinding,
-	HostListener,
 	signal,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideCommand, lucideHeart, lucideHistory } from "@ng-icons/lucide";
+import { lucideHeart, lucideHistory } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
 import { PostDto } from "common";
-import { Observable, filter, map, take } from "rxjs";
+import { Observable, map } from "rxjs";
 import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { PostListComponent } from "../../components/post-list/post-list.component";
-import { SearchPanelComponent } from "../../components/search-panel/search-panel.component";
-import { GradientBlurComponent } from "../../components/ui/blur/gradient-blur.component";
-import { KBDComponent } from "../../components/ui/kbd/kbd.component";
-import { DialogService } from "../../features/dialog/dialog.service";
 import { PostsService } from "../../features/posts/posts.service";
 import {
 	selectHomePosts,
@@ -29,17 +24,10 @@ export type Section = "latest" | "following";
 @Component({
 	selector: "app-page-home",
 	standalone: true,
-	imports: [
-		PostFormComponent,
-		CommonModule,
-		NgIcon,
-		PostListComponent,
-		GradientBlurComponent,
-		KBDComponent,
-	],
+	imports: [PostFormComponent, CommonModule, NgIcon, PostListComponent],
 	templateUrl: "./home.component.html",
 	styleUrl: "./home.component.css",
-	viewProviders: [provideIcons({ lucideHistory, lucideHeart, lucideCommand })],
+	viewProviders: [provideIcons({ lucideHistory, lucideHeart })],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePageComponent {
@@ -59,7 +47,6 @@ export class HomePageComponent {
 	constructor(
 		private store: Store,
 		private postsService: PostsService,
-		private dialogService: DialogService,
 	) {
 		this.isLoggedIn$ = this.store.pipe(
 			select(selectUser),
@@ -80,15 +67,5 @@ export class HomePageComponent {
 
 	protected fetchMoreFollowing(page: number, perPage: number) {
 		this.postsService.getHomePosts(page, perPage, ["author", "community"]);
-	}
-
-	protected openSearch() {
-		this.dialogService.open(SearchPanelComponent);
-	}
-
-	@HostListener("document:keydown.meta.k", ["$event"])
-	protected handleOpenSearchHotkey(event: Event) {
-		event.preventDefault();
-		this.openSearch();
 	}
 }

@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	HostBinding,
+	HostListener,
 	signal,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -83,5 +84,11 @@ export class HomeComponent {
 
 	protected openSearch() {
 		this.dialogService.open(SearchPanelComponent);
+	}
+
+	@HostListener("document:keydown.meta.k", ["$event"])
+	protected handleOpenSearchHotkey(event: Event) {
+		event.preventDefault();
+		this.openSearch();
 	}
 }

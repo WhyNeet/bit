@@ -38,6 +38,8 @@ export class PostDto {
 	upvotes: number;
 	// dislikes are only visible to authors
 	downvotes?: number;
+	// true if is liked by current user, false if disliked, undefined if neither
+	isLiked?: boolean;
 
 	createdAt: Date;
 	updatedAt: Date;

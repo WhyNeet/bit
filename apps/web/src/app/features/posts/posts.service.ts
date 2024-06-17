@@ -9,6 +9,8 @@ import {
 	homePostsFetched,
 	latestPostsFetched,
 	postCreated,
+	postDisliked,
+	postLiked,
 	postsFetching,
 } from "../../state/posts/actions";
 import { selectUser } from "../../state/user/selectors";
@@ -121,5 +123,21 @@ export class PostsService {
 				}`,
 			)
 			.pipe(map((res) => (res as { data: PostDto }).data));
+	}
+
+	public likePost(id: string) {
+		this.httpClient
+			.post(`${environment.API_BASE_URL}/posts/${id}/upvote`, undefined, {
+				withCredentials: true,
+			})
+			.subscribe(() => this.store.dispatch(postLiked({ id })));
+	}
+
+	public dislikePost(id: string) {
+		this.httpClient
+			.post(`${environment.API_BASE_URL}/posts/${id}/downvote`, undefined, {
+				withCredentials: true,
+			})
+			.subscribe(() => this.store.dispatch(postDisliked({ id })));
 	}
 }

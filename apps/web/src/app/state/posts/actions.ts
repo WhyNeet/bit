@@ -20,3 +20,11 @@ export const postCreated = createAction(
 	"[Posts] Post Created",
 	props<{ post: PostDto }>(),
 );
+export const postLiked = createAction(
+	"[Posts] Post Liked",
+	props<{ id: string }>(),
+);
+export const postDisliked = createAction(
+	"[Posts] Post Disliked",
+	props<{ id: string }>(),
+);

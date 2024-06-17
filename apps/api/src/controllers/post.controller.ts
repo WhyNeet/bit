@@ -237,29 +237,7 @@ export class PostController {
 			this.postFactoryService.createDto.bind(this.postFactoryService),
 		);
 
-		if (payload) {
-			const postsIds = dto.map((post) => post.id);
-			const userId = payload.sub;
-			const relations = await this.postRepositoryService.getUserPostRelations(
-				postsIds,
-				userId,
-				posts.length,
-			);
-
-			const relationsMap = relations.reduce((acc, val) => {
-				acc.set(val.post.toString(), val.type);
-				return acc;
-			}, new Map());
-
-			for (const post of dto) {
-				const type = relationsMap.get(post.id);
-				post.isLiked = type
-					? type === UserPostRelationType.Downvote
-						? false
-						: true
-					: undefined;
-			}
-		}
+		if (payload) await this.postRepositoryService.setIsLiked(dto, payload.sub);
 
 		return {
 			data: dto,
@@ -300,10 +278,14 @@ export class PostController {
 				allowedCommunities,
 			);
 
+		const dto: PostDto[] = posts.map(
+			this.postFactoryService.createDto.bind(this.postFactoryService),
+		);
+
+		if (payload) await this.postRepositoryService.setIsLiked(dto, payload.sub);
+
 		return {
-			data: posts.map(
-				this.postFactoryService.createDto.bind(this.postFactoryService),
-			),
+			data: dto,
 		};
 	}
 

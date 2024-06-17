@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Post, UserPostRelation, UserPostRelationType } from "common";
+import { Post, PostDto, UserPostRelation, UserPostRelationType } from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { UpdatePostDto } from "src/core/dtos/post.dto";
 import { RelationFactoryService } from "../relation/relation-factory.service";
@@ -223,5 +223,28 @@ export class PostRepositoryService {
 			limit,
 			0,
 		);
+	}
+
+	public async setIsLiked(dto: PostDto[], userId: string) {
+		const postsIds = dto.map((post) => post.id);
+		const relations = await this.getUserPostRelations(
+			postsIds,
+			userId,
+			dto.length,
+		);
+
+		const relationsMap = relations.reduce((acc, val) => {
+			acc.set(val.post.toString(), val.type);
+			return acc;
+		}, new Map());
+
+		for (const post of dto) {
+			const type = relationsMap.get(post.id);
+			post.isLiked = type
+				? type === UserPostRelationType.Downvote
+					? false
+					: true
+				: undefined;
+		}
 	}
 }

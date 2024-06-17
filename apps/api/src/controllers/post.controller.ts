@@ -428,4 +428,22 @@ export class PostController {
 			data: null,
 		};
 	}
+
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(JwtAuthGuard)
+	@Get("/:postId/voting_status")
+	public async getVotingStatus(
+		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+		@Token() payload: JwtPayload,
+	): ApiResponse<UserPostRelationType | null> {
+		const relationType =
+			await this.postRepositoryService.getUserPostRelationType(
+				postId,
+				payload.sub,
+			);
+
+		return {
+			data: relationType ?? null,
+		};
+	}
 }

@@ -7,6 +7,7 @@ import {
 	lucideThumbsUp,
 } from "@ng-icons/lucide";
 import { CommunityDto, PostDto, UserDto } from "common";
+import { PostsService } from "../../../features/posts/posts.service";
 
 @Component({
 	selector: "app-ui-post-footer",
@@ -19,11 +20,11 @@ import { CommunityDto, PostDto, UserDto } from "common";
 	template: `
     <div class="flex gap-2">
       <div class="footer-item-group">
-        <button class="flex items-center gap-2 {{ post.isLiked === true ? 'text-red-500' : 'text-text/80' }}">
+        <button (click)="handleLikeClick()" class="flex items-center gap-2 {{ post.isLiked === true ? 'text-red-500' : 'text-text/80' }}">
           <ng-icon size="16" name="lucideThumbsUp" />
           {{ post.upvotes }}
         </button>
-        <button class="flex items-center gap-2 {{ post.isLiked === false ? 'text-blue-500' : 'text-text/80' }}">
+        <button (click)="handleDislikeClick()" class="flex items-center gap-2 {{ post.isLiked === false ? 'text-blue-500' : 'text-text/80' }}">
           <ng-icon size="16" name="lucideThumbsDown" />
           {{ post.downvotes }}
         </button>
@@ -42,9 +43,24 @@ export class PostFooterComponent {
 	@Input() post!: PostDto & { author: UserDto; community: CommunityDto };
 	protected isExpanded = false;
 
-	constructor(private activatedRoute: ActivatedRoute) {
+	constructor(
+		private activatedRoute: ActivatedRoute,
+		private postsService: PostsService,
+	) {
 		// if current route is when user clicked "open post"
 		if (typeof this.activatedRoute.snapshot.params["postId"] === "string")
 			this.isExpanded = true;
+	}
+
+	protected handleLikeClick() {
+		if (this.post.isLiked === true)
+			this.postsService.removePostLike(this.post.id);
+		else this.postsService.likePost(this.post.id);
+	}
+
+	protected handleDislikeClick() {
+		if (this.post.isLiked === false)
+			this.postsService.removePostDislike(this.post.id);
+		else this.postsService.dislikePost(this.post.id);
 	}
 }

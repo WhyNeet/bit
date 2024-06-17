@@ -1,9 +1,12 @@
 import { createReducer, on } from "@ngrx/store";
+import { PostDto } from "common";
 import {
 	homePostsFetched,
 	latestPostsFetched,
 	postCreated,
+	postDislikeRemoved,
 	postDisliked,
+	postLikeRemoved,
 	postLiked,
 	postsFetching,
 } from "./actions";
@@ -67,7 +70,7 @@ export const reducers = createReducer(
 		},
 	})),
 	on(postLiked, (state, action) => {
-		const homePosts = state.home.posts?.map((batch) =>
+		const mapper = (batch: PostDto[]) =>
 			batch.map((post) =>
 				post.id === action.id
 					? {
@@ -78,15 +81,10 @@ export const reducers = createReducer(
 								post.isLiked === false ? post.downvotes - 1 : post.downvotes,
 						}
 					: post,
-			),
-		);
-		const latestPosts = state.latest.posts?.map((batch) =>
-			batch.map((post) =>
-				post.id === action.id
-					? { ...post, isLiked: post.isLiked === true ? undefined : true }
-					: post,
-			),
-		);
+			);
+
+		const homePosts = state.home.posts?.map(mapper);
+		const latestPosts = state.latest.posts?.map(mapper);
 
 		return {
 			...state,
@@ -95,30 +93,62 @@ export const reducers = createReducer(
 		};
 	}),
 	on(postDisliked, (state, action) => {
-		const homePosts = state.home.posts?.map((batch) =>
+		const mapper = (batch: PostDto[]) =>
 			batch.map((post) =>
 				post.id === action.id
 					? {
 							...post,
 							isLiked: post.isLiked === false ? undefined : false,
 							upvotes: post.isLiked === true ? post.upvotes - 1 : post.upvotes,
-							downvotes: post.downvotes - 1,
+							downvotes: post.downvotes + 1,
 						}
 					: post,
-			),
-		);
-		const latestPosts = state.latest.posts?.map((batch) =>
+			);
+
+		const homePosts = state.home.posts?.map(mapper);
+		const latestPosts = state.latest.posts?.map(mapper);
+
+		return {
+			...state,
+			home: { ...state.home, posts: homePosts ?? null },
+			latest: { ...state.latest, posts: latestPosts ?? null },
+		};
+	}),
+	on(postDislikeRemoved, (state, action) => {
+		const mapper = (batch: PostDto[]) =>
 			batch.map((post) =>
 				post.id === action.id
 					? {
 							...post,
-							isLiked: post.isLiked === false ? undefined : false,
-							upvotes: post.isLiked === true ? post.upvotes - 1 : post.upvotes,
+							isLiked: undefined,
 							downvotes: post.downvotes - 1,
 						}
 					: post,
-			),
-		);
+			);
+
+		const homePosts = state.home.posts?.map(mapper);
+		const latestPosts = state.latest.posts?.map(mapper);
+
+		return {
+			...state,
+			home: { ...state.home, posts: homePosts ?? null },
+			latest: { ...state.latest, posts: latestPosts ?? null },
+		};
+	}),
+	on(postLikeRemoved, (state, action) => {
+		const mapper = (batch: PostDto[]) =>
+			batch.map((post) =>
+				post.id === action.id
+					? {
+							...post,
+							isLiked: undefined,
+							upvotes: post.upvotes - 1,
+						}
+					: post,
+			);
+
+		const homePosts = state.home.posts?.map(mapper);
+		const latestPosts = state.latest.posts?.map(mapper);
 
 		return {
 			...state,

@@ -9,7 +9,9 @@ import {
 	homePostsFetched,
 	latestPostsFetched,
 	postCreated,
+	postDislikeRemoved,
 	postDisliked,
+	postLikeRemoved,
 	postLiked,
 	postsFetching,
 } from "../../state/posts/actions";
@@ -133,11 +135,27 @@ export class PostsService {
 			.subscribe(() => this.store.dispatch(postLiked({ id })));
 	}
 
+	public removePostLike(id: string) {
+		this.httpClient
+			.delete(`${environment.API_BASE_URL}/posts/${id}/upvote`, {
+				withCredentials: true,
+			})
+			.subscribe(() => this.store.dispatch(postLikeRemoved({ id })));
+	}
+
 	public dislikePost(id: string) {
 		this.httpClient
 			.post(`${environment.API_BASE_URL}/posts/${id}/downvote`, undefined, {
 				withCredentials: true,
 			})
 			.subscribe(() => this.store.dispatch(postDisliked({ id })));
+	}
+
+	public removePostDislike(id: string) {
+		this.httpClient
+			.delete(`${environment.API_BASE_URL}/posts/${id}/downvote`, {
+				withCredentials: true,
+			})
+			.subscribe(() => this.store.dispatch(postDislikeRemoved({ id })));
 	}
 }

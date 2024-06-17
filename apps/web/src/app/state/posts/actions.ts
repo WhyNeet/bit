@@ -24,7 +24,15 @@ export const postLiked = createAction(
 	"[Posts] Post Liked",
 	props<{ id: string }>(),
 );
+export const postLikeRemoved = createAction(
+	"[Posts] Post Like Removed",
+	props<{ id: string }>(),
+);
 export const postDisliked = createAction(
 	"[Posts] Post Disliked",
+	props<{ id: string }>(),
+);
+export const postDislikeRemoved = createAction(
+	"[Posts] Post Dislike Removed",
 	props<{ id: string }>(),
 );

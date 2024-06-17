@@ -31,6 +31,8 @@ export class PostsService {
 	}
 
 	public getLatestPosts(page: number, perPage: number, include?: string[]) {
+		if (isPlatformServer(this.platformId)) return;
+
 		this.store.dispatch(postsFetching({ section: "latest" }));
 
 		this.httpClient
@@ -38,6 +40,7 @@ export class PostsService {
 				`${environment.API_BASE_URL}/posts/latest?include=${
 					include?.join(",") ?? ""
 				}&page=${page}&perPage=${perPage}`,
+				{ withCredentials: true },
 			)
 			.pipe(
 				map((res) => (res as { data: PostDto[] }).data),

@@ -19,11 +19,11 @@ import { CommunityDto, PostDto, UserDto } from "common";
 	template: `
     <div class="flex gap-2">
       <div class="footer-item-group">
-        <button class="flex items-center gap-2 text-text/80">
+        <button class="flex items-center gap-2 {{ post.isLiked === true ? 'text-red-500' : 'text-text/80' }}">
           <ng-icon size="16" name="lucideThumbsUp" />
           {{ post.upvotes }}
         </button>
-        <button class="flex items-center gap-2 text-text/80">
+        <button class="flex items-center gap-2 {{ post.isLiked === false ? 'text-blue-500' : 'text-text/80' }}">
           <ng-icon size="16" name="lucideThumbsDown" />
           {{ post.downvotes }}
         </button>

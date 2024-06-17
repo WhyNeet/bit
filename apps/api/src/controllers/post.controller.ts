@@ -13,6 +13,7 @@ import {
 } from "@nestjs/common";
 import { UserPostRelationType } from "common";
 import { ApiResponse, Community, PostDto, PostVectorData } from "common";
+import { Schema } from "mongoose";
 import { FormDataRequest } from "nestjs-form-data";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
@@ -218,10 +219,12 @@ export class PostController {
 	}
 
 	@HttpCode(HttpStatus.OK)
+	@UseGuards(OptionalJwtAuthGuard)
 	@Get("/latest")
 	public async getLatestPosts(
 		@IncludeFields() includeFields: string[],
 		@Pagination() pageData: PageData,
+		@Token() payload?: JwtPayload,
 	): ApiResponse<PostDto[]> {
 		const posts = await this.postRepositoryService.getLatestPosts(
 			pageData.page ?? 0,
@@ -230,10 +233,36 @@ export class PostController {
 			includeFields,
 		);
 
+		const dto: PostDto[] = posts.map(
+			this.postFactoryService.createDto.bind(this.postFactoryService),
+		);
+
+		if (payload) {
+			const postsIds = dto.map((post) => post.id);
+			const userId = payload.sub;
+			const relations = await this.postRepositoryService.getUserPostRelations(
+				postsIds,
+				userId,
+				posts.length,
+			);
+
+			const relationsMap = relations.reduce((acc, val) => {
+				acc.set(val.post.toString(), val.type);
+				return acc;
+			}, new Map());
+
+			for (const post of dto) {
+				const type = relationsMap.get(post.id);
+				post.isLiked = type
+					? type === UserPostRelationType.Downvote
+						? false
+						: true
+					: undefined;
+			}
+		}
+
 		return {
-			data: posts.map(
-				this.postFactoryService.createDto.bind(this.postFactoryService),
-			),
+			data: dto,
 		};
 	}
 

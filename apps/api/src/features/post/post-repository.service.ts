@@ -205,4 +205,23 @@ export class PostRepositoryService {
 			})
 		)?.type;
 	}
+
+	public async getUserPostRelations(
+		postsIds: string[],
+		userId: string,
+		limit?: number,
+	) {
+		return await this.dataServices.userPostRelations.getAll(
+			{
+				post: { $in: postsIds },
+				user: userId,
+				type: {
+					$in: [UserPostRelationType.Downvote, UserPostRelationType.Upvote],
+				},
+			},
+			undefined,
+			limit,
+			0,
+		);
+	}
 }

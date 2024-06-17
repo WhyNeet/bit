@@ -1,6 +1,6 @@
-import { PostVectorData } from "common";
+import { PostVectorDataDto } from "common";
 
 export interface SearchState {
-	searchResults: PostVectorData[] | null;
+	searchResults: PostVectorDataDto[] | null;
 	isLoading: boolean;
 }

@@ -4,7 +4,12 @@ import { FormsModule } from "@angular/forms";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideSearch, lucideX, lucideXCircle } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
-import { PostVectorData } from "common";
+import {
+	CommunityDto,
+	PostVectorData,
+	PostVectorDataDto,
+	UserDto,
+} from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
@@ -51,7 +56,9 @@ export class SearchPanelComponent implements OnDestroy {
 	private sub: Subscription;
 
 	protected isLoading$: Observable<boolean>;
-	protected searchResults$: Observable<PostVectorData[] | null>;
+	protected searchResults$: Observable<
+		(PostVectorDataDto & { author: UserDto; community: CommunityDto })[] | null
+	>;
 	protected history$: Observable<string[] | null>;
 
 	constructor(
@@ -77,7 +84,16 @@ export class SearchPanelComponent implements OnDestroy {
 			switchMap((data) =>
 				this.searchQuery.pipe(
 					map((q) => !q.trim().length),
-					map((isEmpty) => (isEmpty ? null : data)),
+					map((isEmpty) =>
+						isEmpty
+							? null
+							: (data as
+									| (PostVectorDataDto & {
+											author: UserDto;
+											community: CommunityDto;
+									  })[]
+									| null),
+					),
 				),
 			),
 		);

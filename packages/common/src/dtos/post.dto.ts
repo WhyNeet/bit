@@ -36,8 +36,7 @@ export class PostDto {
 	community?: CommunityDto | string;
 
 	upvotes: number;
-	// dislikes are only visible to authors
-	downvotes?: number;
+	downvotes: number;
 	// true if is liked by current user, false if disliked, undefined if neither
 	isLiked?: boolean;
 

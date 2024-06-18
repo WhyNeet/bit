@@ -1,3 +1,4 @@
+import { UserPostRelationType } from "src/entities";
 import { CommunityDto } from "./community.dto";
 import { UserDto } from "./user.dto";
 
@@ -37,8 +38,10 @@ export class PostDto {
 
 	upvotes: number;
 	downvotes: number;
-	// true if is liked by current user, false if disliked, undefined if neither
-	isLiked?: boolean;
+	votingState:
+		| UserPostRelationType.Downvote
+		| UserPostRelationType.Upvote
+		| null;
 
 	createdAt: Date;
 	updatedAt: Date;

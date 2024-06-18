@@ -194,7 +194,7 @@ export class PostRepositoryService {
 		return await this.dataServices.posts.delete({ _id: postId });
 	}
 
-	public async getUserPostRelationType(postId: string, userId: string) {
+	public async getPostVotingState(postId: string, userId: string) {
 		return (
 			await this.dataServices.userPostRelations.get({
 				post: postId,
@@ -206,7 +206,7 @@ export class PostRepositoryService {
 		)?.type;
 	}
 
-	public async getUserPostRelations(
+	public async getPostsVotingState(
 		postsIds: string[],
 		userId: string,
 		limit?: number,
@@ -225,9 +225,9 @@ export class PostRepositoryService {
 		);
 	}
 
-	public async setIsLiked(dto: PostDto[], userId: string) {
+	public async setPostsVotingState(dto: PostDto[], userId: string) {
 		const postsIds = dto.map((post) => post.id);
-		const relations = await this.getUserPostRelations(
+		const relations = await this.getPostsVotingState(
 			postsIds,
 			userId,
 			dto.length,
@@ -239,12 +239,8 @@ export class PostRepositoryService {
 		}, new Map());
 
 		for (const post of dto) {
-			const type = relationsMap.get(post.id);
-			post.isLiked = type
-				? type === UserPostRelationType.Downvote
-					? false
-					: true
-				: undefined;
+			const type = relationsMap.get(post.id) ?? null;
+			post.votingState = type;
 		}
 	}
 }

@@ -13,7 +13,6 @@ import {
 } from "@nestjs/common";
 import { UserPostRelationType } from "common";
 import { ApiResponse, Community, PostDto, PostVectorData } from "common";
-import { Schema } from "mongoose";
 import { FormDataRequest } from "nestjs-form-data";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
@@ -237,7 +236,8 @@ export class PostController {
 			this.postFactoryService.createDto.bind(this.postFactoryService),
 		);
 
-		if (payload) await this.postRepositoryService.setIsLiked(dto, payload.sub);
+		if (payload)
+			await this.postRepositoryService.setPostsVotingState(dto, payload.sub);
 
 		return {
 			data: dto,
@@ -282,7 +282,8 @@ export class PostController {
 			this.postFactoryService.createDto.bind(this.postFactoryService),
 		);
 
-		if (payload) await this.postRepositoryService.setIsLiked(dto, payload.sub);
+		if (payload)
+			await this.postRepositoryService.setPostsVotingState(dto, payload.sub);
 
 		return {
 			data: dto,
@@ -310,15 +311,11 @@ export class PostController {
 			const postId = dto.id;
 			const userId = payload.sub;
 
-			const relationType =
-				await this.postRepositoryService.getUserPostRelationType(
-					postId,
-					userId,
-				);
-			const isLiked = relationType
-				? relationType === UserPostRelationType.Upvote
-				: undefined;
-			dto.isLiked = isLiked;
+			const state = await this.postRepositoryService.getPostVotingState(
+				postId,
+				userId,
+			);
+			dto.votingState = state ?? null;
 		}
 
 		return {
@@ -436,11 +433,10 @@ export class PostController {
 		@Param("postId", ParseObjectIdPipe.stringified()) postId: string,
 		@Token() payload: JwtPayload,
 	): ApiResponse<UserPostRelationType | null> {
-		const relationType =
-			await this.postRepositoryService.getUserPostRelationType(
-				postId,
-				payload.sub,
-			);
+		const relationType = await this.postRepositoryService.getPostVotingState(
+			postId,
+			payload.sub,
+		);
 
 		return {
 			data: relationType ?? null,

@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { PostDto } from "common";
+import { PostDto, UserPostRelationType } from "common";
 import {
 	homePostsFetched,
 	latestPostsFetched,
@@ -75,10 +75,12 @@ export const reducers = createReducer(
 				post.id === action.id
 					? {
 							...post,
-							isLiked: post.isLiked === true ? undefined : true,
+							votingState: UserPostRelationType.Upvote,
 							upvotes: post.upvotes + 1,
 							downvotes:
-								post.isLiked === false ? post.downvotes - 1 : post.downvotes,
+								post.votingState === UserPostRelationType.Downvote
+									? post.downvotes - 1
+									: post.downvotes,
 						}
 					: post,
 			);
@@ -98,8 +100,11 @@ export const reducers = createReducer(
 				post.id === action.id
 					? {
 							...post,
-							isLiked: post.isLiked === false ? undefined : false,
-							upvotes: post.isLiked === true ? post.upvotes - 1 : post.upvotes,
+							votingState: UserPostRelationType.Downvote,
+							upvotes:
+								post.votingState === UserPostRelationType.Upvote
+									? post.upvotes - 1
+									: post.upvotes,
 							downvotes: post.downvotes + 1,
 						}
 					: post,
@@ -120,7 +125,7 @@ export const reducers = createReducer(
 				post.id === action.id
 					? {
 							...post,
-							isLiked: undefined,
+							votingState: null,
 							downvotes: post.downvotes - 1,
 						}
 					: post,
@@ -141,7 +146,7 @@ export const reducers = createReducer(
 				post.id === action.id
 					? {
 							...post,
-							isLiked: undefined,
+							votingState: null,
 							upvotes: post.upvotes - 1,
 						}
 					: post,

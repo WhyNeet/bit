@@ -63,8 +63,8 @@ export class PostListComponent implements OnInit, AfterViewInit, OnDestroy {
 	private onListEnd = new Subject<boolean>();
 	private sub!: Subscription;
 
-	// biome-ignore lint/complexity/noBannedTypes: Angular
 	constructor(
+		// biome-ignore lint/complexity/noBannedTypes: Angular
 		@Inject(PLATFORM_ID) private platformId: Object,
 		private store: Store,
 	) {}

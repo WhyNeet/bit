@@ -23,7 +23,9 @@
             </div>
             <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
             <div class="mb-4" [innerHtml]="post.renderedContent"></div >
-            <app-ui-post-footer [post]="post" />
+            @if (postVotingState$) {
+                <app-ui-post-footer (onVote)="onVoteChange($event)" [post]="post" />
+            }
         </div>
     </div>
 

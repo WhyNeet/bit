@@ -158,4 +158,12 @@ export class PostsService {
 			})
 			.subscribe(() => this.store.dispatch(postDislikeRemoved({ id })));
 	}
+
+	public getPostVotingState(id: string) {
+		return this.httpClient
+			.get(`${environment.API_BASE_URL}/posts/${id}/voting_status`, {
+				withCredentials: true,
+			})
+			.pipe(map((res) => (res as { data: PostDto["votingState"] }).data));
+	}
 }

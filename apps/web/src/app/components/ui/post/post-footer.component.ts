@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import {
+	ChangeDetectionStrategy,
+	Component,
+	Input,
+	Output,
+	output,
+} from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
@@ -43,6 +49,8 @@ export class PostFooterComponent {
 	@Input() post!: PostDto & { author: UserDto; community: CommunityDto };
 	protected isExpanded = false;
 
+	public onVote = output<PostDto["votingState"]>();
+
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private postsService: PostsService,
@@ -61,14 +69,22 @@ export class PostFooterComponent {
 	}
 
 	protected handleLikeClick() {
-		if (this.post.votingState === UserPostRelationType.Upvote)
+		if (this.post.votingState === UserPostRelationType.Upvote) {
+			this.onVote.emit(null);
 			this.postsService.removePostLike(this.post.id);
-		else this.postsService.likePost(this.post.id);
+		} else {
+			this.onVote.emit(UserPostRelationType.Upvote);
+			this.postsService.likePost(this.post.id);
+		}
 	}
 
 	protected handleDislikeClick() {
-		if (this.post.votingState === UserPostRelationType.Downvote)
+		if (this.post.votingState === UserPostRelationType.Downvote) {
+			this.onVote.emit(null);
 			this.postsService.removePostDislike(this.post.id);
-		else this.postsService.dislikePost(this.post.id);
+		} else {
+			this.onVote.emit(UserPostRelationType.Downvote);
+			this.postsService.dislikePost(this.post.id);
+		}
 	}
 }

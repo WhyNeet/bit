@@ -17,8 +17,8 @@
     </div>
 
     @if (currentSection() === "latest") {
-    <app-posts-list [data]="latestPosts$" [fetchMore]="fetchMoreLatest.bind(this)" />
+    <app-posts-list [posts]="latestPosts$" [isLoading]="latestPostsLoading$" [fetchMore]="fetchMoreLatest.bind(this)" />
     } @else {
-    <app-posts-list [data]="followingPosts$" [fetchMore]="fetchMoreFollowing.bind(this)" />
+    <app-posts-list [posts]="followingPosts$" [isLoading]="followingPostsLoading$" [fetchMore]="fetchMoreFollowing.bind(this)" />
     }
 </div>

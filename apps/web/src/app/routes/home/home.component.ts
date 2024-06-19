@@ -33,14 +33,11 @@ export type Section = "latest" | "following";
 export class HomePageComponent {
 	@HostBinding() class = "flex-auto";
 	protected isLoggedIn$: Observable<boolean>;
-	protected latestPosts$: Observable<{
-		posts: PostDto[][] | null;
-		isLoading: boolean;
-	}>;
-	protected followingPosts$: Observable<{
-		posts: PostDto[][] | null;
-		isLoading: boolean;
-	}>;
+	protected latestPosts$: Observable<PostDto[][] | null>;
+	protected latestPostsLoading$: Observable<boolean>;
+
+	protected followingPosts$: Observable<PostDto[][] | null>;
+	protected followingPostsLoading$: Observable<boolean>;
 
 	protected currentSection = signal<Section>("latest");
 
@@ -53,8 +50,25 @@ export class HomePageComponent {
 			map((user) => !!user),
 		);
 
-		this.latestPosts$ = this.store.pipe(select(selectLatestPosts));
-		this.followingPosts$ = this.store.pipe(select(selectHomePosts));
+		const splitStoreModel = (
+			input: Observable<{ posts: PostDto[][] | null; isLoading: boolean }>,
+		) => ({
+			posts: input.pipe(map((data) => data.posts)),
+			isLoading: input.pipe(map((data) => data.isLoading)),
+		});
+
+		const { isLoading: latestPostsLoading, posts: latestPosts } =
+			splitStoreModel(this.store.pipe(select(selectLatestPosts)));
+
+		this.latestPosts$ = latestPosts;
+		this.latestPostsLoading$ = latestPostsLoading;
+
+		const { isLoading: homePostsLoading, posts: homePosts } = splitStoreModel(
+			this.store.pipe(select(selectHomePosts)),
+		);
+
+		this.followingPosts$ = homePosts;
+		this.followingPostsLoading$ = homePostsLoading;
 	}
 
 	protected setSection(section: Section) {

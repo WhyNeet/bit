@@ -1,6 +1,6 @@
 export type Decorator = (
-	...args: unknown[]
+  ...args: unknown[]
 ) => <T extends abstract new (...args: unknown[]) => object>(
-	target: T,
-	propertyKey: string,
+  target: T,
+  propertyKey: string,
 ) => void;

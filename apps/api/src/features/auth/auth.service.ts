@@ -6,15 +6,15 @@ import { UserRepositoryService } from "../user/user-repository.service";
 
 @Injectable()
 export class AuthService {
-	constructor(private userRepositoryService: UserRepositoryService) {}
+  constructor(private userRepositoryService: UserRepositoryService) {}
 
-	public async registerUser(user: CreateUserDto): Promise<User> {
-		const hashedPassword = await bcrypt.hash(
-			user.password,
-			await bcrypt.genSalt(),
-		);
-		user.password = hashedPassword;
+  public async registerUser(user: CreateUserDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(
+      user.password,
+      await bcrypt.genSalt(),
+    );
+    user.password = hashedPassword;
 
-		return await this.userRepositoryService.createUser(user);
-	}
+    return await this.userRepositoryService.createUser(user);
+  }
 }

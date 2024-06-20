@@ -6,8 +6,8 @@ import { CommunityFactoryService } from "./community-factory.service";
 import { CommunityRepositoryService } from "./community-repository.service";
 
 @Module({
-	imports: [DataServicesModule, UserFeatureModule, RelationFeatureModule],
-	providers: [CommunityFactoryService, CommunityRepositoryService],
-	exports: [CommunityFactoryService, CommunityRepositoryService],
+  imports: [DataServicesModule, UserFeatureModule, RelationFeatureModule],
+  providers: [CommunityFactoryService, CommunityRepositoryService],
+  exports: [CommunityFactoryService, CommunityRepositoryService],
 })
 export class CommunityFeatureModule {}

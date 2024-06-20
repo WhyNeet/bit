@@ -4,15 +4,15 @@ import { IVectorEmbeddingServices } from "src/core/abstracts/vector-embedding-se
 
 @Injectable()
 export class HfVectorEmbeddingServices implements IVectorEmbeddingServices {
-	private model: HuggingFaceTransformersEmbeddings;
+  private model: HuggingFaceTransformersEmbeddings;
 
-	constructor() {
-		this.model = new HuggingFaceTransformersEmbeddings({
-			model: "Xenova/all-MiniLM-L6-v2",
-		});
-	}
+  constructor() {
+    this.model = new HuggingFaceTransformersEmbeddings({
+      model: "Xenova/all-MiniLM-L6-v2",
+    });
+  }
 
-	public async createEmbedding(text: string): Promise<number[]> {
-		return await this.model.embedQuery(text);
-	}
+  public async createEmbedding(text: string): Promise<number[]> {
+    return await this.model.embedQuery(text);
+  }
 }

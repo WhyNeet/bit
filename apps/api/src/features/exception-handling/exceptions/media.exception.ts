@@ -4,10 +4,10 @@ import { Exception } from "src/frameworks/exception-handling/types/exception.int
 
 // biome-ignore lint/complexity/noStaticOnlyClass: grouping
 export class MediaException {
-	@CommonException(
-		"File does not exist.",
-		"File with this identifier does not exist.",
-		HttpStatus.BAD_REQUEST,
-	)
-	public static readonly FileDoesNotExist: Exception;
+  @CommonException(
+    "File does not exist.",
+    "File with this identifier does not exist.",
+    HttpStatus.BAD_REQUEST,
+  )
+  public static readonly FileDoesNotExist: Exception;
 }

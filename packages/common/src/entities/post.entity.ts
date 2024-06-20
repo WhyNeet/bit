@@ -2,22 +2,22 @@ import { Community } from "./community.entity";
 import { User } from "./user.entity";
 
 export class Post {
-	id: string;
+  id: string;
 
-	title: string;
-	content: string;
+  title: string;
+  content: string;
 
-	images: string[];
+  images: string[];
 
-	// other non-image attachments
-	files: string[];
+  // other non-image attachments
+  files: string[];
 
-	author?: User | string;
-	community?: Community | string;
+  author?: User | string;
+  community?: Community | string;
 
-	upvotes: number;
-	downvotes: number;
+  upvotes: number;
+  downvotes: number;
 
-	createdAt: Date;
-	updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

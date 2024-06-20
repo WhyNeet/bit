@@ -6,22 +6,22 @@ export type CommunityDocument = HydratedDocument<Community>;
 
 @Schema({ timestamps: true })
 export class Community {
-	id: string;
+  id: string;
 
-	@Prop({ required: true, unique: true })
-	name: string;
+  @Prop({ required: true, unique: true })
+  name: string;
 
-	@Prop({ required: false })
-	description?: string;
+  @Prop({ required: false })
+  description?: string;
 
-	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
-	owner: User;
+  @Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
+  owner: User;
 
-	@Prop({ required: true })
-	members: number;
+  @Prop({ required: true })
+  members: number;
 
-	createdAt: Date;
-	updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const CommunitySchema = SchemaFactory.createForClass(Community);

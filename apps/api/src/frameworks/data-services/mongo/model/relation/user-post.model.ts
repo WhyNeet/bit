@@ -8,15 +8,15 @@ export type UserPostRelationDocument = HydratedDocument<UserPostRelation>;
 
 @Schema()
 export class UserPostRelation {
-	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
-	user: User;
+  @Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
+  user: User;
 
-	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "Post" })
-	post: Post;
+  @Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "Post" })
+  post: Post;
 
-	@Prop({ required: true, type: String, enum: UserPostRelationType })
-	type: UserPostRelationType;
+  @Prop({ required: true, type: String, enum: UserPostRelationType })
+  type: UserPostRelationType;
 }
 
 export const UserPostRelationSchema =
-	SchemaFactory.createForClass(UserPostRelation);
+  SchemaFactory.createForClass(UserPostRelation);

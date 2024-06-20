@@ -4,21 +4,21 @@ import { Token } from "common";
 
 @Injectable()
 export class TokenFactoryService {
-	private refreshTokenExpiresIn: number;
+  private refreshTokenExpiresIn: number;
 
-	constructor(private configService: ConfigService) {
-		this.refreshTokenExpiresIn = configService.get<number>(
-			"tokens.refreshToken.expiration",
-		);
-	}
+  constructor(private configService: ConfigService) {
+    this.refreshTokenExpiresIn = configService.get<number>(
+      "tokens.refreshToken.expiration",
+    );
+  }
 
-	public createTokenEntity(exp?: number): Token {
-		const token = new Token();
+  public createTokenEntity(exp?: number): Token {
+    const token = new Token();
 
-		token.expireAt = exp
-			? new Date(exp * 1000)
-			: new Date(new Date().getTime() + this.refreshTokenExpiresIn * 1000);
+    token.expireAt = exp
+      ? new Date(exp * 1000)
+      : new Date(new Date().getTime() + this.refreshTokenExpiresIn * 1000);
 
-		return token;
-	}
+    return token;
+  }
 }

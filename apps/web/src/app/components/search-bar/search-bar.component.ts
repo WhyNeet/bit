@@ -1,7 +1,7 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	HostListener,
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideCommand } from "@ng-icons/lucide";
@@ -11,24 +11,24 @@ import { GradientBlurComponent } from "../ui/blur/gradient-blur.component";
 import { KBDComponent } from "../ui/kbd/kbd.component";
 
 @Component({
-	selector: "app-search-bar",
-	standalone: true,
-	imports: [KBDComponent, GradientBlurComponent, NgIcon],
-	providers: [],
-	viewProviders: [provideIcons({ lucideCommand })],
-	templateUrl: "./search-bar.component.html",
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-search-bar",
+  standalone: true,
+  imports: [KBDComponent, GradientBlurComponent, NgIcon],
+  providers: [],
+  viewProviders: [provideIcons({ lucideCommand })],
+  templateUrl: "./search-bar.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent {
-	constructor(private dialogService: DialogService) {}
+  constructor(private dialogService: DialogService) {}
 
-	protected openSearch() {
-		this.dialogService.open(SearchPanelComponent);
-	}
+  protected openSearch() {
+    this.dialogService.open(SearchPanelComponent);
+  }
 
-	@HostListener("document:keydown.meta.k", ["$event"])
-	protected handleOpenSearchHotkey(event: Event) {
-		event.preventDefault();
-		this.openSearch();
-	}
+  @HostListener("document:keydown.meta.k", ["$event"])
+  protected handleOpenSearchHotkey(event: Event) {
+    event.preventDefault();
+    this.openSearch();
+  }
 }

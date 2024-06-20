@@ -4,27 +4,27 @@ import { CreateUserDto } from "src/core/dtos/user.dto";
 
 @Injectable()
 export class UserFactoryService {
-	public createFromDto(createUserDto: CreateUserDto): User {
-		const user = new User();
+  public createFromDto(createUserDto: CreateUserDto): User {
+    const user = new User();
 
-		user.username = createUserDto.username;
-		user.email = createUserDto.email;
-		user.password = createUserDto.password;
-		user.name = createUserDto.name;
+    user.username = createUserDto.username;
+    user.email = createUserDto.email;
+    user.password = createUserDto.password;
+    user.name = createUserDto.name;
 
-		return user;
-	}
+    return user;
+  }
 
-	public createDto(user: User): UserDto {
-		const userDto = new UserDto();
+  public createDto(user: User): UserDto {
+    const userDto = new UserDto();
 
-		userDto.id = user.id ? user.id : (user as unknown as { _id: string })._id;
-		userDto.username = user.username;
-		userDto.email = user.email;
-		userDto.name = user.name;
-		userDto.createdAt = user.createdAt;
-		userDto.updatedAt = user.updatedAt;
+    userDto.id = user.id ? user.id : (user as unknown as { _id: string })._id;
+    userDto.username = user.username;
+    userDto.email = user.email;
+    userDto.name = user.name;
+    userDto.createdAt = user.createdAt;
+    userDto.updatedAt = user.updatedAt;
 
-		return userDto;
-	}
+    return userDto;
+  }
 }

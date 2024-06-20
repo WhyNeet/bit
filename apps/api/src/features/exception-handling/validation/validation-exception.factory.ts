@@ -3,36 +3,36 @@ import { CommonHttpException } from "src/frameworks/exception-handling/common/co
 
 // biome-ignore lint/complexity/noStaticOnlyClass: grouping
 export class ValidationExceptionFactory {
-	public static transform(errors: ValidationError[]): HttpException {
-		const exception = new CommonHttpException(
-			"Validation/ValidationFailed",
-			"Validation failed.",
-			ValidationExceptionFactory.transformErrors(errors),
-			HttpStatus.BAD_REQUEST,
-		);
+  public static transform(errors: ValidationError[]): HttpException {
+    const exception = new CommonHttpException(
+      "Validation/ValidationFailed",
+      "Validation failed.",
+      ValidationExceptionFactory.transformErrors(errors),
+      HttpStatus.BAD_REQUEST,
+    );
 
-		return exception;
-	}
+    return exception;
+  }
 
-	private static transformErrors(errors: ValidationError[]) {
-		return errors.reduce((acc, error) => {
-			const { property, constraints, children } = error;
+  private static transformErrors(errors: ValidationError[]) {
+    return errors.reduce((acc, error) => {
+      const { property, constraints, children } = error;
 
-			const exception = {
-				constrains: [
-					...Object.values(constraints ?? {}),
-					...(acc[property] ?? []),
-				],
-				children: {
-					...(children
-						? ValidationExceptionFactory.transformErrors(children)
-						: {}),
-				},
-			};
+      const exception = {
+        constrains: [
+          ...Object.values(constraints ?? {}),
+          ...(acc[property] ?? []),
+        ],
+        children: {
+          ...(children
+            ? ValidationExceptionFactory.transformErrors(children)
+            : {}),
+        },
+      };
 
-			acc[property] = exception;
+      acc[property] = exception;
 
-			return acc;
-		}, {});
-	}
+      return acc;
+    }, {});
+  }
 }

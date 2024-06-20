@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-	selector: "app-ui-gradient-blur",
-	standalone: true,
-	imports: [],
-	providers: [],
-	template: `
+  selector: "app-ui-gradient-blur",
+  standalone: true,
+  imports: [],
+  providers: [],
+  template: `
   	<div class="gradient-blur">
       <div></div>
       <div></div>
@@ -15,7 +15,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
       <div></div>
     </div>
   `,
-	styleUrl: "./gradient-blur.component.css",
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: "./gradient-blur.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GradientBlurComponent {}

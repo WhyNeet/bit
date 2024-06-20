@@ -1,40 +1,40 @@
 {
-	"name": "common",
-	"version": "1.0.1",
-	"description": "Core package of bit",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"files": ["./dist", "package.json"],
-	"exports": {
-		".": {
-			"require": "./dist/index.js",
-			"import": "./dist/index.mjs",
-			"types": "./dist/index.d.ts"
-		},
-		"./types": {
-			"require": "./dist/types/index.js",
-			"import": "./dist/types/index.mjs",
-			"types": "./dist/types/index.d.ts"
-		},
-		"./dtos": {
-			"require": "./dist/dtos/index.js",
-			"import": "./dist/dtos/index.mjs",
-			"types": "./dist/dtos/index.d.ts"
-		},
-		"./entities": {
-			"require": "./dist/entities/index.js",
-			"import": "./dist/entities/index.mjs",
-			"types": "./dist/entities/index.d.ts"
-		}
-	},
-	"scripts": {
-		"build": "tsup"
-	},
-	"keywords": [],
-	"author": "WhyNeet",
-	"license": "MIT",
-	"devDependencies": {
-		"tsup": "^8.0.2",
-		"typescript": "^5.4.5"
-	}
+  "name": "common",
+  "version": "1.0.1",
+  "description": "Core package of bit",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["./dist", "package.json"],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.mjs",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./dtos": {
+      "require": "./dist/dtos/index.js",
+      "import": "./dist/dtos/index.mjs",
+      "types": "./dist/dtos/index.d.ts"
+    },
+    "./entities": {
+      "require": "./dist/entities/index.js",
+      "import": "./dist/entities/index.mjs",
+      "types": "./dist/entities/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [],
+  "author": "WhyNeet",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
 }

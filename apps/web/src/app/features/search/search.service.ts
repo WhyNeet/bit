@@ -3,13 +3,13 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { PostVectorData } from "common";
 import {
-	Observable,
-	catchError,
-	filter,
-	map,
-	startWith,
-	tap,
-	throwError,
+  Observable,
+  catchError,
+  filter,
+  map,
+  startWith,
+  tap,
+  throwError,
 } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { searchFinished, searchLoading } from "../../state/search/actions";
@@ -17,67 +17,67 @@ import { LocalStorageService } from "../storage/local-storage.service";
 
 @Injectable({ providedIn: "root" })
 export class SearchService {
-	private historyReplaySubject: Observable<string[] | null> =
-		this.localStorageService.getChanges().pipe(
-			filter((change) => change.key === "searchHistory"),
-			map((change) => change.value as string[]),
-			startWith(this.getSavedHistory()),
-		);
+  private historyReplaySubject: Observable<string[] | null> =
+    this.localStorageService.getChanges().pipe(
+      filter((change) => change.key === "searchHistory"),
+      map((change) => change.value as string[]),
+      startWith(this.getSavedHistory()),
+    );
 
-	constructor(
-		private httpClient: HttpClient,
-		private store: Store,
-		private localStorageService: LocalStorageService,
-	) {}
+  constructor(
+    private httpClient: HttpClient,
+    private store: Store,
+    private localStorageService: LocalStorageService,
+  ) {}
 
-	public search(query: string, include?: string[]) {
-		this.store.dispatch(searchLoading());
+  public search(query: string, include?: string[]) {
+    this.store.dispatch(searchLoading());
 
-		this.httpClient
-			.get(
-				`${environment.API_BASE_URL}/posts/search?query=${query}&include=${
-					include?.join(",") ?? ""
-				}`,
-			)
-			.pipe(
-				map((data) => (data as { data: PostVectorData[] }).data),
-				catchError((err) => {
-					return throwError(() => err);
-				}),
-			)
-			.subscribe((results) =>
-				this.store.dispatch(searchFinished({ posts: results })),
-			);
-	}
+    this.httpClient
+      .get(
+        `${environment.API_BASE_URL}/posts/search?query=${query}&include=${
+          include?.join(",") ?? ""
+        }`,
+      )
+      .pipe(
+        map((data) => (data as { data: PostVectorData[] }).data),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      )
+      .subscribe((results) =>
+        this.store.dispatch(searchFinished({ posts: results })),
+      );
+  }
 
-	public saveToHistory(query: string) {
-		const storedHistory = this.localStorageService.getItem("searchHistory");
-		const history: string[] = storedHistory ? JSON.parse(storedHistory) : [];
+  public saveToHistory(query: string) {
+    const storedHistory = this.localStorageService.getItem("searchHistory");
+    const history: string[] = storedHistory ? JSON.parse(storedHistory) : [];
 
-		this.localStorageService.setItem("searchHistory", [query, ...history]);
-	}
+    this.localStorageService.setItem("searchHistory", [query, ...history]);
+  }
 
-	private getSavedHistory() {
-		const storedHistory = this.localStorageService.getItem("searchHistory");
+  private getSavedHistory() {
+    const storedHistory = this.localStorageService.getItem("searchHistory");
 
-		return storedHistory ? JSON.parse(storedHistory) : null;
-	}
+    return storedHistory ? JSON.parse(storedHistory) : null;
+  }
 
-	public removeHistoryItem(idx: number) {
-		const storedHistory = this.localStorageService.getItem("searchHistory");
+  public removeHistoryItem(idx: number) {
+    const storedHistory = this.localStorageService.getItem("searchHistory");
 
-		if (!storedHistory)
-			throw new Error("Cannot remove item from history: no history stored.");
+    if (!storedHistory)
+      throw new Error("Cannot remove item from history: no history stored.");
 
-		const history = JSON.parse(storedHistory) as string[];
-		history.splice(idx, 1);
+    const history = JSON.parse(storedHistory) as string[];
+    history.splice(idx, 1);
 
-		history.length
-			? this.localStorageService.setItem("searchHistory", history)
-			: this.localStorageService.removeItem("searchHistory");
-	}
+    history.length
+      ? this.localStorageService.setItem("searchHistory", history)
+      : this.localStorageService.removeItem("searchHistory");
+  }
 
-	public getHistory() {
-		return this.historyReplaySubject;
-	}
+  public getHistory() {
+    return this.historyReplaySubject;
+  }
 }

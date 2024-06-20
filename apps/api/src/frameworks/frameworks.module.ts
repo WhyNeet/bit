@@ -7,21 +7,21 @@ import { StorageServicesModule } from "./storage-services/storage-services.modul
 import { VectorServicesModule } from "./vector-services/vector-services.module";
 
 @Module({
-	imports: [
-		AuthModule,
-		DataServicesModule,
-		ExceptionHandlingModule,
-		StorageServicesModule,
-		VectorServicesModule,
-		CachingServicesModule,
-	],
-	exports: [
-		AuthModule,
-		DataServicesModule,
-		ExceptionHandlingModule,
-		StorageServicesModule,
-		VectorServicesModule,
-		CachingServicesModule,
-	],
+  imports: [
+    AuthModule,
+    DataServicesModule,
+    ExceptionHandlingModule,
+    StorageServicesModule,
+    VectorServicesModule,
+    CachingServicesModule,
+  ],
+  exports: [
+    AuthModule,
+    DataServicesModule,
+    ExceptionHandlingModule,
+    StorageServicesModule,
+    VectorServicesModule,
+    CachingServicesModule,
+  ],
 })
 export class FrameworksModule {}

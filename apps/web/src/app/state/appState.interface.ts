@@ -4,11 +4,11 @@ import { SearchState } from "./search/searchState.interface";
 import { UserState } from "./user/userState.interface";
 
 export interface AppState {
-	user: UserState;
-	posts: PostsState;
-	search: SearchState;
+  user: UserState;
+  posts: PostsState;
+  search: SearchState;
 }
 
 export type AppReducers = {
-	[key in keyof AppState]: ActionReducer<AppState[key], Action>;
+  [key in keyof AppState]: ActionReducer<AppState[key], Action>;
 };

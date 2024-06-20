@@ -4,10 +4,10 @@ import { Exception } from "src/frameworks/exception-handling/types/exception.int
 
 // biome-ignore lint/complexity/noStaticOnlyClass: grouping
 export class UserException {
-	@CommonException(
-		"User does not exist.",
-		"Uset with this identifier does not exist.",
-		HttpStatus.BAD_REQUEST,
-	)
-	public static readonly UserDoesNotExist: Exception;
+  @CommonException(
+    "User does not exist.",
+    "Uset with this identifier does not exist.",
+    HttpStatus.BAD_REQUEST,
+  )
+  public static readonly UserDoesNotExist: Exception;
 }

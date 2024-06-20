@@ -1,7 +1,7 @@
 export interface Exception {
-	new (): object;
+  new (): object;
 }
 
 export interface CustomizableException {
-	new (customDetail?: string): object;
+  new (customDetail?: string): object;
 }

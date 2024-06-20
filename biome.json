@@ -1,26 +1,30 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"style": {
-				"useImportType": "off"
-			},
-			"complexity": {
-				"useLiteralKeys": "off"
-			}
-		}
-	},
-	"files": {
-		"ignore": ["*/node_modules", "*/dist", ".zed/*", ".angular/*", "volumes"]
-	},
-	"javascript": {
-		"parser": {
-			"unsafeParameterDecoratorsEnabled": true
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useImportType": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
+      }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "files": {
+    "ignore": ["*/node_modules", "*/dist", ".zed/*", ".angular/*", "volumes"]
+  },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  }
 }

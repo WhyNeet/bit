@@ -4,10 +4,10 @@ import { UserState } from "./userState.interface";
 export const selectFeature = createFeatureSelector<UserState>("user");
 export const selectUser = createSelector(selectFeature, (user) => user.user);
 export const selectIsUserLoading = createSelector(
-	selectFeature,
-	(user) => user.isLoading,
+  selectFeature,
+  (user) => user.isLoading,
 );
 export const selectUserCommunities = createSelector(
-	selectFeature,
-	(user) => user.communities,
+  selectFeature,
+  (user) => user.communities,
 );

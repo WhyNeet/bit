@@ -11,19 +11,19 @@ import { FeaturesModule } from "./features/features.module";
 import { FrameworksModule } from "./frameworks/frameworks.module";
 
 @Module({
-	imports: [
-		ConfigurationModule,
-		FrameworksModule,
-		FeaturesModule,
-		FormDataModule,
-	],
-	controllers: [
-		AuthController,
-		CurrentUserController,
-		UserController,
-		CommunityController,
-		PostController,
-		MediaController,
-	],
+  imports: [
+    ConfigurationModule,
+    FrameworksModule,
+    FeaturesModule,
+    FormDataModule,
+  ],
+  controllers: [
+    AuthController,
+    CurrentUserController,
+    UserController,
+    CommunityController,
+    PostController,
+    MediaController,
+  ],
 })
 export class AppModule {}

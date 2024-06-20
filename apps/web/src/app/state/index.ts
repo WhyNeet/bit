@@ -4,7 +4,7 @@ import { reducers as searchReducers } from "./search/reducers";
 import { reducers as userReducers } from "./user/reducers";
 
 export const reducers: AppReducers = {
-	user: userReducers,
-	posts: postsReducers,
-	search: searchReducers,
+  user: userReducers,
+  posts: postsReducers,
+  search: searchReducers,
 };

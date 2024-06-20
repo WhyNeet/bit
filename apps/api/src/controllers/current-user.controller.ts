@@ -1,9 +1,9 @@
 import {
-	Controller,
-	Get,
-	HttpCode,
-	HttpStatus,
-	UseGuards,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiResponse, CommunityDto, User, UserDto } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
@@ -17,67 +17,67 @@ import { JwtPayload } from "src/frameworks/auth/jwt/types/payload.interface";
 
 @Controller("/users/me")
 export class CurrentUserController {
-	constructor(
-		private userRepositoryService: UserRepositoryService,
-		private userFactoryService: UserFactoryService,
-		private cachingServices: ICachingServices,
-		private communityFactoryService: CommunityFactoryService,
-		private communityRepositoryService: CommunityRepositoryService,
-	) {}
+  constructor(
+    private userRepositoryService: UserRepositoryService,
+    private userFactoryService: UserFactoryService,
+    private cachingServices: ICachingServices,
+    private communityFactoryService: CommunityFactoryService,
+    private communityRepositoryService: CommunityRepositoryService,
+  ) {}
 
-	@HttpCode(200)
-	@UseGuards(JwtAuthGuard)
-	@Get("")
-	public async getCurrentUser(
-		@Token() token: JwtPayload,
-	): ApiResponse<UserDto> {
-		const cachedUser = await this.cachingServices.get<User>(
-			`user:${token.sub}`,
-			true,
-		);
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Get("")
+  public async getCurrentUser(
+    @Token() token: JwtPayload,
+  ): ApiResponse<UserDto> {
+    const cachedUser = await this.cachingServices.get<User>(
+      `user:${token.sub}`,
+      true,
+    );
 
-		if (cachedUser)
-			return {
-				data: this.userFactoryService.createDto(cachedUser),
-			};
+    if (cachedUser)
+      return {
+        data: this.userFactoryService.createDto(cachedUser),
+      };
 
-		const user = await this.userRepositoryService.getUserById(token.sub);
+    const user = await this.userRepositoryService.getUserById(token.sub);
 
-		await this.cachingServices.set(`user:${token.sub}`, user);
+    await this.cachingServices.set(`user:${token.sub}`, user);
 
-		return {
-			data: this.userFactoryService.createDto(user),
-		};
-	}
+    return {
+      data: this.userFactoryService.createDto(user),
+    };
+  }
 
-	@HttpCode(HttpStatus.OK)
-	@UseGuards(JwtAuthGuard)
-	@Get("/communities")
-	public async getCurrentUserCommunities(
-		@Token() payload: JwtPayload,
-	): ApiResponse<CommunityDto[]> {
-		const cachedCommunities = await this.cachingServices.sget<string>(
-			`userCommunities:${payload.sub}`,
-		);
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Get("/communities")
+  public async getCurrentUserCommunities(
+    @Token() payload: JwtPayload,
+  ): ApiResponse<CommunityDto[]> {
+    const cachedCommunities = await this.cachingServices.sget<string>(
+      `userCommunities:${payload.sub}`,
+    );
 
-		const communitiesIds =
-			cachedCommunities.length > 0
-				? cachedCommunities
-				: (
-						await this.communityRepositoryService.getUserCommunities(
-							payload.sub,
-						)
-					).map((c) => c.community.toString());
+    const communitiesIds =
+      cachedCommunities.length > 0
+        ? cachedCommunities
+        : (
+            await this.communityRepositoryService.getUserCommunities(
+              payload.sub,
+            )
+          ).map((c) => c.community.toString());
 
-		const communities =
-			await this.communityRepositoryService.getCommunities(communitiesIds);
+    const communities =
+      await this.communityRepositoryService.getCommunities(communitiesIds);
 
-		return {
-			data: communities.map(
-				this.communityFactoryService.createDto.bind(
-					this.communityFactoryService,
-				),
-			),
-		};
-	}
+    return {
+      data: communities.map(
+        this.communityFactoryService.createDto.bind(
+          this.communityFactoryService,
+        ),
+      ),
+    };
+  }
 }

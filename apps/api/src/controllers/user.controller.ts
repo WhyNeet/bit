@@ -8,35 +8,35 @@ import { UserRepositoryService } from "src/features/user/user-repository.service
 
 @Controller("/users")
 export class UserController {
-	constructor(
-		private userRepositoryService: UserRepositoryService,
-		private userFactoryService: UserFactoryService,
-		private cachingServices: ICachingServices,
-	) {}
+  constructor(
+    private userRepositoryService: UserRepositoryService,
+    private userFactoryService: UserFactoryService,
+    private cachingServices: ICachingServices,
+  ) {}
 
-	@HttpCode(200)
-	@Get("/user/:userId")
-	public async getUserById(
-		@Param("userId", ParseObjectIdPipe.stringified()) userId: string,
-	): ApiResponse<UserDto> {
-		const cachedUser = await this.cachingServices.get<User>(
-			`user:${userId}`,
-			true,
-		);
+  @HttpCode(200)
+  @Get("/user/:userId")
+  public async getUserById(
+    @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
+  ): ApiResponse<UserDto> {
+    const cachedUser = await this.cachingServices.get<User>(
+      `user:${userId}`,
+      true,
+    );
 
-		if (cachedUser)
-			return {
-				data: this.userFactoryService.createDto(cachedUser),
-			};
+    if (cachedUser)
+      return {
+        data: this.userFactoryService.createDto(cachedUser),
+      };
 
-		const user = await this.userRepositoryService.getUserById(userId);
+    const user = await this.userRepositoryService.getUserById(userId);
 
-		if (!user) throw new UserException.UserDoesNotExist();
+    if (!user) throw new UserException.UserDoesNotExist();
 
-		await this.cachingServices.set(`user:${userId}`, user);
+    await this.cachingServices.set(`user:${userId}`, user);
 
-		return {
-			data: this.userFactoryService.createDto(user),
-		};
-	}
+    return {
+      data: this.userFactoryService.createDto(user),
+    };
+  }
 }

@@ -1,9 +1,9 @@
 export enum TokenType {
-	AccessToken = "access_token",
-	RefreshToken = "refresh_token",
+  AccessToken = "access_token",
+  RefreshToken = "refresh_token",
 }
 
 export class Token {
-	id: string;
-	expireAt: Date;
+  id: string;
+  expireAt: Date;
 }

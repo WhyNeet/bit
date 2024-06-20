@@ -1,29 +1,29 @@
 {
-	"name": "bit",
-	"version": "1.0.0",
-	"description": "",
-	"type": "module",
-	"main": "index.js",
-	"scripts": {
-		"api": "pnpm --filter api",
-		"web": "pnpm --filter web",
-		"biome:check": "biome check --apply .",
-		"prepare": "husky",
-		"pkl:eval": "pkl eval apps/api/conf/dev.config.pkl -f yaml -o apps/api/conf/dev.config.yaml"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"@biomejs/biome": "1.6.4",
-		"@commitlint/cli": "^19.2.1",
-		"@commitlint/config-conventional": "^19.1.0",
-		"husky": "^9.0.11",
-		"lint-staged": "^15.2.2"
-	},
+  "name": "bit",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "api": "pnpm --filter api",
+    "web": "pnpm --filter web",
+    "biome:check": "biome check --apply .",
+    "prepare": "husky",
+    "pkl:eval": "pkl eval apps/api/conf/dev.config.pkl -f yaml -o apps/api/conf/dev.config.yaml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.6.4",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  },
 
-	"lint-staged": {
-		"**/*.{js,ts,tsx}": ["biome check --apply"],
-		"**/*": ["biome check --apply --files-ignore-unknown=true"]
-	}
+  "lint-staged": {
+    "**/*.{js,ts,tsx}": ["biome check --apply"],
+    "**/*": ["biome check --apply --files-ignore-unknown=true"]
+  }
 }

@@ -3,8 +3,8 @@ import { VectorEmbeddingServicesModule } from "./vector-embedding-services/vecto
 import { VectorStorageServicesModule } from "./vector-storage-services/vector-storage-services.module";
 
 @Module({
-	imports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
-	providers: [],
-	exports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
+  imports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
+  providers: [],
+  exports: [VectorStorageServicesModule, VectorEmbeddingServicesModule],
 })
 export class VectorServicesModule {}

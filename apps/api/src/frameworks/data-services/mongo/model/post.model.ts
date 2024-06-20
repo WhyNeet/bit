@@ -7,33 +7,33 @@ export type PostDocument = HydratedDocument<Post>;
 
 @Schema({ timestamps: true })
 export class Post {
-	id: string;
+  id: string;
 
-	@Prop({ required: true })
-	title: string;
-	@Prop({ required: true })
-	content: string;
+  @Prop({ required: true })
+  title: string;
+  @Prop({ required: true })
+  content: string;
 
-	@Prop({ required: true, type: [String] })
-	images: string[];
+  @Prop({ required: true, type: [String] })
+  images: string[];
 
-	@Prop({ required: true, type: [String] })
-	files: string[];
+  @Prop({ required: true, type: [String] })
+  files: string[];
 
-	@Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
-	author?: User;
+  @Prop({ required: true, type: SchemaTypes.Types.ObjectId, ref: "User" })
+  author?: User;
 
-	@Prop({ required: false, type: SchemaTypes.Types.ObjectId, ref: "Community" })
-	community?: Community;
+  @Prop({ required: false, type: SchemaTypes.Types.ObjectId, ref: "Community" })
+  community?: Community;
 
-	@Prop({ required: true })
-	upvotes: number;
+  @Prop({ required: true })
+  upvotes: number;
 
-	@Prop({ required: true })
-	downvotes: number;
+  @Prop({ required: true })
+  downvotes: number;
 
-	createdAt: Date;
-	updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

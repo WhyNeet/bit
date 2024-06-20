@@ -1,69 +1,69 @@
 import type { FilterQuery, Model, SortOrder, UpdateQuery } from "mongoose";
 import type {
-	IGenericRepository,
-	SortQuery,
+  IGenericRepository,
+  SortQuery,
 } from "src/core/abstracts/generic-repository.abstract";
 
 export class MongoGenericRepository<Entity>
-	implements IGenericRepository<Entity>
+  implements IGenericRepository<Entity>
 {
-	private model: Model<Entity>;
+  private model: Model<Entity>;
 
-	constructor(model: Model<Entity>) {
-		this.model = model;
-	}
+  constructor(model: Model<Entity>) {
+    this.model = model;
+  }
 
-	public async create(entity: Entity): Promise<Entity> {
-		return this.model.create(entity);
-	}
+  public async create(entity: Entity): Promise<Entity> {
+    return this.model.create(entity);
+  }
 
-	public async getAll(
-		filter: FilterQuery<Entity>,
-		sort: SortQuery<Entity>,
-		limit: number,
-		skip: number,
-		populate?: string[],
-	): Promise<Entity[]> {
-		return this.model
-			.find(filter)
-			.limit(limit)
-			.skip(skip)
-			.sort(sort)
-			.populate(populate)
-			.exec();
-	}
+  public async getAll(
+    filter: FilterQuery<Entity>,
+    sort: SortQuery<Entity>,
+    limit: number,
+    skip: number,
+    populate?: string[],
+  ): Promise<Entity[]> {
+    return this.model
+      .find(filter)
+      .limit(limit)
+      .skip(skip)
+      .sort(sort)
+      .populate(populate)
+      .exec();
+  }
 
-	public async getById(
-		id: string,
-		populate?: string[],
-		select?: string,
-	): Promise<Entity | null> {
-		/* @ts-ignore */
-		return this.model.findById(id).select(select).populate(populate).exec();
-	}
+  public async getById(
+    id: string,
+    populate?: string[],
+    select?: string,
+  ): Promise<Entity | null> {
+    /* @ts-ignore */
+    return this.model.findById(id).select(select).populate(populate).exec();
+  }
 
-	public async get(
-		filter: FilterQuery<Entity>,
-		populate?: string[],
-		select?: string,
-	): Promise<Entity | null> {
-		/* @ts-ignore */
-		return this.model
-			.findOne()
-			.where(filter)
-			.select(select)
-			.populate(populate)
-			.exec();
-	}
+  public async get(
+    filter: FilterQuery<Entity>,
+    populate?: string[],
+    select?: string,
+  ): Promise<Entity | null> {
+    /* @ts-ignore */
+    return this.model
+      .findOne()
+      .where(filter)
+      .select(select)
+      .populate(populate)
+      .exec();
+  }
 
-	public async update(
-		filter: FilterQuery<Entity>,
-		entity: Entity | UpdateQuery<Entity>,
-	): Promise<Entity | null> {
-		return await this.model.findOneAndUpdate(filter, entity).exec();
-	}
+  public async update(
+    filter: FilterQuery<Entity>,
+    entity: Entity | UpdateQuery<Entity>,
+  ): Promise<Entity | null> {
+    return await this.model.findOneAndUpdate(filter, entity).exec();
+  }
 
-	public async delete(filter: FilterQuery<Entity>): Promise<Entity | null> {
-		return this.model.findOneAndDelete(filter).exec();
-	}
+  public async delete(filter: FilterQuery<Entity>): Promise<Entity | null> {
+    return this.model.findOneAndDelete(filter).exec();
+  }
 }

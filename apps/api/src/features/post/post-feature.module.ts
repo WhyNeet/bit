@@ -7,13 +7,13 @@ import { PostFactoryService } from "./post-factory.service";
 import { PostRepositoryService } from "./post-repository.service";
 
 @Module({
-	imports: [
-		DataServicesModule,
-		UserFeatureModule,
-		CommunityFeatureModule,
-		RelationFeatureModule,
-	],
-	providers: [PostFactoryService, PostRepositoryService],
-	exports: [PostFactoryService, PostRepositoryService],
+  imports: [
+    DataServicesModule,
+    UserFeatureModule,
+    CommunityFeatureModule,
+    RelationFeatureModule,
+  ],
+  providers: [PostFactoryService, PostRepositoryService],
+  exports: [PostFactoryService, PostRepositoryService],
 })
 export class PostFeatureModule {}

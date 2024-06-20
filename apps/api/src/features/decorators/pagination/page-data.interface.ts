@@ -1,4 +1,4 @@
 export interface PageData {
-	page?: number;
-	perPage?: number;
+  page?: number;
+  perPage?: number;
 }

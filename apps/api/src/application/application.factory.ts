@@ -5,27 +5,27 @@ import { ValidationExceptionFactory } from "src/features/exception-handling/vali
 
 // biome-ignore lint/complexity/noStaticOnlyClass: static factory class
 export class ApplicationFactory {
-	public static async create<M extends { new (...args: unknown[]): object }>(
-		module: M,
-	): Promise<INestApplication<M>> {
-		const app: INestApplication = await NestFactory.create(module);
+  public static async create<M extends { new (...args: unknown[]): object }>(
+    module: M,
+  ): Promise<INestApplication<M>> {
+    const app: INestApplication = await NestFactory.create(module);
 
-		app.enableCors({
-			origin: process.env.CORS_ORIGIN ?? "http://localhost:4200",
-			credentials: true,
-		});
+    app.enableCors({
+      origin: process.env.CORS_ORIGIN ?? "http://localhost:4200",
+      credentials: true,
+    });
 
-		app.setGlobalPrefix("/api");
+    app.setGlobalPrefix("/api");
 
-		app.useGlobalPipes(
-			new ValidationPipe({
-				transform: true,
-				exceptionFactory: ValidationExceptionFactory.transform,
-			}),
-		);
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        exceptionFactory: ValidationExceptionFactory.transform,
+      }),
+    );
 
-		app.use(cookieParser());
+    app.use(cookieParser());
 
-		return app;
-	}
+    return app;
+  }
 }

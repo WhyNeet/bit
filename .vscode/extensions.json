@@ -1,4 +1,4 @@
 {
-	"unwantedRecommendations": ["esbenp.prettier-vscode"],
-	"recommendations": ["angular.ng-template"]
+  "unwantedRecommendations": ["esbenp.prettier-vscode"],
+  "recommendations": ["angular.ng-template"]
 }

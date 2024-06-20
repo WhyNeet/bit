@@ -5,7 +5,7 @@ import { CookiesExtractorService } from "./extractors/cookies-extractor.service"
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
-	imports: [PassportModule, FeaturesModule],
-	providers: [JwtStrategy, CookiesExtractorService],
+  imports: [PassportModule, FeaturesModule],
+  providers: [JwtStrategy, CookiesExtractorService],
 })
 export class AuthModule {}

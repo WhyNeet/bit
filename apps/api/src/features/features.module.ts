@@ -8,23 +8,23 @@ import { UserFeatureModule } from "./user/user-feature.module";
 import { VectorFeatureModule } from "./vector/vector-feature.module";
 
 @Module({
-	imports: [
-		UserFeatureModule,
-		AuthFeatureModule,
-		TokenFeatureModule,
-		CommunityFeatureModule,
-		PostFeatureModule,
-		RelationFeatureModule,
-		VectorFeatureModule,
-	],
-	exports: [
-		UserFeatureModule,
-		AuthFeatureModule,
-		TokenFeatureModule,
-		CommunityFeatureModule,
-		PostFeatureModule,
-		RelationFeatureModule,
-		VectorFeatureModule,
-	],
+  imports: [
+    UserFeatureModule,
+    AuthFeatureModule,
+    TokenFeatureModule,
+    CommunityFeatureModule,
+    PostFeatureModule,
+    RelationFeatureModule,
+    VectorFeatureModule,
+  ],
+  exports: [
+    UserFeatureModule,
+    AuthFeatureModule,
+    TokenFeatureModule,
+    CommunityFeatureModule,
+    PostFeatureModule,
+    RelationFeatureModule,
+    VectorFeatureModule,
+  ],
 })
 export class FeaturesModule {}

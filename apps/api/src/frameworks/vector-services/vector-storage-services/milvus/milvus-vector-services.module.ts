@@ -3,13 +3,13 @@ import { IVectorStorageServices } from "src/core/abstracts/vector-storage-servic
 import { MilvusVectorServices } from "./milvus-vector-services.service";
 
 @Module({
-	imports: [],
-	providers: [
-		{
-			provide: IVectorStorageServices,
-			useClass: MilvusVectorServices,
-		},
-	],
-	exports: [IVectorStorageServices],
+  imports: [],
+  providers: [
+    {
+      provide: IVectorStorageServices,
+      useClass: MilvusVectorServices,
+    },
+  ],
+  exports: [IVectorStorageServices],
 })
 export class MilvusVectorServicesModule {}

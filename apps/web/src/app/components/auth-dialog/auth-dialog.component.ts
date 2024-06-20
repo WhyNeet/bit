@@ -1,10 +1,10 @@
 import {
-	ChangeDetectionStrategy,
-	Component,
-	OnDestroy,
-	afterNextRender,
-	computed,
-	signal,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  afterNextRender,
+  computed,
+  signal,
 } from "@angular/core";
 import { Store, select } from "@ngrx/store";
 import { Subscription, map } from "rxjs";
@@ -18,43 +18,43 @@ import { AuthDialogLoginComponent } from "./login/auth-dialog-login.component";
 import { AuthDialogSignupComponent } from "./register/auth-dialog-register.component";
 
 @Component({
-	selector: "app-dialog-auth",
-	standalone: true,
-	imports: [
-		AuthDialogLoginComponent,
-		AuthDialogSignupComponent,
-		TabsComponent,
-		TabComponent,
-		DialogContent,
-	],
-	providers: [],
-	animations: [heightChangeAnmation],
-	templateUrl: "./auth-dialog.component.html",
-	styleUrl: "./auth-dialog.component.css",
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: "app-dialog-auth",
+  standalone: true,
+  imports: [
+    AuthDialogLoginComponent,
+    AuthDialogSignupComponent,
+    TabsComponent,
+    TabComponent,
+    DialogContent,
+  ],
+  providers: [],
+  animations: [heightChangeAnmation],
+  templateUrl: "./auth-dialog.component.html",
+  styleUrl: "./auth-dialog.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthDialogComponent implements OnDestroy {
-	protected tab = signal(0);
-	protected enterStart = computed(() => (this.tab() === 1 ? "100%" : "-100%"));
-	protected leaveEnd = computed(() => (this.tab() === 1 ? "-100%" : "100%"));
+  protected tab = signal(0);
+  protected enterStart = computed(() => (this.tab() === 1 ? "100%" : "-100%"));
+  protected leaveEnd = computed(() => (this.tab() === 1 ? "-100%" : "100%"));
 
-	private sub: Subscription | null = null;
+  private sub: Subscription | null = null;
 
-	constructor(
-		private store: Store,
-		private dialogRef: AnimatedDialogRef<unknown>,
-	) {
-		afterNextRender(() => {
-			this.sub = this.store
-				.pipe(
-					select(selectUser),
-					map((user) => !!user),
-				)
-				.subscribe((hasUser) => (hasUser ? this.dialogRef.close() : null));
-		});
-	}
+  constructor(
+    private store: Store,
+    private dialogRef: AnimatedDialogRef<unknown>,
+  ) {
+    afterNextRender(() => {
+      this.sub = this.store
+        .pipe(
+          select(selectUser),
+          map((user) => !!user),
+        )
+        .subscribe((hasUser) => (hasUser ? this.dialogRef.close() : null));
+    });
+  }
 
-	ngOnDestroy(): void {
-		this.sub?.unsubscribe();
-	}
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
 }

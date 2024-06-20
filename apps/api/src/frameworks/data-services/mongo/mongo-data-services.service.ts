@@ -1,10 +1,10 @@
 import { Injectable, type OnApplicationBootstrap } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Post } from "common";
 import type { Model } from "mongoose";
 import type { IDataServices } from "src/core/abstracts/data-services.abstract";
+import { Comment, CommentDocument } from "./model/comment.model";
 import { Community, CommunityDocument } from "./model/community.model";
-import { PostDocument } from "./model/post.model";
+import { Post, PostDocument } from "./model/post.model";
 import {
   UserCommunityRelation,
   UserCommunityRelationDocument,
@@ -25,6 +25,7 @@ export class MongoDataServices
   public tokens: MongoGenericRepository<Token>;
   public communities: MongoGenericRepository<Community>;
   public posts: MongoGenericRepository<Post>;
+  public comments: MongoGenericRepository<Comment>;
 
   public userCommunityRelations: MongoGenericRepository<UserCommunityRelation>;
   public userPostRelations: MongoGenericRepository<UserPostRelation>;
@@ -35,6 +36,7 @@ export class MongoDataServices
     @InjectModel(Community.name)
     private CommunityModel: Model<CommunityDocument>,
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
+    @InjectModel(Comment.name) private CommentModel: Model<CommentDocument>,
     @InjectModel(UserCommunityRelation.name)
     private UserCommunityRelationModel: Model<UserCommunityRelationDocument>,
     @InjectModel(UserPostRelation.name)
@@ -48,6 +50,7 @@ export class MongoDataServices
       this.CommunityModel,
     );
     this.posts = new MongoGenericRepository<Post>(this.PostModel);
+    this.comments = new MongoGenericRepository<Comment>(this.CommentModel);
 
     this.userCommunityRelations =
       new MongoGenericRepository<UserCommunityRelation>(

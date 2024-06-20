@@ -1,4 +1,5 @@
 import {
+  Comment,
   Community,
   Post,
   Token,
@@ -13,6 +14,7 @@ export abstract class IDataServices {
   abstract tokens: IGenericRepository<Token>;
   abstract communities: IGenericRepository<Community>;
   abstract posts: IGenericRepository<Post>;
+  abstract comments: IGenericRepository<Comment>;
 
   abstract userCommunityRelations: IGenericRepository<UserCommunityRelation>;
   abstract userPostRelations: IGenericRepository<UserPostRelation>;

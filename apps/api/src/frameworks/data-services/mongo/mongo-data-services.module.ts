@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
+import { Comment, CommentSchema } from "./model/comment.model";
 import { Community, CommunitySchema } from "./model/community.model";
 import { Post, PostSchema } from "./model/post.model";
 import {
@@ -39,6 +40,7 @@ import { MongoDataServices } from "./mongo-data-services.service";
       { name: Token.name, schema: TokenSchema },
       { name: Community.name, schema: CommunitySchema },
       { name: Post.name, schema: PostSchema },
+      { name: Comment.name, schema: CommentSchema },
       { name: UserCommunityRelation.name, schema: UserCommunityRelationSchema },
       { name: UserPostRelation.name, schema: UserPostRelationSchema },
     ]),

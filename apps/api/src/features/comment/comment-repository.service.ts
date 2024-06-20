@@ -40,4 +40,13 @@ export class CommentRepositoryService {
   public async deleteComment(commentId: string): Promise<Comment> {
     return await this.dataServices.comments.delete({ _id: commentId });
   }
+
+  public async verifyCommentOwner(
+    commentId: string,
+    userId: string,
+  ): Promise<boolean> {
+    return (
+      (await this.dataServices.comments.get({ _id: commentId })).id === userId
+    );
+  }
 }

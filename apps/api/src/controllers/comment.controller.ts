@@ -5,14 +5,16 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
 import { ApiResponse } from "common";
 import { CommentDto } from "common";
-import { CreateCommentDto } from "src/core/dtos/comment.dto";
+import { CreateCommentDto, UpdateCommentDto } from "src/core/dtos/comment.dto";
 import { CommentFactoryService } from "src/features/comment/comment-factory.service";
 import { CommentRepositoryService } from "src/features/comment/comment-repository.service";
+import { CommentException } from "src/features/exception-handling/exceptions/comment.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
@@ -25,7 +27,7 @@ export class CommentController {
     private commentFactoryService: CommentFactoryService,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard)
   @Post("")
   public async createComment(
@@ -53,6 +55,31 @@ export class CommentController {
       data: comments.map(
         this.commentFactoryService.createDto.bind(this.commentFactoryService),
       ),
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Patch("/:commentId")
+  public async updateComment(
+    @Param("commentId", ParseObjectIdPipe.stringified()) commentId: string,
+    @Token() payload: JwtPayload,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ): ApiResponse<CommentDto> {
+    const isValidOwner =
+      await this.commentRespositoryService.verifyCommentOwner(
+        commentId,
+        payload.sub,
+      );
+    if (!isValidOwner) throw new CommentException.CommentCannotBeModified();
+
+    const comment = await this.commentRespositoryService.updateComment(
+      commentId,
+      updateCommentDto.content,
+    );
+
+    return {
+      data: this.commentFactoryService.createDto(comment),
     };
   }
 }

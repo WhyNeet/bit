@@ -10,3 +10,9 @@ export class CreateCommentDto {
   @IsObjectId({ message: ValidationError.MustBeAnObjectId })
   post: string;
 }
+
+export class UpdateCommentDto {
+  @IsString({ message: ValidationError.MustBeAString })
+  @Length(1, 512, { message: ValidationError.MustBeBetweenChars(1, 512) })
+  content: string;
+}

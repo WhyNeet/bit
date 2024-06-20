@@ -48,21 +48,12 @@ export class PostPageComponent {
   private postId = this.activatedRoute.snapshot.params["postId"] as string;
   protected post$ = new BehaviorSubject<FullPost | null>(null);
   protected postVotingState$!: Observable<PostDto["votingState"]>;
-  protected isLoggedIn: Signal<boolean>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
     protected userService: UserService,
-    private store: Store,
   ) {
-    this.isLoggedIn = toSignal(
-      this.store.pipe(
-        select(selectUser),
-        map((user) => !!user),
-      ),
-    ) as Signal<boolean>;
-
     this.postsService
       .getPost(this.postId, ["author", "community"])
       .pipe(

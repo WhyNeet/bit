@@ -23,7 +23,7 @@
             </div>
             <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
             <div class="mb-4" [innerHtml]="post.renderedContent"></div>
-            <app-ui-post-footer [canVote]="isLoggedIn()" (onVote)="onVoteChange($event)" [post]="post" />
+            <app-ui-post-footer [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
         </div>
     </div>
 

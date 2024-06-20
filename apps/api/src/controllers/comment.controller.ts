@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -80,6 +81,27 @@ export class CommentController {
 
     return {
       data: this.commentFactoryService.createDto(comment),
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Delete("/:commentId")
+  public async deleteComment(
+    @Param("commentId", ParseObjectIdPipe.stringified()) commentId: string,
+    @Token() payload: JwtPayload,
+  ): ApiResponse<null> {
+    const isValidOwner =
+      await this.commentRespositoryService.verifyCommentOwner(
+        commentId,
+        payload.sub,
+      );
+    if (!isValidOwner) throw new CommentException.CommentCannotBeModified();
+
+    await this.commentRespositoryService.deleteComment(commentId);
+
+    return {
+      data: null,
     };
   }
 }

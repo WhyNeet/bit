@@ -6,7 +6,7 @@ import { Exception } from "src/frameworks/exception-handling/types/exception.int
 export class CommentException {
   @CommonException(
     "Comment cannot be modified.",
-    "Only comment or community owner is allowed to modify this comment.",
+    "Only comment owner is allowed to modify this comment.",
     HttpStatus.FORBIDDEN,
   )
   public static readonly CommentCannotBeModified: Exception;

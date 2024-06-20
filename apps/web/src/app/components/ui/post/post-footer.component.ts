@@ -49,6 +49,8 @@ export class PostFooterComponent {
 	@Input() post!: PostDto & { author: UserDto; community: CommunityDto };
 	protected isExpanded = false;
 
+	@Input() canVote = true;
+
 	public onVote = output<PostDto["votingState"]>();
 
 	constructor(
@@ -69,6 +71,8 @@ export class PostFooterComponent {
 	}
 
 	protected handleLikeClick() {
+		if (!this.canVote) return;
+
 		if (this.post.votingState === UserPostRelationType.Upvote) {
 			this.onVote.emit(null);
 			this.postsService.removePostLike(this.post.id);
@@ -79,6 +83,8 @@ export class PostFooterComponent {
 	}
 
 	protected handleDislikeClick() {
+		if (!this.canVote) return;
+
 		if (this.post.votingState === UserPostRelationType.Downvote) {
 			this.onVote.emit(null);
 			this.postsService.removePostDislike(this.post.id);

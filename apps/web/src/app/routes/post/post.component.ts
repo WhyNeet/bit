@@ -2,11 +2,14 @@ import { CommonModule } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	Component,
+	Signal,
 	afterNextRender,
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideChevronLeft } from "@ng-icons/lucide";
+import { Store, select } from "@ngrx/store";
 import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -16,6 +19,7 @@ import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
+import { selectUser } from "../../state/user/selectors";
 
 dayjs.extend(relativeTime);
 
@@ -44,12 +48,21 @@ export class PostPageComponent {
 	private postId = this.activatedRoute.snapshot.params["postId"] as string;
 	protected post$ = new BehaviorSubject<FullPost | null>(null);
 	protected postVotingState$!: Observable<PostDto["votingState"]>;
+	protected isLoggedIn: Signal<boolean>;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private postsService: PostsService,
 		protected userService: UserService,
+		private store: Store,
 	) {
+		this.isLoggedIn = toSignal(
+			this.store.pipe(
+				select(selectUser),
+				map((user) => !!user),
+			),
+		) as Signal<boolean>;
+
 		this.postsService
 			.getPost(this.postId, ["author", "community"])
 			.pipe(
@@ -73,6 +86,8 @@ export class PostPageComponent {
 	}
 
 	protected onVoteChange(votingState: PostDto["votingState"]) {
+		// if (!this.isLoggedIn()) return
+
 		// biome-ignore lint/style/noNonNullAssertion: is always a non-null value if this handler is invoked
 		const currentPost = this.post$.getValue()!;
 

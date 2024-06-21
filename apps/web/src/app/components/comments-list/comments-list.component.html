@@ -1,0 +1,25 @@
+<div class="flex flex-col items-stretch gap-4">
+    @if (comments$ | async; as comments) {
+        @for (batch of comments; track $index) {
+            @if (batch.length > 0) {
+                @for (comment of batch; track comment.id) {
+                    <app-ui-comment [comment]="$any(comment)" />
+                }
+            }
+        }
+
+        @if (isLoading$ | async) {
+            <div @label class="h-12 w-full flex items-center justify-center gap-4 text-text/80 font-display">
+                <app-ui-progress-spinner class="h-6 w-6 text-primary" />
+                Loading more comments...
+            </div>
+        }
+    } @else {
+        @if (isLoading$ | async) {
+            @for (_ of [].constructor(5); track $index) {
+                <app-ui-skeleton class="w-full h-28 rounded-default mb-4" />
+            }
+        }
+    }
+    <div class="w-full" #listEnd></div>
+</div>

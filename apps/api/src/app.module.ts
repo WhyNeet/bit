@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { NestjsFormDataModule as FormDataModule } from "nestjs-form-data";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { AuthController } from "./controllers/auth.controller";
+import { CommentController } from "./controllers/comment.controller";
 import { CommunityController } from "./controllers/community.controller";
 import { CurrentUserController } from "./controllers/current-user.controller";
 import { MediaController } from "./controllers/media.controller";
@@ -24,6 +25,7 @@ import { FrameworksModule } from "./frameworks/frameworks.module";
     CommunityController,
     PostController,
     MediaController,
+    CommentController,
   ],
 })
 export class AppModule {}

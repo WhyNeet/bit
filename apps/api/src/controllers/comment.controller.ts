@@ -15,6 +15,8 @@ import { CommentDto } from "common";
 import { CreateCommentDto, UpdateCommentDto } from "src/core/dtos/comment.dto";
 import { CommentFactoryService } from "src/features/comment/comment-factory.service";
 import { CommentRepositoryService } from "src/features/comment/comment-repository.service";
+import { PageData } from "src/features/decorators/pagination/page-data.interface";
+import { Pagination } from "src/features/decorators/pagination/pagination.decorator";
 import { CommentException } from "src/features/exception-handling/exceptions/comment.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
@@ -48,9 +50,13 @@ export class CommentController {
   @Get("/post/:postId")
   public async getPostComments(
     @Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+    @Pagination() pageData: PageData,
   ): ApiResponse<CommentDto[]> {
-    const comments =
-      await this.commentRespositoryService.getPostComments(postId);
+    const comments = await this.commentRespositoryService.getPostComments(
+      postId,
+      pageData.page,
+      pageData.perPage,
+    );
 
     return {
       data: comments.map(

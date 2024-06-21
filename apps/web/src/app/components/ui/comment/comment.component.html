@@ -1,0 +1,7 @@
+<div class="p-4 rounded-default bg-text/5 border border-text/10">
+  <div class="flex gap-2 items-center mb-2 font-display font-semibold">
+    <app-ui-avatar [size]="24" [src]="userService.getUserAvatarUrl(comment.author.id)" />
+    {{ "@" }}{{ comment.author.username }}
+  </div>
+  <div>{{ comment.content }}</div>
+</div>

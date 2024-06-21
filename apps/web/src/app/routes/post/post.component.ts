@@ -2,21 +2,18 @@ import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
-  Signal,
   afterNextRender,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideChevronLeft } from "@ng-icons/lucide";
-import { Store, select } from "@ngrx/store";
+import { lucideChevronLeft, lucideSendHorizontal } from "@ng-icons/lucide";
 import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
   BehaviorSubject,
   Observable,
-  Subject,
   filter,
   map,
   switchMap,
@@ -25,9 +22,9 @@ import {
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
+import { CommentsService } from "../../features/comments/comments.service";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
-import { selectUser } from "../../state/user/selectors";
 
 dayjs.extend(relativeTime);
 
@@ -46,13 +43,22 @@ export type FullPost = PostDto & {
     RouterLink,
     AvatarComponent,
     PostFooterComponent,
+    ReactiveFormsModule,
   ],
-  viewProviders: [provideIcons({ lucideChevronLeft })],
+  viewProviders: [provideIcons({ lucideChevronLeft, lucideSendHorizontal })],
   templateUrl: "./post.component.html",
   styleUrl: "./post.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostPageComponent {
+  protected comment = new FormControl("", {
+    validators: [
+      Validators.minLength(1),
+      Validators.maxLength(512),
+      Validators.required,
+    ],
+  });
+
   private postId = this.activatedRoute.snapshot.params["postId"] as string;
   protected post$ = new BehaviorSubject<FullPost | null>(null);
   protected postVotingState$!: Observable<PostDto["votingState"]>;
@@ -61,6 +67,7 @@ export class PostPageComponent {
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
     protected userService: UserService,
+    private commentsService: CommentsService,
   ) {
     this.postsService
       .getPost(this.postId, ["author", "community"])
@@ -115,5 +122,12 @@ export class PostPageComponent {
 
   protected timeElapsed(since: Date) {
     return dayjs(since).fromNow();
+  }
+
+  protected handleCreateCommentClick() {
+    if (this.comment.invalid) return;
+
+    // biome-ignore lint/style/noNonNullAssertion: is not null
+    this.commentsService.createComment(this.postId, this.comment.value!);
   }
 }

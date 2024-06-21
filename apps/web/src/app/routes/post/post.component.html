@@ -1,11 +1,11 @@
-<div class="pt-16 h-full">
+<div class="pt-16 pr-8 h-full">
 @if (post$ | async; as post) {
 
-    <div class="flex gap-2">
+    <div class="flex gap-2 w-full">
         <a routerLink="/" class="h-10 w-10 rounded-default hover:bg-text/10 aspect-square transition-colors flex items-center justify-center">
             <ng-icon name="lucideChevronLeft" size="24" />
         </a>
-        <div>
+        <div class="w-full">
             <div class="flex gap-2 items-center mb-4">
                 <app-ui-avatar [src]="userService.getUserAvatarUrl(post.author.id)" [size]="40" />
                 <div>
@@ -24,7 +24,13 @@
             <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
             <div class="mb-4" [innerHtml]="post.renderedContent"></div>
             <app-ui-post-footer [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
-        </div>
+            <div class="mt-4 w-full rounded-default bg-text/5 border border-text/10 flex items-stretch gap-2 overflow-hidden">
+              <input [formControl]="comment" class="bg-transparent font-display placeholder:text-text/60 outline-none w-full px-4 py-2" placeholder="Add a comment..." />
+              <button (click)="handleCreateCommentClick()" [disabled]="comment.invalid" class="flex items-center justify-center text-text/80 hover:text-primary h-10 border-l border-l-text/10 px-4 hover:bg-text/5 disabled:hover:bg-transparent disabled:hover:text-text/80 disabled:opacity-80 transition-colors">
+                <ng-icon name="lucideSendHorizontal" size="20" />
+              </button>
+            </div>
+        </div >
     </div>
 } @else {
   <div class="h-full w-full flex items-center justify-center flex-col">

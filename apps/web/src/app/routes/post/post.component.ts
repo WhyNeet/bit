@@ -24,17 +24,15 @@ import {
   Subject,
   catchError,
   filter,
-  lastValueFrom,
   map,
   switchMap,
   take,
   takeUntil,
   takeWhile,
-  tap,
   throwError,
 } from "rxjs";
+import { CommentsListComponent } from "../../components/comments-list/comments-list.component";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
-import { CommentComponent } from "../../components/ui/comment/comment.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
 import { ProgressSpinnerComponent } from "../../components/ui/progress-spinner/progress-spinner.component";
@@ -64,7 +62,7 @@ export type FullPost = PostDto & {
     PostFooterComponent,
     ReactiveFormsModule,
     ProgressSpinnerComponent,
-    CommentComponent,
+    CommentsListComponent,
   ],
   viewProviders: [provideIcons({ lucideChevronLeft, lucideSendHorizontal })],
   templateUrl: "./post.component.html",
@@ -84,7 +82,7 @@ export class PostPageComponent {
   protected post$ = new BehaviorSubject<FullPost | null>(null);
   protected postVotingState$!: Observable<PostDto["votingState"]>;
   protected postComments$: Observable<FullComment[][] | undefined>;
-  private commentsLoading$ = new Subject<void>();
+  protected commentsLoading$ = new Subject<boolean>();
   protected isNotFound$ = new Subject<boolean>();
 
   constructor(
@@ -129,9 +127,11 @@ export class PostPageComponent {
         takeUntil(this.commentsLoading$),
       )
       .subscribe(({ id }) => {
-        this.commentsLoading$.next();
+        this.commentsLoading$.next(true);
         this.commentsService.getComments(id, 0, 20, ["author"]);
       });
+
+    this.postComments$.subscribe(() => this.commentsLoading$.next(false));
 
     afterNextRender(() => {
       // voting state is specific for every user, fetch it on the client
@@ -183,5 +183,9 @@ export class PostPageComponent {
 
     // biome-ignore lint/style/noNonNullAssertion: is not null
     this.commentsService.createComment(this.postId, this.comment.value!);
+  }
+
+  protected fetchComments(page: number, perPage: number) {
+    this.commentsService.getComments(this.postId, page, perPage, ["author"]);
   }
 }

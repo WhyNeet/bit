@@ -1,4 +1,4 @@
-<div class="pt-16">
+<div class="pt-16 h-full">
 @if (post$ | async; as post) {
 
     <div class="flex gap-2">
@@ -26,6 +26,10 @@
             <app-ui-post-footer [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
         </div>
     </div>
-
+} @else {
+  <div class="h-full w-full flex items-center justify-center flex-col">
+    <h1 class="text-2xl font-semibold font-display mb-4">Post does not exist.</h1>
+    <a routerLink="/home" class="px-4 py-2 rounded-default bg-text/5 hover:bg-secondary transition-colors font-display font-semibold">Return to homepage.</a>
+  </div>
 }
 </div>

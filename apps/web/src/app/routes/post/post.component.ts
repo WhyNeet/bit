@@ -13,7 +13,15 @@ import { Store, select } from "@ngrx/store";
 import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { BehaviorSubject, Observable, Subject, map, switchMap } from "rxjs";
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  filter,
+  map,
+  switchMap,
+  take,
+} from "rxjs";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
@@ -67,12 +75,16 @@ export class PostPageComponent {
     afterNextRender(() => {
       // voting state is specific for every user, fetch it on the client
       this.postVotingState$ = this.postsService.getPostVotingState(this.postId);
-      this.postVotingState$.subscribe((votingState) =>
-        this.post$.next({
-          ...(this.post$.getValue() ?? {}),
-          votingState,
-        } as FullPost),
-      );
+      this.postVotingState$
+        .pipe(
+          switchMap((state) =>
+            this.post$.pipe(map((post) => ({ post, state }))),
+          ),
+          filter(({ post }) => !!post),
+          map(({ state, post }) => ({ ...post, votingState: state })),
+          take(1),
+        )
+        .subscribe((post) => this.post$.next(post as FullPost));
     });
   }
 

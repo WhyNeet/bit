@@ -20,16 +20,11 @@ import {
   debounceTime,
   filter,
   map,
-  switchMap,
   take,
   takeWhile,
-  tap,
   withLatestFrom,
 } from "rxjs";
-import { appear } from "../../animations/appear.animation";
-import { disappear } from "../../animations/disappear.animation";
 import { label } from "../../animations/label.animation";
-import { postsFetching } from "../../state/posts/actions";
 import { PostComponent } from "../ui/post/post.component";
 import { ProgressSpinnerComponent } from "../ui/progress-spinner/progress-spinner.component";
 import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
@@ -44,7 +39,7 @@ import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
     ProgressSpinnerComponent,
   ],
   providers: [],
-  animations: [appear, disappear, label],
+  animations: [label],
   templateUrl: "./post-list.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -111,9 +106,5 @@ export class PostListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isPlatformServer(this.platformId)) return;
 
     this.listEndObserver.disconnect();
-  }
-
-  protected handleScroll(event: Event) {
-    console.log(event);
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Comment, CreateCommentDto } from "common";
 import { CommentDto } from "common";
+import { Types } from "mongoose";
 import { RelationDtoHelper } from "../helpers/relation-dto.helper";
 import { PostFactoryService } from "../post/post-factory.service";
 import { UserFactoryService } from "../user/user-factory.service";
@@ -31,11 +32,11 @@ export class CommentFactoryService {
     dto.id = comment.id;
     dto.content = comment.content;
     dto.author = RelationDtoHelper.createFromRelation(
-      dto.author,
+      comment.author,
       this.userFactoryService.createDto.bind(this.userFactoryService),
     );
     dto.post = RelationDtoHelper.createFromRelation(
-      dto.post,
+      comment.post,
       this.postFactoryService.createDto.bind(this.postFactoryService),
     );
     dto.createdAt = comment.createdAt;

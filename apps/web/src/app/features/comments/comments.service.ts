@@ -15,10 +15,17 @@ export class CommentsService {
     private store: Store,
   ) {}
 
-  public getComments(post: string, page = 0, perPage = 20, include = []) {
+  public getComments(
+    post: string,
+    page = 0,
+    perPage = 20,
+    include: string[] = [],
+  ) {
     this.httpClient
       .get(
-        `${environment}/comments/${post}?page=${page}&perPage=${perPage}&include=${include.join(
+        `${
+          environment.API_BASE_URL
+        }/comments/post/${post}?page=${page}&perPage=${perPage}&include=${include.join(
           ",",
         )}`,
       )

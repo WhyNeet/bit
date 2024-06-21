@@ -8,25 +8,44 @@ import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideChevronLeft, lucideSendHorizontal } from "@ng-icons/lucide";
-import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
+import { Store, select } from "@ngrx/store";
+import {
+  CommentDto,
+  CommunityDto,
+  PostDto,
+  UserDto,
+  UserPostRelationType,
+} from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
   BehaviorSubject,
   Observable,
+  Subject,
+  catchError,
   filter,
+  lastValueFrom,
   map,
   switchMap,
   take,
+  takeUntil,
+  takeWhile,
+  tap,
+  throwError,
 } from "rxjs";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
+import { CommentComponent } from "../../components/ui/comment/comment.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
+import { ProgressSpinnerComponent } from "../../components/ui/progress-spinner/progress-spinner.component";
 import { CommentsService } from "../../features/comments/comments.service";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
+import { selectComments } from "../../state/comments/selectors";
 
 dayjs.extend(relativeTime);
+
+export type FullComment = CommentDto & { author: UserDto };
 
 export type FullPost = PostDto & {
   community: CommunityDto;
@@ -44,6 +63,8 @@ export type FullPost = PostDto & {
     AvatarComponent,
     PostFooterComponent,
     ReactiveFormsModule,
+    ProgressSpinnerComponent,
+    CommentComponent,
   ],
   viewProviders: [provideIcons({ lucideChevronLeft, lucideSendHorizontal })],
   templateUrl: "./post.component.html",
@@ -62,22 +83,55 @@ export class PostPageComponent {
   private postId = this.activatedRoute.snapshot.params["postId"] as string;
   protected post$ = new BehaviorSubject<FullPost | null>(null);
   protected postVotingState$!: Observable<PostDto["votingState"]>;
+  protected postComments$: Observable<FullComment[][] | undefined>;
+  private commentsLoading$ = new Subject<void>();
+  protected isNotFound$ = new Subject<boolean>();
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
     protected userService: UserService,
     private commentsService: CommentsService,
+    private store: Store,
   ) {
     this.postsService
       .getPost(this.postId, ["author", "community"])
       .pipe(
+        catchError((err) => {
+          this.isNotFound$.next(true);
+          return throwError(() => err);
+        }),
         map((post) => ({
           ...post,
           renderedContent: markdown.render(post.content),
         })),
       )
-      .subscribe((data) => this.post$.next(data as FullPost));
+      .subscribe((data) => {
+        this.post$.next(data as FullPost);
+      });
+
+    this.postComments$ = this.store.pipe(
+      select(selectComments),
+      map(
+        (comments) => comments.get(this.postId) as FullComment[][] | undefined,
+      ),
+    );
+
+    this.post$
+      .pipe(
+        filter((post) => !!post),
+        switchMap((post) =>
+          this.postComments$.pipe(
+            map((comments) => ({ comments, id: post?.id as string })),
+          ),
+        ),
+        takeWhile(({ comments }) => comments === undefined),
+        takeUntil(this.commentsLoading$),
+      )
+      .subscribe(({ id }) => {
+        this.commentsLoading$.next();
+        this.commentsService.getComments(id, 0, 20, ["author"]);
+      });
 
     afterNextRender(() => {
       // voting state is specific for every user, fetch it on the client

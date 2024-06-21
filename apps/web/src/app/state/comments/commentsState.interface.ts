@@ -1,5 +1,6 @@
 import { CommentDto } from "common";
 
 export interface CommentsState {
-  comments: Map<string, CommentDto[]>;
+  // mapping between post id and batches of comments
+  comments: Map<string, CommentDto[][]>;
 }

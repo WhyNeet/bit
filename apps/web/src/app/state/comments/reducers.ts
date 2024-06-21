@@ -9,12 +9,15 @@ export const initialState: CommentsState = {
 export const reducers = createReducer(
   initialState,
   on(commentsFetched, (state, action) => {
-    state.comments.set(action.postId, action.comments);
+    state.comments.set(action.postId, [
+      ...(state.comments.get(action.postId) ?? []),
+      action.comments,
+    ]);
     return state;
   }),
   on(commentCreated, (state, action) => {
     state.comments.set(action.postId, [
-      action.comment,
+      [action.comment],
       ...(state.comments.get(action.postId) ?? []),
     ]);
     return state;

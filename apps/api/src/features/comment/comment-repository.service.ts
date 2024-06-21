@@ -16,6 +16,7 @@ export class CommentRepositoryService {
 
   public async getPostComments(
     postId: string,
+    include: string[],
     page = 0,
     perPage = 20,
   ): Promise<Comment[]> {
@@ -24,6 +25,7 @@ export class CommentRepositoryService {
       { createdAt: "desc" },
       perPage,
       page * perPage,
+      include,
     );
   }
 

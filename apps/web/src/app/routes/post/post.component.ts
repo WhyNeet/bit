@@ -40,6 +40,7 @@ import { CommentsService } from "../../features/comments/comments.service";
 import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
 import { selectComments } from "../../state/comments/selectors";
+import { selectUser } from "../../state/user/selectors";
 
 dayjs.extend(relativeTime);
 
@@ -84,6 +85,7 @@ export class PostPageComponent {
   protected postComments$: Observable<FullComment[][] | undefined>;
   protected commentsLoading$ = new Subject<boolean>();
   protected isNotFound$ = new Subject<boolean>();
+  protected isLoggedIn$: Observable<boolean>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -92,6 +94,11 @@ export class PostPageComponent {
     private commentsService: CommentsService,
     private store: Store,
   ) {
+    this.isLoggedIn$ = this.store.pipe(
+      select(selectUser),
+      map((user) => !!user),
+    );
+
     this.postsService
       .getPost(this.postId, ["author", "community"])
       .pipe(

@@ -6,6 +6,7 @@ import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
   commentCreated,
+  commentDeleted,
   commentUpdated,
   commentsFetched,
 } from "../../state/comments/actions";
@@ -85,5 +86,21 @@ export class CommentsService {
           commentUpdated({ content, commentId: id, postId: post as string }),
         );
       });
+  }
+
+  public deleteComment(commentId: string) {
+    this.httpClient
+      .delete(`${environment.API_BASE_URL}/comments/${commentId}`, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((res) => (res as { data: CommentDto }).data),
+        catchError((err) => throwError(() => err)),
+      )
+      .subscribe(({ id, post }) =>
+        this.store.dispatch(
+          commentDeleted({ commentId: id, postId: post as string }),
+        ),
+      );
   }
 }

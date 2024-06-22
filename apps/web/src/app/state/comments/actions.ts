@@ -13,3 +13,7 @@ export const commentUpdated = createAction(
   "[Comments] Comment Updated",
   props<{ postId: string; commentId: string; content: string }>(),
 );
+export const commentDeleted = createAction(
+  "[Comments] Comment Deleted",
+  props<{ commentId: string; postId: string }>(),
+);

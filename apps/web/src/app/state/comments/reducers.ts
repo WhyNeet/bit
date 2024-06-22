@@ -1,5 +1,10 @@
 import { createReducer, on } from "@ngrx/store";
-import { commentCreated, commentUpdated, commentsFetched } from "./actions";
+import {
+  commentCreated,
+  commentDeleted,
+  commentUpdated,
+  commentsFetched,
+} from "./actions";
 import { CommentsState } from "./commentsState.interface";
 
 export const initialState: CommentsState = {
@@ -39,6 +44,19 @@ export const reducers = createReducer(
             ? { ...comment, content: action.content }
             : comment,
         ),
+      ),
+    );
+
+    return { comments: updated };
+  }),
+  on(commentDeleted, (state, action) => {
+    const updated = new Map(state.comments);
+
+    const comments = updated.get(action.postId) ?? [];
+    updated.set(
+      action.postId,
+      comments.map((batch) =>
+        batch.filter(({ id }) => id !== action.commentId),
       ),
     );
 

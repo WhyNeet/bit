@@ -88,6 +88,8 @@ export class CommentController {
       updateCommentDto.content,
     );
 
+    comment.content = updateCommentDto.content;
+
     return {
       data: this.commentFactoryService.createDto(comment),
     };

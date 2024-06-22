@@ -9,3 +9,7 @@ export const commentCreated = createAction(
   "[Comments] Comment Created",
   props<{ postId: string; comment: CommentDto }>(),
 );
+export const commentUpdated = createAction(
+  "[Comments] Comment Updated",
+  props<{ postId: string; commentId: string; content: string }>(),
+);

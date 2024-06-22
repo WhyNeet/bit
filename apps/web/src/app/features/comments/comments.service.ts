@@ -1,10 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { CommentDto, CreateCommentDto } from "common";
+import { CommentDto, CreateCommentDto, UpdateCommentDto } from "common";
 import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
-import { commentCreated, commentsFetched } from "../../state/comments/actions";
+import {
+  commentCreated,
+  commentUpdated,
+  commentsFetched,
+} from "../../state/comments/actions";
 
 @Injectable({
   providedIn: "root",
@@ -59,5 +63,27 @@ export class CommentsService {
       .subscribe((comment) =>
         this.store.dispatch(commentCreated({ postId: post, comment })),
       );
+  }
+
+  public updateComment(commentId: string, content: string) {
+    const payload: UpdateCommentDto = {
+      content,
+    };
+
+    this.httpClient
+      .patch(`${environment.API_BASE_URL}/comments/${commentId}`, payload, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((res) => (res as { data: CommentDto }).data),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      )
+      .subscribe(({ content, id, post }) => {
+        this.store.dispatch(
+          commentUpdated({ content, commentId: id, postId: post as string }),
+        );
+      });
   }
 }

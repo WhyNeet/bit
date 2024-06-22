@@ -24,11 +24,14 @@ import {
   Subject,
   catchError,
   filter,
+  lastValueFrom,
   map,
+  mergeMap,
   switchMap,
   take,
   takeUntil,
   takeWhile,
+  tap,
   throwError,
 } from "rxjs";
 import { CommentsListComponent } from "../../components/comments-list/comments-list.component";
@@ -125,13 +128,13 @@ export class PostPageComponent {
     this.post$
       .pipe(
         filter((post) => !!post),
-        switchMap((post) =>
+        mergeMap((post) =>
           this.postComments$.pipe(
-            map((comments) => ({ comments, id: post?.id as string })),
+            map((comments) => ({ comments, id: (post as FullPost).id })),
           ),
         ),
         takeWhile(({ comments }) => comments === undefined),
-        takeUntil(this.commentsLoading$),
+        take(1),
       )
       .subscribe(({ id }) => {
         this.commentsLoading$.next(true);
@@ -141,7 +144,7 @@ export class PostPageComponent {
     this.postComments$.subscribe(() => this.commentsLoading$.next(false));
 
     afterNextRender(() => {
-      // voting state is specific for every user, fetch it on the client
+      // voting state is specific for every user, fetch it on the client side
       this.postVotingState$ = this.postsService.getPostVotingState(this.postId);
       this.postVotingState$
         .pipe(
@@ -157,9 +160,7 @@ export class PostPageComponent {
   }
 
   protected onVoteChange(votingState: PostDto["votingState"]) {
-    // if (!this.isLoggedIn()) return
-
-    // biome-ignore lint/style/noNonNullAssertion: is always a non-null value if this handler is invoked
+    // biome-ignore lint/style/noNonNullAssertion: is never a null value if this handler is invoked
     const currentPost = this.post$.getValue()!;
 
     if (votingState === null) {

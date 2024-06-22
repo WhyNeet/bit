@@ -1,7 +1,24 @@
-<div class="p-4 rounded-default bg-text/5 border border-text/10">
+<div class="p-4 rounded-default bg-text/5 border border-text/10 relative">
   <div class="flex gap-2 items-center mb-2 font-display font-semibold">
     <app-ui-avatar [size]="24" [src]="userService.getUserAvatarUrl(comment.author.id)" />
     {{ "@" }}{{ comment.author.username }}
   </div>
-  <div>{{ comment.content }}</div>
+  <input #contentInput [hidden]="!isEditing()" [formControl]="changedContent" class="bg-transparent outline-none placeholder:text-text/60" placeholder="Comment..." />
+  @if (!isEditing()) {
+    <div>{{ comment.content }}</div>
+  }
+  @if (comment.author.id === (userId$ | async)) {
+    <div class="absolute top-4 right-4 flex gap-2">
+      @if (isEditing()) {
+        <button (click)="onEditsApproved()" class="flex items-center justify-center rounded-default bg-text/5 border border-text/10 w-9 h-9">
+          <ng-icon name="lucideCheck" size="18" />
+        </button>
+        <button (click)="onEditsCancel()" class="flex items-center justify-center rounded-default bg-text/5 border border-text/10 w-9 h-9">
+          <ng-icon name="lucideX" size="18" />
+        </button>
+      } @else {
+        <app-ui-options (onSelectionChange)="onAction($event)" [options]="actions" />
+      }
+    </div>
+  }
 </div>

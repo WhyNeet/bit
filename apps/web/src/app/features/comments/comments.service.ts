@@ -82,6 +82,7 @@ export class CommentsService {
         }),
       )
       .subscribe(({ content, id, post }) => {
+        console.log("new content:", content);
         this.store.dispatch(
           commentUpdated({ content, commentId: id, postId: post as string }),
         );

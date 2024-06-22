@@ -48,7 +48,9 @@ export class CommentRepositoryService {
     userId: string,
   ): Promise<boolean> {
     return (
-      (await this.dataServices.comments.get({ _id: commentId })).id === userId
+      (
+        await this.dataServices.comments.get({ _id: commentId })
+      ).author.toString() === userId
     );
   }
 }

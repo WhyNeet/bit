@@ -99,7 +99,7 @@ export class CommentController {
   public async deleteComment(
     @Param("commentId", ParseObjectIdPipe.stringified()) commentId: string,
     @Token() payload: JwtPayload,
-  ): ApiResponse<null> {
+  ): ApiResponse<CommentDto> {
     const isValidOwner =
       await this.commentRespositoryService.verifyCommentOwner(
         commentId,
@@ -107,10 +107,11 @@ export class CommentController {
       );
     if (!isValidOwner) throw new CommentException.CommentCannotBeModified();
 
-    await this.commentRespositoryService.deleteComment(commentId);
+    const comment =
+      await this.commentRespositoryService.deleteComment(commentId);
 
     return {
-      data: null,
+      data: this.commentFactoryService.createDto(comment),
     };
   }
 }

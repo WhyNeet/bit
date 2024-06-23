@@ -1,7 +1,12 @@
+import { isPlatformServer } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
+  Input,
+  OnInit,
+  PLATFORM_ID,
   ViewChild,
   afterNextRender,
   input,
@@ -17,7 +22,10 @@ import {
 import { baseKeymap, toggleMark } from "prosemirror-commands";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
-import { defaultMarkdownSerializer } from "prosemirror-markdown";
+import {
+  defaultMarkdownParser,
+  defaultMarkdownSerializer,
+} from "prosemirror-markdown";
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
@@ -46,9 +54,12 @@ export class EditorComponent {
   onSend = output<string>();
   disabled = input<boolean>(false);
 
+  @Input() initialContent: string | undefined = undefined;
+
   private view!: EditorView;
 
-  constructor() {
+  // biome-ignore lint/complexity/noBannedTypes: Angular
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     afterNextRender(() => {
       const state = EditorState.create({
         schema,
@@ -68,6 +79,9 @@ export class EditorComponent {
             },
           }),
         ],
+        doc: this.initialContent
+          ? defaultMarkdownParser.parse(this.initialContent)
+          : undefined,
       });
 
       this.view = new EditorView(this.editorRoot.nativeElement, {

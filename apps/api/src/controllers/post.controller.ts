@@ -338,8 +338,10 @@ export class PostController {
     if (oldPost.author.toString() !== token.sub)
       throw new PostException.PostCannotBeModified();
 
-    await this.storageServices.deleteFiles(oldPost.images);
-    await this.storageServices.deleteFiles(oldPost.files);
+    if (oldPost.images.length)
+      await this.storageServices.deleteFiles(oldPost.images);
+    if (oldPost.files.length)
+      await this.storageServices.deleteFiles(oldPost.files);
 
     const images = (updatePostDto.images ?? []).map((f) => ({
       body: f.buffer,
@@ -373,15 +375,17 @@ export class PostController {
       updatePostDto.title,
     );
 
+    console.log("post:", post, updatedPost);
+
     await this.vectorStorageServices.updateVectorData<PostVectorData>(
       "POSTS_EMBEDDINGS",
       [
         this.vectorFactoryService.createPostEmbeddingVector(
-          post.id,
-          post.title,
+          updatedPost.id,
+          updatedPost.title,
           titleVector,
           token.sub,
-          post.community.toString(),
+          updatedPost.community?.toString(),
         ),
       ],
     );

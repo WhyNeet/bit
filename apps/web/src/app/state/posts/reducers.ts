@@ -4,10 +4,12 @@ import {
   homePostsFetched,
   latestPostsFetched,
   postCreated,
+  postDeleted,
   postDislikeRemoved,
   postDisliked,
   postLikeRemoved,
   postLiked,
+  postUpdated,
   postsFetching,
 } from "./actions";
 import { PostsState } from "./postsState.interface";
@@ -161,4 +163,47 @@ export const reducers = createReducer(
       latest: { ...state.latest, posts: latestPosts ?? null },
     };
   }),
+
+  on(postDeleted, (state, action) => ({
+    ...state,
+    home: {
+      ...state.home,
+      posts: state.home.posts
+        ? state.home.posts.map((batch) =>
+            batch.filter(({ id }) => id !== action.postId),
+          )
+        : null,
+    },
+    latest: {
+      ...state.latest,
+      posts: state.latest.posts
+        ? state.latest.posts.map((batch) =>
+            batch.filter(({ id }) => id !== action.postId),
+          )
+        : null,
+    },
+  })),
+  on(postUpdated, (state, action) => ({
+    ...state,
+    home: {
+      ...state.home,
+      posts: state.home.posts
+        ? state.home.posts.map((batch) =>
+            batch.map((post) =>
+              post.id === action.post.id ? action.post : post,
+            ),
+          )
+        : null,
+    },
+    latest: {
+      ...state.latest,
+      posts: state.latest.posts
+        ? state.latest.posts.map((batch) =>
+            batch.map((post) =>
+              post.id === action.post.id ? action.post : post,
+            ),
+          )
+        : null,
+    },
+  })),
 );

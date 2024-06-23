@@ -2,17 +2,19 @@ import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store, select } from "@ngrx/store";
-import { PostDto, UserDto } from "common";
+import { PostDto, UpdatePostDto, UserDto } from "common";
 import { catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
   homePostsFetched,
   latestPostsFetched,
   postCreated,
+  postDeleted,
   postDislikeRemoved,
   postDisliked,
   postLikeRemoved,
   postLiked,
+  postUpdated,
   postsFetching,
 } from "../../state/posts/actions";
 import { selectUser } from "../../state/user/selectors";
@@ -115,6 +117,35 @@ export class PostsService {
           }),
         ),
       );
+  }
+
+  public deletePost(postId: string) {
+    this.httpClient
+      .delete(`${environment.API_BASE_URL}/posts/${postId}`, {
+        withCredentials: true,
+      })
+      .subscribe(() => this.store.dispatch(postDeleted({ postId })));
+  }
+
+  public updatePost(postId: string, title: string, content: string) {
+    const payload: UpdatePostDto = {
+      content,
+      files: [],
+      images: [],
+      title,
+    };
+
+    this.httpClient
+      .patch(`${environment.API_BASE_URL}/posts/${postId}`, payload, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((res) => (res as { data: PostDto }).data),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      )
+      .subscribe((post) => this.store.dispatch(postUpdated({ post })));
   }
 
   public getPost(id: string, include?: string[]) {

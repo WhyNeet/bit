@@ -20,6 +20,15 @@ export const postCreated = createAction(
   "[Posts] Post Created",
   props<{ post: PostDto }>(),
 );
+export const postUpdated = createAction(
+  "[Posts] Post Updated",
+  props<{ post: PostDto }>(),
+);
+export const postDeleted = createAction(
+  "[Posts] Post Deleted",
+  props<{ postId: string }>(),
+);
+
 export const postLiked = createAction(
   "[Posts] Post Liked",
   props<{ id: string }>(),

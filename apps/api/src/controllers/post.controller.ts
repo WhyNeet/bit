@@ -414,8 +414,8 @@ export class PostController {
 
     await this.postRepositoryService.deletePost(postId);
 
-    await this.storageServices.deleteFiles(post.images);
-    await this.storageServices.deleteFiles(post.files);
+    if (post.images.length) await this.storageServices.deleteFiles(post.images);
+    if (post.files.length) await this.storageServices.deleteFiles(post.files);
 
     await this.vectorStorageServices.deleteVectorData("POSTS_EMBEDDINGS", [
       post.id,

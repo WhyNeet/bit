@@ -5,6 +5,7 @@ import {
   Input,
   Output,
   output,
+  signal,
 } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -56,6 +57,8 @@ import { Option, OptionsComponent } from "../options/options.component";
 export class PostFooterComponent {
   @Input() post!: PostDto & { author: UserDto; community: CommunityDto };
   protected isExpanded = false;
+
+  public onEditClick = output();
 
   protected userId$: Observable<string | undefined>;
 
@@ -124,6 +127,7 @@ export class PostFooterComponent {
   protected onAction(idx: number) {
     switch (idx) {
       case 0:
+        this.onEditClick.emit();
         break;
       case 1:
         this.postsService.deletePost(this.post.id);

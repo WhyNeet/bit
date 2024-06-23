@@ -26,11 +26,11 @@ export type Option = {
   ],
   providers: [],
   template: `
-  <button cdkOverlayOrigin #trigger="cdkOverlayOrigin" class="flex items-center gap-2 rounded-default bg-text/5 border border-text/10 p-2 font-display" (click)="toggle()">
+  <button cdkOverlayOrigin #trigger="cdkOverlayOrigin" class="flex items-center gap-2 rounded-default bg-text/5 px-4 py-2 h-9 font-display" (click)="toggle()">
     <ng-icon name="lucideMoreVertical" />
   </button>
   <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen()" (backdropClick)="isOpen.set(false)" [cdkConnectedOverlayHasBackdrop]="true" cdkConnectedOverlayBackdropClass="!opacity-0">
-      <div class="p-1 bg-text/5 backdrop-blur rounded-default border border-text/10 min-w-48 translate-y-28">
+      <div class="p-1 bg-text/5 backdrop-blur rounded-default border border-text/10 min-w-48 absolute top-[calc(100%+6px)] -right-10">
           @for (item of options(); track item.label) {
             <app-ui-dropdown-item (onSelect)="setCurrentItem($index)">
                 <ng-icon [name]="item.icon" size="18" icon />

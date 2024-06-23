@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,13 +13,17 @@ import {
   lucideThumbsDown,
   lucideThumbsUp,
 } from "@ng-icons/lucide";
+import { Store, select } from "@ngrx/store";
 import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
+import { Observable, map } from "rxjs";
 import { PostsService } from "../../../features/posts/posts.service";
+import { selectUser } from "../../../state/user/selectors";
+import { Option, OptionsComponent } from "../options/options.component";
 
 @Component({
   selector: "app-ui-post-footer",
   standalone: true,
-  imports: [NgIcon, RouterLink],
+  imports: [NgIcon, RouterLink, OptionsComponent, CommonModule],
   providers: [],
   viewProviders: [
     provideIcons({ lucideThumbsUp, lucideThumbsDown, lucideExternalLink }),
@@ -40,6 +45,9 @@ import { PostsService } from "../../../features/posts/posts.service";
           <ng-icon size="16" name="lucideExternalLink" />
         </a>
       }
+      @if ((userId$ | async) === post.author.id) {
+        <app-ui-options (onSelectionChange)="onAction($event)" [options]="actions" />
+      }
     </div>
 	`,
   styleUrl: "./post-footer.component.css",
@@ -49,14 +57,33 @@ export class PostFooterComponent {
   @Input() post!: PostDto & { author: UserDto; community: CommunityDto };
   protected isExpanded = false;
 
+  protected userId$: Observable<string | undefined>;
+
   @Input() canVote = true;
 
   public onVote = output<PostDto["votingState"]>();
 
+  protected actions: Option[] = [
+    {
+      label: "Edit",
+      icon: "lucidePencil",
+    },
+    {
+      label: "Delete",
+      icon: "lucideTrash",
+    },
+  ];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
+    private store: Store,
   ) {
+    this.userId$ = this.store.pipe(
+      select(selectUser),
+      map((user) => user?.id),
+    );
+
     // if current route is when user clicked "open post"
     if (typeof this.activatedRoute.snapshot.params["postId"] === "string")
       this.isExpanded = true;
@@ -91,6 +118,16 @@ export class PostFooterComponent {
     } else {
       this.onVote.emit(UserPostRelationType.Downvote);
       this.postsService.dislikePost(this.post.id);
+    }
+  }
+
+  protected onAction(idx: number) {
+    switch (idx) {
+      case 0:
+        break;
+      case 1:
+        this.postsService.deletePost(this.post.id);
+        break;
     }
   }
 }

@@ -3,8 +3,11 @@ import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   Signal,
   WritableSignal,
+  effect,
+  input,
   signal,
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
@@ -12,7 +15,6 @@ import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { CommunityDto, UserDto } from "common";
 import { map, take, takeWhile } from "rxjs";
-import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
 import { selectUser, selectUserCommunities } from "../../state/user/selectors";
 import { EditorComponent } from "../editor/editor.component";
@@ -48,11 +50,19 @@ export class PostFormComponent {
   private communityId = signal<string | null>(null);
   private currentUser!: Signal<UserDto>;
 
+  @Input() handleSend!: (data: {
+    title: string;
+    content: string;
+    communityId?: string;
+  }) => void;
+  initialDetails = input<{ title: string; content: string } | undefined>();
+
   constructor(
     private store: Store,
     private userService: UserService,
-    private postsService: PostsService,
   ) {
+    effect(() => this.title.setValue(this.initialDetails()?.title ?? ""));
+
     this.currentUser = toSignal(
       this.store.pipe(select(selectUser)),
     ) as Signal<UserDto>;
@@ -100,14 +110,11 @@ export class PostFormComponent {
     this.communityId.set(communityId);
   }
 
-  protected handleSend(content: string) {
-    this.postsService.createPost(
-      // biome-ignore lint/style/noNonNullAssertion: not null
-      this.title.value!,
+  protected handleSendClick(content: string) {
+    this.handleSend({
+      title: this.title.value as string,
       content,
-      [],
-      [],
-      this.communityId() ?? undefined,
-    );
+      communityId: this.communityId() ?? undefined,
+    });
   }
 }

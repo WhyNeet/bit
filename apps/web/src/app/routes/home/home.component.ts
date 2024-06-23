@@ -82,4 +82,12 @@ export class HomePageComponent {
   protected fetchMoreFollowing(page: number, perPage: number) {
     this.postsService.getHomePosts(page, perPage, ["author", "community"]);
   }
+
+  protected handleSend({
+    content,
+    title,
+    communityId,
+  }: { title: string; content: string; communityId?: string }) {
+    this.postsService.createPost(title, content, [], [], communityId);
+  }
 }

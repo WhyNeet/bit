@@ -190,7 +190,13 @@ export const reducers = createReducer(
       posts: state.home.posts
         ? state.home.posts.map((batch) =>
             batch.map((post) =>
-              post.id === action.post.id ? action.post : post,
+              post.id === action.post.id
+                ? {
+                    ...post,
+                    content: action.post.content,
+                    title: action.post.title,
+                  }
+                : post,
             ),
           )
         : null,
@@ -200,7 +206,13 @@ export const reducers = createReducer(
       posts: state.latest.posts
         ? state.latest.posts.map((batch) =>
             batch.map((post) =>
-              post.id === action.post.id ? action.post : post,
+              post.id === action.post.id
+                ? {
+                    ...post,
+                    content: action.post.content,
+                    title: action.post.title,
+                  }
+                : post,
             ),
           )
         : null,

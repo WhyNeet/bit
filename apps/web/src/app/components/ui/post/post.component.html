@@ -9,7 +9,12 @@
         <span class="h-1 w-1 rounded-full bg-text/60"></span>
         <div class="text-text/80">{{ timeElapsed }}</div>
     </div>
-    <h2 class="font-bold text-lg font-display mb-1">{{ post.title }}</h2>
-    <div [innerHtml]="renderedContent" class="mb-4 text-text/90"></div>
-    <app-ui-post-footer [post]="post" />
+    @if (isEditing()) {
+      <app-post-form [handleSend]="handleEditFinish.bind(this)" [initialDetails]="{ title: post.title, content: post.content }" />
+      <div class="h-4"></div>
+    } @else {
+      <h2 class="font-bold text-lg font-display mb-1">{{ post.title }}</h2>
+      <div [innerHtml]="renderedContent" class="mb-4 text-text/90"></div>
+    }
+    <app-ui-post-footer (onEditClick)="handleEditClick()" [post]="post" />
 </div>

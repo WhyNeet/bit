@@ -25,5 +25,7 @@ export class DialogService {
         ];
       },
     });
+
+    return ref;
   }
 }

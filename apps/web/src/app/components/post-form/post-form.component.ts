@@ -49,6 +49,7 @@ export class PostFormComponent {
   });
   private communityId = signal<string | null>(null);
   private currentUser!: Signal<UserDto>;
+  canChangeCommunity = input(true);
 
   @Input() handleSend!: (data: {
     title: string;

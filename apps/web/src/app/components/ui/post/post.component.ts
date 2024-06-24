@@ -44,7 +44,7 @@ export class PostComponent implements OnInit {
   }
 
   protected handleEditClick() {
-    this.isEditing.set(true);
+    this.isEditing.update((prev) => !prev);
   }
 
   protected handleEditFinish({

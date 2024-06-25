@@ -9,8 +9,10 @@ import {
   PLATFORM_ID,
   ViewChild,
   afterNextRender,
+  effect,
   input,
   output,
+  signal,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
@@ -29,6 +31,8 @@ import {
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { __read } from "tslib";
+import { imageAppear } from "../../animations/appear.animation";
 import { placeholder } from "./plugins/placeholder.plugin";
 
 @Component({
@@ -44,12 +48,20 @@ import { placeholder } from "./plugins/placeholder.plugin";
       lucideItalic,
     }),
   ],
+  animations: [imageAppear],
   templateUrl: "./editor.component.html",
   styleUrl: "./editor.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent {
   @ViewChild("root") editorRoot!: ElementRef;
+
+  @ViewChild("imagePicker") imagePicker!: ElementRef<HTMLInputElement>;
+  @ViewChild("filePicker") filePicker!: ElementRef<HTMLInputElement>;
+
+  protected images = signal<File[]>([]);
+  protected loadedImages = signal<(string | null)[]>([]);
+  protected files = signal<File[]>([]);
 
   onSend = output<string>();
   disabled = input<boolean>(false);
@@ -58,8 +70,7 @@ export class EditorComponent {
 
   private view!: EditorView;
 
-  // biome-ignore lint/complexity/noBannedTypes: Angular
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor() {
     afterNextRender(() => {
       const state = EditorState.create({
         schema,
@@ -103,5 +114,62 @@ export class EditorComponent {
     if (this.disabled()) return;
 
     this.onSend.emit(defaultMarkdownSerializer.serialize(this.view.state.doc));
+  }
+
+  protected openFileSelector() {
+    this.filePicker.nativeElement.click();
+  }
+
+  protected openImageSelector() {
+    this.imagePicker.nativeElement.click();
+  }
+
+  protected onAttachmentsPicked(event: Event, type: "image" | "file") {
+    const files = Array.from((event.target as HTMLInputElement).files ?? []);
+
+    const prevLength = this.images().length;
+
+    if (type === "image") this.images.update((prev) => [...prev, ...files]);
+    else this.files.update((prev) => [...prev, ...files]);
+
+    for (let i = prevLength; i < this.images().length; i++)
+      this.readImageData(i);
+  }
+
+  protected readImageData(idx: number) {
+    const image = this.images()[idx];
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(image);
+
+    reader.addEventListener("load", (e) => {
+      this.loadedImages.update((imgs) => {
+        imgs[idx] = e.target?.result as string;
+        return [...imgs];
+      });
+    });
+  }
+
+  protected removeImage(idx: number) {
+    this.images.update((prev) => {
+      prev.splice(idx, 1);
+
+      return [...prev];
+    });
+
+    this.loadedImages.update((prev) => {
+      prev.splice(idx, 1);
+
+      return [...prev];
+    });
+  }
+
+  protected removeFile(idx: number) {
+    this.files.update((prev) => {
+      prev.splice(idx, 1);
+
+      return [...prev];
+    });
   }
 }

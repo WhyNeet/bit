@@ -1,20 +1,28 @@
 .editor {
-    @apply flex-1 p-4 max-h-96 overflow-scroll;
+  @apply flex-1 p-4 max-h-96 overflow-scroll;
 }
 
 .editor::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 ::ng-deep .ProseMirror {
-    @apply h-full outline-none whitespace-pre-wrap;
+  @apply h-full outline-none whitespace-pre-wrap;
 }
 
 ::ng-deep .ProseMirror[data-placeholder]::before {
-    content: attr(data-placeholder);
-    @apply absolute pointer-events-none text-text/60;
+  content: attr(data-placeholder);
+  @apply absolute pointer-events-none text-text/60;
 }
 
 ::ng-deep .ProseMirror a {
-    @apply text-accent;
+  @apply text-accent;
+}
+
+.divider {
+  @apply min-w-[1px] h-7 bg-text/10 mx-2
+}
+
+.footer-item {
+  @apply aspect-square rounded-default flex items-center justify-center transition-colors h-full
 }

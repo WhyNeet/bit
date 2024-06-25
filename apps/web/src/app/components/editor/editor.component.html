@@ -1,32 +1,86 @@
 <div class="editor" #root></div>
 
-<div class="bg-text/5 p-1.5 flex items-center h-12">
-    <div class="flex gap-2 items-stretch h-full text-text/60">
-        <button
-            class="aspect-square rounded-default flex items-center justify-center transition-colors"
-            (click)="toggleMark('strong')"
-        >
-            <ng-icon name="lucideBold" size="22" />
-        </button>
-        <button
-            class="aspect-square rounded-default flex items-center justify-center transition-colors"
-            (click)="toggleMark('em')"
-        >
-            <ng-icon name="lucideItalic" size="22" />
-        </button>
-        <button
-            class="aspect-square rounded-default flex items-center justify-center transition-colors"
-            (click)="toggleMark('code')"
-        >
-            <ng-icon name="lucideCode" size="22" />
-        </button>
-    </div>
-    <span class="flex-1"></span>
-    <button
-        class="p-2 flex items-center justify-center text-text/80 hover:text-accent transition-colors disabled:text-text/60 disabled:hover:text-text/60"
-        (click)="handleSendClick()"
-        [disabled]="disabled()"
-    >
-        <ng-icon name="lucideSendHorizontal" size="22" />
-    </button>
+<div class="bg-text/5">
+  <div class="p-1.5 flex items-center h-12 justify-between">
+      <div class="flex gap-2 items-center h-full text-text/60">
+          <button
+              class="footer-item"
+              (click)="toggleMark('strong')"
+          >
+              <ng-icon name="lucideBold" size="22" />
+          </button>
+          <button
+              class="footer-item"
+              (click)="toggleMark('em')"
+          >
+              <ng-icon name="lucideItalic" size="22" />
+          </button>
+          <button
+              class="footer-item"
+              (click)="toggleMark('code')"
+          >
+              <ng-icon name="lucideCode" size="22" />
+          </button>
+          <div class="divider"></div>
+          <button
+              class="footer-item"
+              (click)="openImageSelector()"
+          >
+              <ng-icon name="lucideImage" size="22" />
+          </button>
+          <button
+              class="footer-item"
+              (click)="openFileSelector()"
+          >
+              <ng-icon name="lucidePaperclip" size="22" />
+          </button>
+      </div>
+      <button
+          class="p-2 flex items-center justify-center text-text/80 hover:text-accent transition-colors disabled:text-text/60 disabled:hover:text-text/60"
+          (click)="handleSendClick()"
+          [disabled]="disabled()"
+      >
+          <ng-icon name="lucideSendHorizontal" size="22" />
+      </button>
+      <input #imagePicker (change)="onAttachmentsPicked($event, 'image')" class="hidden" type="file" />
+      <input #filePicker (change)="onAttachmentsPicked($event, 'file')" class="hidden" type="file" />
+  </div>
+    @if (images().length) {
+      <div class="py-3 px-4">
+        <div class="font-display font-semibold mb-2">Images</div>
+        <div class="flex gap-2 flex-wrap">
+              @for (image of images(); track image.name) {
+                <div @imageAppear>
+                  <div class="h-32 w-56 rounded-default overflow-hidden relative">
+                    @if (loadedImages()[$index]) {
+                      <img class="h-full w-full object-cover blur absolute inset-0 -z-10 brightness-50" [src]="loadedImages()[$index]" />
+                      <img class="h-full w-full object-contain" [src]="loadedImages()[$index]" />
+                      <button (click)="removeImage($index)" class="absolute top-2 right-2">
+                        <ng-icon name="lucideX" size="18" />
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+      </div>
+    }
+    @if (files().length) {
+      <div class="py-3 px-4">
+        <div class="font-display font-semibold mb-2">Files</div>
+        <div class="flex gap-2 flex-wrap">
+              @for (file of files(); track file.name) {
+                <div @imageAppear>
+                  <div class="h-12 w-56 rounded-default flex items-center font-display bg-text/5 border border-text/10 px-4">
+                    {{ file.name }}
+                    <span class="flex-1"></span>
+                    <button (click)="removeFile($index)" class="h-[18px]">
+                      <ng-icon name="lucideX" size="18" />
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+      </div>
+    }
 </div>

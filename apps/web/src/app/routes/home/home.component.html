@@ -1,6 +1,6 @@
 <div class="pb-10 pt-16 pr-10 flex flex-col h-screen overflow-y-scroll relative scrollbar-none">
     @if (isLoggedIn$ | async) {
-    <app-post-form [handleSend]="handleSend" />
+    <app-post-form [handleSend]="handleSend.bind(this)" />
     <div class="mb-8"></div>
     }
     <div class="flex gap-2 mb-4">

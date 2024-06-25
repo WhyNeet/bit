@@ -55,6 +55,8 @@ export class PostFormComponent {
     title: string;
     content: string;
     communityId?: string;
+    files: File[];
+    images: File[];
   }) => void;
   initialDetails = input<{ title: string; content: string } | undefined>();
 
@@ -111,11 +113,17 @@ export class PostFormComponent {
     this.communityId.set(communityId);
   }
 
-  protected handleSendClick(content: string) {
+  protected handleSendClick({
+    content,
+    files,
+    images,
+  }: { content: string; files: File[]; images: File[] }) {
     this.handleSend({
       title: this.title.value as string,
       content,
       communityId: this.communityId() ?? undefined,
+      files,
+      images,
     });
   }
 }

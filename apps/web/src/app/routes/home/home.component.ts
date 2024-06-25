@@ -87,7 +87,15 @@ export class HomePageComponent {
     content,
     title,
     communityId,
-  }: { title: string; content: string; communityId?: string }) {
-    this.postsService.createPost(title, content, [], [], communityId);
+    files,
+    images,
+  }: {
+    title: string;
+    content: string;
+    communityId?: string;
+    files: File[];
+    images: File[];
+  }) {
+    this.postsService.createPost(title, content, images, files, communityId);
   }
 }

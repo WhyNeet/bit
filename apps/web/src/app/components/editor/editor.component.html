@@ -38,7 +38,7 @@
       <button
           class="p-2 flex items-center justify-center text-text/80 hover:text-accent transition-colors disabled:text-text/60 disabled:hover:text-text/60"
           (click)="handleSendClick()"
-          [disabled]="disabled()"
+          [disabled]="sendDisabled()"
       >
           <ng-icon name="lucideSendHorizontal" size="22" />
       </button>

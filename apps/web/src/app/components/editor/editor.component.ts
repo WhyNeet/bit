@@ -5,6 +5,7 @@ import {
   Input,
   ViewChild,
   afterNextRender,
+  computed,
   input,
   output,
   signal,
@@ -59,8 +60,20 @@ export class EditorComponent {
   protected loadedImages = signal<(string | null)[]>([]);
   protected files = signal<File[]>([]);
 
-  onSend = output<string>();
+  onSend = output<{ content: string; files: File[]; images: File[] }>();
   disabled = input<boolean>(false);
+
+  private invalidImages = computed(
+    () =>
+      this.images().length > 3 || this.images().some((f) => f.size > 3000000),
+  );
+  private invalidFiles = computed(
+    () => this.files().length > 3 || this.files().some((f) => f.size > 3000000),
+  );
+
+  protected sendDisabled = computed(
+    () => this.disabled() || this.invalidImages() || this.invalidFiles(),
+  );
 
   @Input() initialContent: string | undefined = undefined;
 
@@ -109,7 +122,11 @@ export class EditorComponent {
   protected handleSendClick() {
     if (this.disabled()) return;
 
-    this.onSend.emit(defaultMarkdownSerializer.serialize(this.view.state.doc));
+    this.onSend.emit({
+      content: defaultMarkdownSerializer.serialize(this.view.state.doc),
+      files: this.files(),
+      images: this.images(),
+    });
   }
 
   protected openFileSelector() {
@@ -178,14 +195,7 @@ export class EditorComponent {
   }
 
   protected readableFileSize(attachmentSize: number) {
-    const DEFAULT_SIZE = 0;
-    const fileSize = attachmentSize ?? DEFAULT_SIZE;
-
-    if (!fileSize) {
-      return `${DEFAULT_SIZE} kb`;
-    }
-
-    const sizeInKb = fileSize / 1024;
+    const sizeInKb = attachmentSize / 1024;
 
     if (sizeInKb > 1024) {
       return `${(sizeInKb / 1024).toFixed(2)} mb`;

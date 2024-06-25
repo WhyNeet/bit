@@ -42,12 +42,12 @@
       >
           <ng-icon name="lucideSendHorizontal" size="22" />
       </button>
-      <input #imagePicker (change)="onAttachmentsPicked($event, 'image')" class="hidden" type="file" />
+      <input #imagePicker accept="image/*" multiple (change)="onAttachmentsPicked($event, 'image')" class="hidden" type="file" />
       <input #filePicker (change)="onAttachmentsPicked($event, 'file')" class="hidden" type="file" />
   </div>
     @if (images().length) {
       <div class="py-3 px-4">
-        <div class="font-display font-semibold mb-2">Images</div>
+        <div class="font-display font-semibold mb-2">Images <span>(<span class="{{ images().length > 3 ? 'text-error' : '' }}">{{ images().length }}</span > out of 3)</span></div>
         <div class="flex gap-2 flex-wrap">
               @for (image of images(); track image.name) {
                 <div @imageAppear>
@@ -59,6 +59,14 @@
                         <ng-icon name="lucideX" size="18" />
                       </button>
                     }
+                    @if (image.size > 3000000) {
+                      <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/60 to-transparent text-error font-display flex text-sm font-medium items-end">
+                        <div class="flex items-center gap-1 px-2 py-1.5">
+                          <ng-icon name="lucideAlertCircle" size="16" />
+                          File is too large.
+                        </div>
+                      </div>
+                    }
                   </div>
                 </div>
               }
@@ -66,17 +74,25 @@
       </div>
     }
     @if (files().length) {
-      <div class="py-3 px-4">
-        <div class="font-display font-semibold mb-2">Files</div>
+      <div class="pt-3 pb-4 px-4">
+        <div class="font-display font-semibold mb-2">Files <span>(<span class="{{ files().length > 3 ? 'text-error' : '' }}">{{ files().length }}</span > out of 3)</span></div>
         <div class="flex gap-2 flex-wrap">
               @for (file of files(); track file.name) {
                 <div @imageAppear>
-                  <div class="h-12 w-56 rounded-default flex items-center font-display bg-text/5 border border-text/10 px-4">
-                    {{ file.name }}
-                    <span class="flex-1"></span>
-                    <button (click)="removeFile($index)" class="h-[18px]">
-                      <ng-icon name="lucideX" size="18" />
-                    </button>
+                  <div class="w-56 rounded-default font-display bg-text/5 border border-text/10 px-4 py-2">
+                      <div class="flex justify-between w-full">
+                        <div class="max-w-40 overflow-hidden text-ellipsis whitespace-nowrap">{{ file.name }}</div >
+                        <button (click)="removeFile($index)" class="flex items-center">
+                          <ng-icon name="lucideX" size="18" />
+                        </button>
+                      </div>
+                      @if (file.size > 3000000) {
+                        <div class="text-error font-display flex text-sm font-medium items-end">
+                          File is too large.
+                        </div>
+                      } @else {
+                        <div class="font-display text-sm font-medium text-text/60">{{ readableFileSize(file.size) }}</div>
+                      }
                   </div>
                 </div>
               }

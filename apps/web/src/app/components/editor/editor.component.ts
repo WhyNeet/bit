@@ -1,21 +1,17 @@
-import { isPlatformServer } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
   Input,
-  OnInit,
-  PLATFORM_ID,
   ViewChild,
   afterNextRender,
-  effect,
   input,
   output,
   signal,
 } from "@angular/core";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
+  lucideAlertCircle,
   lucideBold,
   lucideCode,
   lucideItalic,
@@ -31,7 +27,6 @@ import {
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { __read } from "tslib";
 import { imageAppear } from "../../animations/appear.animation";
 import { placeholder } from "./plugins/placeholder.plugin";
 
@@ -46,6 +41,7 @@ import { placeholder } from "./plugins/placeholder.plugin";
       lucideBold,
       lucideCode,
       lucideItalic,
+      lucideAlertCircle,
     }),
   ],
   animations: [imageAppear],
@@ -163,6 +159,10 @@ export class EditorComponent {
 
       return [...prev];
     });
+
+    const dataTransfer = new DataTransfer();
+    for (const image of this.images()) dataTransfer.items.add(image);
+    this.imagePicker.nativeElement.files = dataTransfer.files;
   }
 
   protected removeFile(idx: number) {
@@ -171,5 +171,25 @@ export class EditorComponent {
 
       return [...prev];
     });
+
+    const dataTransfer = new DataTransfer();
+    for (const file of this.files()) dataTransfer.items.add(file);
+    this.imagePicker.nativeElement.files = dataTransfer.files;
+  }
+
+  protected readableFileSize(attachmentSize: number) {
+    const DEFAULT_SIZE = 0;
+    const fileSize = attachmentSize ?? DEFAULT_SIZE;
+
+    if (!fileSize) {
+      return `${DEFAULT_SIZE} kb`;
+    }
+
+    const sizeInKb = fileSize / 1024;
+
+    if (sizeInKb > 1024) {
+      return `${(sizeInKb / 1024).toFixed(2)} mb`;
+    }
+    return `${sizeInKb.toFixed(2)} kb`;
   }
 }

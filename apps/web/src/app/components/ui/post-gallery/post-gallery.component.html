@@ -1,0 +1,30 @@
+<div class="rounded-default overflow-hidden border border-text/10 h-[410px] max-w-full mb-4 relative">
+  <div class="flex transition-transform" [style]="{ transform: 'translateX(' + (-100 * currentImageIndex()) + '%)' }">
+    @for (image of images(); track image) {
+      <div class="h-[410px] w-full overflow-hidden relative min-w-full">
+        <img [ngSrc]="image" height="200" width="200" class="absolute inset-0 blur brightness-50 w-full h-full object-cover -z-10" onerror="this.style.display = 'none'" />
+        <img [ngSrc]="image" height="200" width="200" class="w-full h-full object-contain peer" onerror="this.style.display = 'none'; this.dataset.error = true" />
+        <div class="hidden peer-data-[error]:flex items-center justify-center gap-1 absolute inset-0 pointer-events-none font-display text-sm font-medium text-error">
+          <ng-icon name="lucideAlertCircle" size="18" />
+          Failed to load this image.
+        </div>
+      </div>
+    }
+  </div>
+  <div class="absolute bottom-4 inset-x-0 flex justify-center">
+    <div class="px-3 py-2 bg-background/60 backdrop-blur rounded-full flex gap-2">
+      @for (_ of images(); track $index) {
+        <button (click)="onImageSelected($index)" class="h-2 w-2 rounded-full cursor-pointer transition-colors {{ $index === currentImageIndex() ? 'bg-primary' : 'bg-text/40' }}"></button>
+      }
+    </div>
+  </div>
+  <div class="absolute inset-6 pointer-events-none flex items-center justify-between">
+    <button [disabled]="currentImageIndex() === 0" (click)="onImageSelected(currentImageIndex() - 1)" class="rounded-default h-8 w-8 flex items-center justify-center bg-background/60 backdrop-blur pointer-events-auto disabled:opacity-60 disabled:bg-background/20 transition-all">
+      <ng-icon name="lucideChevronLeft" size="18" />
+    </button>
+
+    <button [disabled]="currentImageIndex() === images().length - 1" (click)="onImageSelected(currentImageIndex() + 1)" class="rounded-default h-8 w-8 flex items-center justify-center bg-background/60 backdrop-blur pointer-events-auto disabled:opacity-60 disabled:bg-background/20 transition-all">
+      <ng-icon name="lucideChevronRight" size="18" />
+    </button>
+  </div>
+</div>

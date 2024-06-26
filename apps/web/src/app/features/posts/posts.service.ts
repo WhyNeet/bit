@@ -207,4 +207,23 @@ export class PostsService {
 
     return this.httpClient.get(url, { responseType: "blob" });
   }
+
+  public extractFileParams(fileId: string): {
+    filename: string;
+    extension: string;
+  } {
+    // file id has the following structure: post/<random uuid><filename length>.<filename><extension>
+
+    const specifier = fileId.split("/").at(-1) as string;
+    const rawFileParams = specifier.slice(36);
+    const firstSepIdx = rawFileParams.indexOf(".");
+    const filenameLength = +rawFileParams.slice(0, firstSepIdx);
+    const filename = rawFileParams.slice(
+      firstSepIdx + 1,
+      firstSepIdx + 1 + filenameLength,
+    );
+    const extension = rawFileParams.slice(firstSepIdx + 1 + filenameLength);
+
+    return { filename, extension };
+  }
 }

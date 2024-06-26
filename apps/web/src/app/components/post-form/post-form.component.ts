@@ -52,6 +52,9 @@ export class PostFormComponent {
   private currentUser!: Signal<UserDto>;
   canChangeCommunity = input(true);
 
+  initialImages = input<string[]>([]);
+  initialFiles = input<string[]>([]);
+
   @Input() handleSend!: (data: {
     title: string;
     content: string;

@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store, select } from "@ngrx/store";
 import { PostDto, UpdatePostDto, UserDto } from "common";
-import { catchError, map, throwError } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
   homePostsFetched,
@@ -200,5 +200,11 @@ export class PostsService {
 
   public getPostFileUrl(fileId: string): string {
     return `${environment.API_BASE_URL}/media/post/${fileId.split("/").at(-1)}`;
+  }
+
+  public getFileBlobById(fileId: string): Observable<Blob> {
+    const url = this.getPostFileUrl(fileId);
+
+    return this.httpClient.get(url, { responseType: "blob" });
   }
 }

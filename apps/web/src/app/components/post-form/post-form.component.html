@@ -7,5 +7,5 @@
       </div>
     }
     <textarea cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="2" placeholder="Title" class="placeholder:text-text/60 bg-transparent resize-none w-full px-4 outline-none mt-4 text-lg -mb-2 font-display" [formControl]="title"></textarea >
-    <app-editor [initialContent]="initialDetails()?.content" [disabled]="title.invalid" (onSend)="handleSendClick($event)" class="h-full flex flex-col" />
+    <app-editor [initialFiles]="initialFiles()" [initialImages]="initialImages()" [initialContent]="initialDetails()?.content" [disabled]="title.invalid" (onSend)="handleSendClick($event)" class="h-full flex flex-col" />
 </div>

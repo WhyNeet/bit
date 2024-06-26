@@ -3,9 +3,11 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild,
   afterNextRender,
   computed,
+  effect,
   input,
   output,
   signal,
@@ -28,7 +30,9 @@ import {
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { Observable, Subject, map } from "rxjs";
 import { imageAppear } from "../../animations/appear.animation";
+import { PostsService } from "../../features/posts/posts.service";
 import { placeholder } from "./plugins/placeholder.plugin";
 
 @Component({
@@ -50,7 +54,7 @@ import { placeholder } from "./plugins/placeholder.plugin";
   styleUrl: "./editor.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditorComponent {
+export class EditorComponent implements OnInit {
   @ViewChild("root") editorRoot!: ElementRef;
 
   @ViewChild("imagePicker") imagePicker!: ElementRef<HTMLInputElement>;
@@ -58,7 +62,9 @@ export class EditorComponent {
 
   protected images = signal<File[]>([]);
   protected loadedImages = signal<(string | null)[]>([]);
+  public initialImages = input<string[]>([]);
   protected files = signal<File[]>([]);
+  public initialFiles = input<string[]>([]);
 
   onSend = output<{ content: string; files: File[]; images: File[] }>();
   disabled = input<boolean>(false);
@@ -79,7 +85,12 @@ export class EditorComponent {
 
   private view!: EditorView;
 
-  constructor() {
+  constructor(private postsService: PostsService) {
+    effect(() => {
+      for (let i = this.loadedImages().length; i < this.images().length; i++)
+        this.readImageData(i);
+    });
+
     afterNextRender(() => {
       const state = EditorState.create({
         schema,
@@ -110,6 +121,20 @@ export class EditorComponent {
     });
   }
 
+  ngOnInit(): void {
+    for (const initial of this.initialFiles()) {
+      this.loadFileById(initial).subscribe((file) =>
+        this.files.update((prev) => [...prev, file]),
+      );
+    }
+
+    for (const initial of this.initialImages()) {
+      this.loadFileById(initial).subscribe((file) =>
+        this.images.update((prev) => [...prev, file]),
+      );
+    }
+  }
+
   protected toggleMark(mark: string) {
     const { state, dispatch } = this.view;
 
@@ -129,6 +154,12 @@ export class EditorComponent {
     });
   }
 
+  protected loadFileById(id: string): Observable<File> {
+    return this.postsService
+      .getFileBlobById(id)
+      .pipe(map((blob) => new File([blob], id.split("/").at(-1) as string)));
+  }
+
   protected openFileSelector() {
     this.filePicker.nativeElement.click();
   }
@@ -144,9 +175,6 @@ export class EditorComponent {
 
     if (type === "image") this.images.update((prev) => [...prev, ...files]);
     else this.files.update((prev) => [...prev, ...files]);
-
-    for (let i = prevLength; i < this.images().length; i++)
-      this.readImageData(i);
   }
 
   protected readImageData(idx: number) {

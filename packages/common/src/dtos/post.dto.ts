@@ -9,9 +9,9 @@ export class CreatePostDto {
 
   community: string;
 
-  images: string[];
+  images: File[];
 
-  files: string[];
+  files: File[];
 }
 
 export class UpdatePostDto {
@@ -19,9 +19,9 @@ export class UpdatePostDto {
 
   content: string;
 
-  images: string[];
+  images: File[];
 
-  files: string[];
+  files: File[];
 }
 
 export class PostDto {

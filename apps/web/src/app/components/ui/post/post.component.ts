@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,6 +6,7 @@ import {
   OnInit,
   signal,
 } from "@angular/core";
+import { NgIcon } from "@ng-icons/core";
 import { CommunityDto, PostDto, UserDto } from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -12,6 +14,7 @@ import { PostsService } from "../../../features/posts/posts.service";
 import { UserService } from "../../../features/user/user.service";
 import { PostFormComponent } from "../../post-form/post-form.component";
 import { AvatarComponent } from "../avatar/avatar.component";
+import { PostGalleryComponent } from "../post-gallery/post-gallery.component";
 import { markdown } from "./markdown.conf";
 import { PostFooterComponent } from "./post-footer.component";
 
@@ -20,7 +23,14 @@ dayjs.extend(relativeTime);
 @Component({
   selector: "app-ui-post",
   standalone: true,
-  imports: [AvatarComponent, PostFooterComponent, PostFormComponent],
+  imports: [
+    AvatarComponent,
+    PostFooterComponent,
+    PostFormComponent,
+    NgOptimizedImage,
+    NgIcon,
+    PostGalleryComponent,
+  ],
   providers: [UserService],
   templateUrl: "./post.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +38,7 @@ dayjs.extend(relativeTime);
 export class PostComponent implements OnInit {
   constructor(
     protected userService: UserService,
-    private postsService: PostsService,
+    protected postsService: PostsService,
   ) {}
 
   protected isEditing = signal(false);

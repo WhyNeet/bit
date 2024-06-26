@@ -16,5 +16,10 @@
       <h2 class="font-bold text-lg font-display mb-1">{{ post.title }}</h2>
       <div [innerHtml]="renderedContent" class="mb-4 text-text/90"></div>
     }
+
+    @if (post.images.length) {
+      <app-ui-post-gallery [images]="post.images" />
+    }
+
     <app-ui-post-footer (onEditClick)="handleEditClick()" [post]="post" />
 </div>

@@ -2,6 +2,7 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   Signal,
@@ -63,8 +64,13 @@ export class PostFormComponent {
   constructor(
     private store: Store,
     private userService: UserService,
+    private cdr: ChangeDetectorRef,
   ) {
-    effect(() => this.title.setValue(this.initialDetails()?.title ?? ""));
+    effect(() => {
+      this.title.setValue(this.initialDetails()?.title ?? "");
+      this.title.updateValueAndValidity();
+      this.cdr.detectChanges();
+    });
 
     this.currentUser = toSignal(
       this.store.pipe(select(selectUser)),

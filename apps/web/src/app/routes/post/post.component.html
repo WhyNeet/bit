@@ -23,6 +23,9 @@
             </div>
             <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
             <div class="mb-4" [innerHtml]="post.renderedContent"></div>
+            @if (post.images.length) {
+              <app-ui-post-gallery [images]="post.images" />
+            }
             <app-ui-post-footer [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
             <div class="h-4"></div>
             @if (isLoggedIn$ | async) {

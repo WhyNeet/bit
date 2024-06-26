@@ -36,6 +36,7 @@ import {
 } from "rxjs";
 import { CommentsListComponent } from "../../components/comments-list/comments-list.component";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
+import { PostGalleryComponent } from "../../components/ui/post-gallery/post-gallery.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
 import { PostFooterComponent } from "../../components/ui/post/post-footer.component";
 import { ProgressSpinnerComponent } from "../../components/ui/progress-spinner/progress-spinner.component";
@@ -67,6 +68,7 @@ export type FullPost = PostDto & {
     ReactiveFormsModule,
     ProgressSpinnerComponent,
     CommentsListComponent,
+    PostGalleryComponent,
   ],
   viewProviders: [provideIcons({ lucideChevronLeft, lucideSendHorizontal })],
   templateUrl: "./post.component.html",

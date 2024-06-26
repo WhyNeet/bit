@@ -197,4 +197,8 @@ export class PostsService {
       })
       .pipe(map((res) => (res as { data: PostDto["votingState"] }).data));
   }
+
+  public getPostFileUrl(fileId: string): string {
+    return `${environment.API_BASE_URL}/media/post/${fileId.split("/").at(-1)}`;
+  }
 }

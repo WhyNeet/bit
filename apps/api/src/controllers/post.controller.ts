@@ -74,7 +74,7 @@ export class PostController {
 
     const images = (createPostDto.images ?? []).map((f) => ({
       body: f.buffer,
-      fileName: `post/${crypto.randomUUID()}`,
+      fileName: this.postFactoryService.createPostFileId(f.originalName),
     }));
     const files = (createPostDto.files ?? []).map((f) => ({
       body: f.buffer,
@@ -345,11 +345,11 @@ export class PostController {
 
     const images = (updatePostDto.images ?? []).map((f) => ({
       body: f.buffer,
-      fileName: crypto.randomUUID(),
+      fileName: this.postFactoryService.createPostFileId(f.originalName),
     }));
     const files = (updatePostDto.files ?? []).map((f) => ({
       body: f.buffer,
-      fileName: crypto.randomUUID(),
+      fileName: this.postFactoryService.createPostFileId(f.originalName),
     }));
 
     for (const image of images)

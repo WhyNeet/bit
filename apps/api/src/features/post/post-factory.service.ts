@@ -89,4 +89,17 @@ export class PostFactoryService {
 
     return post;
   }
+
+  public createPostFileId(originalName: string): string {
+    const fileext = (originalName.split(".").at(-1) ?? "").slice(0, 10);
+    // filename must not contain any extensions and must be at most 18 characters long
+    const filename = originalName.slice(
+      0,
+      Math.min(originalName.length - fileext.length - 1, 18),
+    );
+
+    return `post/${crypto.randomUUID()}${
+      filename.length
+    }.${filename}${fileext}`;
+  }
 }

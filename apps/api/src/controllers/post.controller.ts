@@ -375,8 +375,6 @@ export class PostController {
       updatePostDto.title,
     );
 
-    console.log("post:", post, updatedPost);
-
     await this.vectorStorageServices.updateVectorData<PostVectorData>(
       "POSTS_EMBEDDINGS",
       [

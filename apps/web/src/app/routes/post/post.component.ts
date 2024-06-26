@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   afterNextRender,
+  signal,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
@@ -35,6 +36,7 @@ import {
   throwError,
 } from "rxjs";
 import { CommentsListComponent } from "../../components/comments-list/comments-list.component";
+import { PostFormComponent } from "../../components/post-form/post-form.component";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
 import { PostGalleryComponent } from "../../components/ui/post-gallery/post-gallery.component";
 import { markdown } from "../../components/ui/post/markdown.conf";
@@ -69,6 +71,7 @@ export type FullPost = PostDto & {
     ProgressSpinnerComponent,
     CommentsListComponent,
     PostGalleryComponent,
+    PostFormComponent,
   ],
   viewProviders: [provideIcons({ lucideChevronLeft, lucideSendHorizontal })],
   templateUrl: "./post.component.html",
@@ -91,6 +94,8 @@ export class PostPageComponent {
   protected commentsLoading$ = new Subject<boolean>();
   protected isNotFound$ = new Subject<boolean>();
   protected isLoggedIn$: Observable<boolean>;
+
+  protected isEditing = signal(false);
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -197,5 +202,27 @@ export class PostPageComponent {
 
   protected fetchComments(page: number, perPage: number) {
     this.commentsService.getComments(this.postId, page, perPage, ["author"]);
+  }
+
+  protected toggleIsEditing() {
+    this.isEditing.update((prev) => !prev);
+  }
+
+  protected handleEditFinish({
+    content,
+    title,
+  }: { title: string; content: string }) {
+    this.postsService.updatePost(
+      (this.post$.getValue() as FullPost).id,
+      title,
+      content,
+    );
+    this.isEditing.set(false);
+    this.post$.next({
+      ...(this.post$.getValue() as FullPost),
+      content,
+      title,
+      renderedContent: markdown.render(content),
+    });
   }
 }

@@ -21,12 +21,17 @@
                     }
                 </div>
             </div>
-            <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
-            <div class="mb-4" [innerHtml]="post.renderedContent"></div>
-            @if (post.images.length) {
+            @if (isEditing()) {
+              <app-post-form [canChangeCommunity]="false" [handleSend]="handleEditFinish.bind(this)" [initialDetails]="{ title: post.title, content: post.content }" />
+              <div class="h-4"></div>
+            } @else {
+              <h1 class="text-xl font-display font-bold mb-4">{{ post.title }}</h1>
+              <div class="mb-4" [innerHtml]="post.renderedContent"></div>
+            }
+            @if (post.images.length && !isEditing()) {
               <app-ui-post-gallery [images]="post.images" />
             }
-            <app-ui-post-footer [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
+            <app-ui-post-footer (onEditClick)="toggleIsEditing()" [canVote]="(postVotingState$ | async) !== null" (onVote)="onVoteChange($event)" [post]="post" />
             <div class="h-4"></div>
             @if (isLoggedIn$ | async) {
               <div class="w-full rounded-default bg-text/5 border border-text/10 flex items-stretch gap-2 overflow-hidden">

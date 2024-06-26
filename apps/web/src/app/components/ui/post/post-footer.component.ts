@@ -1,13 +1,12 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   Output,
   output,
-  signal,
 } from "@angular/core";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
   lucideExternalLink,
@@ -81,6 +80,7 @@ export class PostFooterComponent {
     private activatedRoute: ActivatedRoute,
     private postsService: PostsService,
     private store: Store,
+    private location: Location,
   ) {
     this.userId$ = this.store.pipe(
       select(selectUser),
@@ -131,6 +131,7 @@ export class PostFooterComponent {
         break;
       case 1:
         this.postsService.deletePost(this.post.id);
+        if (this.isExpanded) this.location.back();
         break;
     }
   }

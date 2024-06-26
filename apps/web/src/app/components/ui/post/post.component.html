@@ -17,7 +17,7 @@
       <div [innerHtml]="renderedContent" class="mb-4 text-text/90"></div>
     }
 
-    @if (post.images.length) {
+    @if (post.images.length && !isEditing()) {
       <app-ui-post-gallery [images]="post.images" />
     }
 

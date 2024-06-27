@@ -127,13 +127,19 @@ export class PostsService {
       .subscribe(() => this.store.dispatch(postDeleted({ postId })));
   }
 
-  public updatePost(postId: string, title: string, content: string) {
-    const payload: UpdatePostDto = {
-      content,
-      files: [],
-      images: [],
-      title,
-    };
+  public updatePost(
+    postId: string,
+    title: string,
+    content: string,
+    files: File[],
+    images: File[],
+  ) {
+    const payload = new FormData();
+
+    payload.set("title", title);
+    payload.set("content", content);
+    for (const file of files) payload.append("files", file);
+    for (const image of images) payload.append("images", image);
 
     this.httpClient
       .patch(`${environment.API_BASE_URL}/posts/${postId}`, payload, {

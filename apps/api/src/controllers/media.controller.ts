@@ -20,6 +20,7 @@ import { IStorageServices } from "src/core/abstracts/storage-services.abstract";
 import { CommunityRepositoryService } from "src/features/community/community-repository.service";
 import { CommunityException } from "src/features/exception-handling/exceptions/community.exception";
 import { MediaException } from "src/features/exception-handling/exceptions/media.exception";
+import { ParseFileIdPipe } from "src/features/pipes/parse-fileid.pipe";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { Token } from "src/frameworks/auth/decorators/token.decorator";
 import { JwtAuthGuard } from "src/frameworks/auth/guards/jwt.guard";
@@ -35,7 +36,7 @@ export class MediaController {
   @HttpCode(HttpStatus.OK)
   @Get("/post/:fileId")
   public async getFile(
-    @Param("fileId", ParseUUIDPipe) fileId: string,
+    @Param("fileId", ParseFileIdPipe) fileId: string,
   ): Promise<StreamableFile> {
     try {
       const file = await this.storageServices.getFile(`post/${fileId}`);

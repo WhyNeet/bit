@@ -214,19 +214,24 @@ export class PostPageComponent {
     files,
     images,
   }: { title: string; content: string; files: File[]; images: File[] }) {
-    this.postsService.updatePost(
-      (this.post$.getValue() as FullPost).id,
-      title,
-      content,
-      files,
-      images,
-    );
+    this.postsService
+      .updatePost(
+        (this.post$.getValue() as FullPost).id,
+        title,
+        content,
+        files,
+        images,
+      )
+      .subscribe((post) => {
+        this.post$.next({
+          ...(this.post$.getValue() as FullPost),
+          content: post.content,
+          title: post.title,
+          renderedContent: markdown.render(post.content),
+          images: post.images,
+          files: post.files,
+        });
+      });
     this.isEditing.set(false);
-    this.post$.next({
-      ...(this.post$.getValue() as FullPost),
-      content,
-      title,
-      renderedContent: markdown.render(content),
-    });
   }
 }

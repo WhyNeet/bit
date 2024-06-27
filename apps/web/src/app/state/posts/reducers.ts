@@ -195,6 +195,8 @@ export const reducers = createReducer(
                     ...post,
                     content: action.post.content,
                     title: action.post.title,
+                    files: action.post.files,
+                    images: action.post.images,
                   }
                 : post,
             ),
@@ -211,6 +213,8 @@ export const reducers = createReducer(
                     ...post,
                     content: action.post.content,
                     title: action.post.title,
+                    files: action.post.files,
+                    images: action.post.images,
                   }
                 : post,
             ),

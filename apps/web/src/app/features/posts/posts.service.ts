@@ -133,7 +133,7 @@ export class PostsService {
     content: string,
     files: File[],
     images: File[],
-  ) {
+  ): Observable<PostDto> {
     const payload = new FormData();
 
     payload.set("title", title);
@@ -141,7 +141,7 @@ export class PostsService {
     for (const file of files) payload.append("files", file);
     for (const image of images) payload.append("images", image);
 
-    this.httpClient
+    const post = this.httpClient
       .patch(`${environment.API_BASE_URL}/posts/${postId}`, payload, {
         withCredentials: true,
       })
@@ -150,8 +150,10 @@ export class PostsService {
         catchError((err) => {
           return throwError(() => err);
         }),
-      )
-      .subscribe((post) => this.store.dispatch(postUpdated({ post })));
+      );
+    post.subscribe((post) => this.store.dispatch(postUpdated({ post })));
+
+    return post;
   }
 
   public getPost(id: string, include?: string[]) {

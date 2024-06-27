@@ -444,4 +444,26 @@ export class PostController {
       data: relationType ?? null,
     };
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Get("/user/:userId")
+  public async getUserPosts(
+    @Param("userId", ParseObjectIdPipe) userId: string,
+    @Pagination() pageData: PageData,
+    @IncludeFields() include: string[],
+  ): ApiResponse<PostDto[]> {
+    const posts = await this.postRepositoryService.getLatestPosts(
+      pageData.page,
+      pageData.perPage,
+      undefined,
+      include,
+      [userId],
+    );
+
+    return {
+      data: posts.map(
+        this.postFactoryService.createDto.bind(this.postFactoryService),
+      ),
+    };
+  }
 }

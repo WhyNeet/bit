@@ -22,9 +22,15 @@ export class PostRepositoryService {
     perPage: number,
     communities?: string[],
     populate?: string[],
+    users?: string[],
   ): Promise<Post[]> {
+    const communityQuery = communities
+      ? { community: { $in: communities } }
+      : {};
+    const authorQuery = users ? { author: { $in: users } } : {};
+    console.log(communityQuery, authorQuery);
     return await this.dataServices.posts.getAll(
-      communities ? { community: { $in: communities } } : {},
+      { ...communityQuery, ...authorQuery },
       { createdAt: "desc" },
       perPage,
       perPage * page,

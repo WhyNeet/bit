@@ -211,11 +211,15 @@ export class PostPageComponent {
   protected handleEditFinish({
     content,
     title,
-  }: { title: string; content: string }) {
+    files,
+    images,
+  }: { title: string; content: string; files: File[]; images: File[] }) {
     this.postsService.updatePost(
       (this.post$.getValue() as FullPost).id,
       title,
       content,
+      files,
+      images,
     );
     this.isEditing.set(false);
     this.post$.next({

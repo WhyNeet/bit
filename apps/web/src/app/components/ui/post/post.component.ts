@@ -60,8 +60,10 @@ export class PostComponent implements OnInit {
   protected handleEditFinish({
     content,
     title,
-  }: { title: string; content: string }) {
-    this.postsService.updatePost(this.post.id, title, content);
+    files,
+    images,
+  }: { title: string; content: string; files: File[]; images: File[] }) {
+    this.postsService.updatePost(this.post.id, title, content, files, images);
     this.isEditing.set(false);
   }
 }

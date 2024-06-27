@@ -2,7 +2,7 @@ import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store, select } from "@ngrx/store";
-import { PostDto, UpdatePostDto, UserDto } from "common";
+import { PostDto, UpdatePostDto, UserDto, validateFileId } from "common";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
@@ -18,6 +18,8 @@ import {
   postsFetching,
 } from "../../state/posts/actions";
 import { selectUser } from "../../state/user/selectors";
+
+export type FileMetadata = { filename: string; extension: string };
 
 @Injectable({
   providedIn: "root",
@@ -216,22 +218,29 @@ export class PostsService {
     return this.httpClient.get(url, { responseType: "blob" });
   }
 
-  public extractFileParams(fileId: string): {
-    filename: string;
-    extension: string;
-  } {
+  private metadataCache = new Map<string, FileMetadata>();
+
+  public extractFileMetadata(fileId: string): FileMetadata {
+    if (this.metadataCache.has(fileId))
+      return this.metadataCache.get(fileId) as FileMetadata;
+
     // file id has the following structure: post/<random uuid><filename length>.<filename><extension>
 
-    const specifier = fileId.split("/").at(-1) as string;
-    const rawFileParams = specifier.slice(36);
-    const firstSepIdx = rawFileParams.indexOf(".");
-    const filenameLength = +rawFileParams.slice(0, firstSepIdx);
-    const filename = rawFileParams.slice(
+    const validatedExpr = validateFileId(fileId);
+    if (!validatedExpr) return { filename: fileId, extension: "" };
+
+    const { metadata: rawMetadata } = validatedExpr;
+    const firstSepIdx = rawMetadata.indexOf(".");
+    const filenameLength = +rawMetadata.slice(0, firstSepIdx);
+    const filename = rawMetadata.slice(
       firstSepIdx + 1,
       firstSepIdx + 1 + filenameLength,
     );
-    const extension = rawFileParams.slice(firstSepIdx + 1 + filenameLength);
+    const extension = rawMetadata.slice(firstSepIdx + 1 + filenameLength);
 
-    return { filename, extension };
+    const res: FileMetadata = { filename, extension };
+    this.metadataCache.set(fileId, res);
+
+    return res;
   }
 }

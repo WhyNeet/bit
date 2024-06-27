@@ -85,7 +85,7 @@ export class EditorComponent implements OnInit {
 
   private view!: EditorView;
 
-  constructor(private postsService: PostsService) {
+  constructor(protected postsService: PostsService) {
     effect(() => {
       for (let i = this.loadedImages().length; i < this.images().length; i++)
         this.readImageData(i);

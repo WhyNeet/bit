@@ -42,12 +42,13 @@ export class UserPageComponent {
   protected isCurrentUser: Signal<boolean | undefined>;
   protected user$ = new Subject<UserDto | null>();
   protected isError = signal(false);
+  protected isLoggedIn$: Observable<boolean>;
 
-  // biome-ignore lint/complexity/noBannedTypes: Angular
   constructor(
     private store: Store,
     private activatedRoute: ActivatedRoute,
     protected userService: UserService,
+    // biome-ignore lint/complexity/noBannedTypes: Angular
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
   ) {
@@ -57,6 +58,11 @@ export class UserPageComponent {
         select(selectUser),
         map((user) => user?.id === this.userId),
       ),
+    );
+
+    this.isLoggedIn$ = this.store.pipe(
+      select(selectUser),
+      map((user) => !!user),
     );
 
     if (isPlatformServer(this.platformId)) return;

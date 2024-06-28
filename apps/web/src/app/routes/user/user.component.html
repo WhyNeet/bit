@@ -12,7 +12,9 @@
         @if (isCurrentUser()) {
           <button (click)="logout()" class="px-4 py-2 rounded-default bg-secondary hover:bg-secondary/90 font-medium font-display transition-colors">Log out</button>
         } @else {
-          <button class="primary">Follow</button>
+          @if (isLoggedIn$ | async) {
+            <button class="primary">Follow</button>
+          }
         }
       </div>
       <div>

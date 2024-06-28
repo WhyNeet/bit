@@ -19,9 +19,9 @@ import { lucideUserRound } from "@ng-icons/lucide";
   template: `
   <div [style]="{ height: (size() ?? 24) + 'px' }" class="relative flex items-center justify-center aspect-square rounded-full {{ withBackground() ? 'bg-text/5' : '' }}">
     @if (customIcon()) {
-      <ng-icon [size]="iconSize()" [svg]="customSvg()" />
+      <ng-icon [strokeWidth]="weight()" [size]="iconSize()" [svg]="customSvg()" />
     } @else {
-      <ng-icon [size]="iconSize()" name="lucideUserRound" />
+      <ng-icon [strokeWidth]="weight()" [size]="iconSize()" name="lucideUserRound" />
     }
     @if (src()) {
       <img [ngSrc]="src()!" class="absolute inset-0 rounded-full" [height]="+iconSize() + 10" [width]="+iconSize() + 10" onerror="this.style.display='none'" />
@@ -35,6 +35,7 @@ export class AvatarComponent implements OnInit {
   size = input<number>();
   withBackground = input<boolean>();
   customIcon = input<string>();
+  weight = input<number>();
 
   // biome-ignore lint/style/noNonNullAssertion: provided in app.config.ts
   private iconLoader = injectNgIconLoader()!;

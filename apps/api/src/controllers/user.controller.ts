@@ -33,7 +33,7 @@ export class UserController {
       return {
         data: this.userFactoryService.createDto(
           cachedUser,
-          payload.sub === cachedUser.id,
+          payload?.sub === (cachedUser as unknown as { _id: string })._id,
         ),
       };
 
@@ -43,8 +43,10 @@ export class UserController {
 
     await this.cachingServices.set(`user:${userId}`, user);
 
+    console.log(payload, user.id);
+
     return {
-      data: this.userFactoryService.createDto(user, payload.sub === user.id),
+      data: this.userFactoryService.createDto(user, payload?.sub === user.id),
     };
   }
 }

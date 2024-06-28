@@ -43,8 +43,6 @@ export class UserController {
 
     await this.cachingServices.set(`user:${userId}`, user);
 
-    console.log(payload, user.id);
-
     return {
       data: this.userFactoryService.createDto(user, payload?.sub === user.id),
     };

@@ -21,6 +21,7 @@ export class UserFactoryService {
     userDto.id = user.id ? user.id : (user as unknown as { _id: string })._id;
     userDto.username = user.username;
     userDto.email = isFull ? user.email : undefined;
+    userDto.bio = user.bio;
     userDto.name = user.name;
     userDto.createdAt = user.createdAt;
     userDto.updatedAt = user.updatedAt;

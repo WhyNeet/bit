@@ -2,8 +2,8 @@ import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { CommunityDto } from "common";
-import { map } from "rxjs";
+import { CommunityDto, UserDto } from "common";
+import { Observable, map } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { userCommunitiesFetched } from "../../state/user/actions";
 
@@ -37,5 +37,13 @@ export class UserService {
 
   public getUserAvatarUrl(userId: string): string {
     return `${environment.API_BASE_URL}/media/avatar/${userId}`;
+  }
+
+  public getUserById(userId: string): Observable<UserDto> {
+    return this.httpClient
+      .get(`${environment.API_BASE_URL}/users/user/${userId}`, {
+        withCredentials: true,
+      })
+      .pipe(map((data) => (data as { data: UserDto }).data));
   }
 }

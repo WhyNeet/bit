@@ -74,4 +74,12 @@ export class AuthService {
       )
       .subscribe((user) => this.store.dispatch(loggedIn({ user })));
   }
+
+  public logout() {
+    this.httpClient
+      .post(`${environment.API_BASE_URL}/auth/logout`, undefined, {
+        withCredentials: true,
+      })
+      .subscribe(() => this.store.dispatch(loggedOut()));
+  }
 }

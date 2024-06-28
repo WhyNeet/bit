@@ -10,9 +10,9 @@
                 <app-ui-avatar [src]="userService.getUserAvatarUrl(post.author.id)" [size]="40" />
                 <div>
                     <div class="font-display flex gap-2 items-center">
-                        {{ "@" }}{{ post.author!.username }}
+                        <a routerLink="/user/{{ post.author!.id }}">{{ "@" }}{{ post.author!.username }}</a>
                         <div class="h-1 w-1 rounded-full bg-text/20"></div>
-                        <div class="text-text/80">{{ timeElapsed(post.createdAt) }}</div >
+                        <div class="text-text/80">{{ timeElapsed(post.createdAt) }}</div>
                     </div>
                     @if (post.community) {
                         <div class="text-sm font-display text-text/80">

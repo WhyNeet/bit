@@ -6,6 +6,7 @@ import {
   OnInit,
   signal,
 } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { CommunityDto, PostDto, UserDto } from "common";
 import dayjs from "dayjs";
@@ -30,6 +31,7 @@ dayjs.extend(relativeTime);
     NgOptimizedImage,
     NgIcon,
     PostGalleryComponent,
+    RouterLink,
   ],
   providers: [UserService],
   templateUrl: "./post.component.html",

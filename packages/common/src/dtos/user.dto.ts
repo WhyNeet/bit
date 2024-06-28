@@ -28,7 +28,7 @@ export class UserCredentialsDto {
 
 export class UserDto {
   id: string;
-  email: string;
+  email?: string;
   username: string;
   name: string;
   createdAt: Date;

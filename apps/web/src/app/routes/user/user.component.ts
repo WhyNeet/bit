@@ -34,6 +34,7 @@ import { selectUser } from "../../state/user/selectors";
   selector: "app-page-user",
   standalone: true,
   imports: [CommonModule, ProgressSpinnerComponent, NgIcon, AvatarComponent],
+  styleUrl: "./user.component.css",
   templateUrl: "./user.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

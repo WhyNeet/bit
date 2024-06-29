@@ -52,7 +52,7 @@ export class UserPageComponent {
   protected isLoggedIn$: Observable<boolean>;
   private userPosts = signal<PostDto[][] | null>(null);
   protected userPosts$: Observable<PostDto[][] | null>;
-  protected userPostsLoading$: Observable<boolean>;
+  protected userPostsLoading$ = new Subject<boolean>();
   protected isUserPostsError = signal(false);
 
   constructor(
@@ -65,7 +65,6 @@ export class UserPageComponent {
     private postsService: PostsService,
   ) {
     this.userPosts$ = toObservable(this.userPosts);
-    this.userPostsLoading$ = this.userPosts$.pipe(map((posts) => !posts));
 
     this.user$
       .pipe(
@@ -73,6 +72,8 @@ export class UserPageComponent {
         take(1),
       )
       .subscribe((user) => {
+        this.userPostsLoading$.next(true);
+
         this.postsService
           .getUserPosts((user as UserDto).id, ["author", "community"])
           .pipe(
@@ -82,9 +83,10 @@ export class UserPageComponent {
             }),
             take(1),
           )
-          .subscribe((posts) =>
-            this.userPosts.update((prev) => [...(prev ?? []), posts]),
-          );
+          .subscribe((posts) => {
+            this.userPosts.update((prev) => [...(prev ?? []), posts]);
+            this.userPostsLoading$.next(false);
+          });
       });
 
     this.userId = this.activatedRoute.snapshot.params["userId"];
@@ -118,6 +120,17 @@ export class UserPageComponent {
   }
 
   protected fetchMorePosts(page: number, perPage: number) {
-    console.log("TODO: fetchMoreUserPosts", page, perPage);
+    this.postsService
+      .getUserPosts(this.userId, ["author", "community"], page, perPage)
+      .pipe(
+        catchError((err) => {
+          this.isUserPostsError.set(true);
+          return throwError(() => err);
+        }),
+        take(1),
+      )
+      .subscribe((posts) =>
+        this.userPosts.update((prev) => [...(prev ?? []), posts]),
+      );
   }
 }

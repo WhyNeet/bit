@@ -247,12 +247,16 @@ export class PostsService {
   public getUserPosts(
     userId: string,
     include: string[],
+    page = 0,
+    perPage = 20,
   ): Observable<PostDto[]> {
     return this.httpClient
       .get(
         `${
           environment.API_BASE_URL
-        }/posts/user/${userId}?include=${include.join(",")}`,
+        }/posts/user/${userId}?include=${include.join(
+          ",",
+        )}&page=${page}&perPage=${perPage}`,
         {
           withCredentials: true,
         },

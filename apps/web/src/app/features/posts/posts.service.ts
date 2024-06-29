@@ -243,4 +243,20 @@ export class PostsService {
 
     return res;
   }
+
+  public getUserPosts(
+    userId: string,
+    include: string[],
+  ): Observable<PostDto[]> {
+    return this.httpClient
+      .get(
+        `${
+          environment.API_BASE_URL
+        }/posts/user/${userId}?include=${include.join(",")}`,
+        {
+          withCredentials: true,
+        },
+      )
+      .pipe(map((res) => (res as { data: PostDto[] }).data));
+  }
 }

@@ -1,12 +1,12 @@
-<div class="pt-16 pr-8 h-full">
+<div class="pr-8 h-full">
 @if (user$ | async; as user) {
   <div class="h-full w-full flex gap-2">
-    <div class="w-full h-full">
-      <div class="w-full layout-block flex items-center gap-2">
+    <div class="w-full h-full overflow-y-scroll scrollbar-none pt-16">
+      <div class="w-full layout-block flex items-center gap-4">
         <app-ui-avatar [src]="userService.getCurrentUserAvatarUrl()" [size]="48" [weight]="1.3" />
         <div>
           <h1 class="text-lg font-display font-semibold">{{ user.name }}</h1>
-          <div class="font-display text-text/80">{{ "@" }}{{ user.username }}</div >
+          <div class="font-display text-text/80">{{ "@" }}{{ user.username }}</div>
         </div>
         <span class="flex-1"></span >
         @if (isCurrentUser()) {
@@ -17,16 +17,17 @@
           }
         }
       </div>
-      <div>
-        posts list placeholder
-      </div>
+      <div class="mt-4">
+        <h2 class="font-display font-semibold text-lg mb-4">Posts</h2>
+        <app-posts-list [posts]="userPosts$" [isLoading]="userPostsLoading$" [fetchMore]="fetchMorePosts.bind(this)" />
+      </div >
     </div >
-    <aside class="layout-block min-w-96 h-fit">
+    <aside class="layout-block min-w-96 h-fit mt-16">
       <h2 class="font-display font-semibold text-lg">Bio</h2>
       @if (user.bio) {
-        <p class="text-text/80">{{ user.bio }}</p  >
+        <p class="text-text/80">{{ user.bio }}</p>
       } @else {
-        <p class="font-display text-text/60">No bio provided.</p >
+        <p class="font-display text-text/60">No bio provided.</p>
       }
     </aside >
   </div>

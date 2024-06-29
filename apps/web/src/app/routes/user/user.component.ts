@@ -6,14 +6,13 @@ import {
   Inject,
   PLATFORM_ID,
   Signal,
-  effect,
   signal,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { Store, select } from "@ngrx/store";
-import { UserDto } from "common";
+import { PostDto, UserDto } from "common";
 import {
   Observable,
   Subject,
@@ -21,19 +20,26 @@ import {
   filter,
   map,
   take,
-  takeWhile,
   throwError,
 } from "rxjs";
+import { PostListComponent } from "../../components/post-list/post-list.component";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
 import { ProgressSpinnerComponent } from "../../components/ui/progress-spinner/progress-spinner.component";
 import { AuthService } from "../../features/auth/auth.service";
+import { PostsService } from "../../features/posts/posts.service";
 import { UserService } from "../../features/user/user.service";
 import { selectUser } from "../../state/user/selectors";
 
 @Component({
   selector: "app-page-user",
   standalone: true,
-  imports: [CommonModule, ProgressSpinnerComponent, NgIcon, AvatarComponent],
+  imports: [
+    CommonModule,
+    ProgressSpinnerComponent,
+    NgIcon,
+    AvatarComponent,
+    PostListComponent,
+  ],
   styleUrl: "./user.component.css",
   templateUrl: "./user.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +50,10 @@ export class UserPageComponent {
   protected user$ = new Subject<UserDto | null>();
   protected isError = signal(false);
   protected isLoggedIn$: Observable<boolean>;
+  private userPosts = signal<PostDto[][] | null>(null);
+  protected userPosts$: Observable<PostDto[][] | null>;
+  protected userPostsLoading$: Observable<boolean>;
+  protected isUserPostsError = signal(false);
 
   constructor(
     private store: Store,
@@ -52,7 +62,31 @@ export class UserPageComponent {
     // biome-ignore lint/complexity/noBannedTypes: Angular
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
+    private postsService: PostsService,
   ) {
+    this.userPosts$ = toObservable(this.userPosts);
+    this.userPostsLoading$ = this.userPosts$.pipe(map((posts) => !posts));
+
+    this.user$
+      .pipe(
+        filter((user) => !!user),
+        take(1),
+      )
+      .subscribe((user) => {
+        this.postsService
+          .getUserPosts((user as UserDto).id, ["author", "community"])
+          .pipe(
+            catchError((err) => {
+              this.isUserPostsError.set(true);
+              return throwError(() => err);
+            }),
+            take(1),
+          )
+          .subscribe((posts) =>
+            this.userPosts.update((prev) => [...(prev ?? []), posts]),
+          );
+      });
+
     this.userId = this.activatedRoute.snapshot.params["userId"];
     this.isCurrentUser = toSignal(
       this.store.pipe(
@@ -81,5 +115,9 @@ export class UserPageComponent {
 
   protected logout() {
     this.authService.logout();
+  }
+
+  protected fetchMorePosts(page: number, perPage: number) {
+    console.log("TODO: fetchMoreUserPosts", page, perPage);
   }
 }

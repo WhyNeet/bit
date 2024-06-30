@@ -6,7 +6,7 @@ import {
   signal,
 } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideChevronLeft, lucideSendHorizontal } from "@ng-icons/lucide";
 import { Store, select } from "@ngrx/store";
@@ -25,14 +25,11 @@ import {
   Subject,
   catchError,
   filter,
-  lastValueFrom,
   map,
   mergeMap,
   switchMap,
   take,
-  takeUntil,
   takeWhile,
-  tap,
   throwError,
 } from "rxjs";
 import { CommentsListComponent } from "../../components/comments-list/comments-list.component";
@@ -103,6 +100,7 @@ export class PostPageComponent {
     protected userService: UserService,
     private commentsService: CommentsService,
     private store: Store,
+    private router: Router,
   ) {
     this.isLoggedIn$ = this.store.pipe(
       select(selectUser),
@@ -233,5 +231,10 @@ export class PostPageComponent {
         });
       });
     this.isEditing.set(false);
+  }
+
+  protected getBackLink() {
+    if (!this.router.lastSuccessfulNavigation) return null;
+    return this.router.lastSuccessfulNavigation.previousNavigation?.finalUrl?.toString();
   }
 }

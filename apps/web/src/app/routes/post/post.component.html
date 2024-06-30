@@ -2,9 +2,11 @@
 @if (post$ | async; as post) {
 
     <div class="flex gap-2 w-full">
-        <a routerLink="/" class="h-10 w-10 rounded-default hover:bg-text/10 aspect-square transition-colors flex items-center justify-center">
-            <ng-icon name="lucideChevronLeft" size="24" />
-        </a>
+        @if (getBackLink()) {
+          <a [routerLink]="getBackLink()" class="h-10 w-10 rounded-default hover:bg-text/10 aspect-square transition-colors flex items-center justify-center">
+              <ng-icon name="lucideChevronLeft" size="24" />
+          </a>
+        }
         <div class="w-full">
             <div class="flex gap-2 items-center mb-4">
                 <app-ui-avatar [src]="userService.getUserAvatarUrl(post.author.id)" [size]="40" />

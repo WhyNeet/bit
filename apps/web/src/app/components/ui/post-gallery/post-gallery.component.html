@@ -11,13 +11,15 @@
       </div>
     }
   </div>
-  <div class="absolute bottom-4 inset-x-0 flex justify-center">
-    <div class="px-3 py-2 bg-background/60 backdrop-blur rounded-full flex gap-2">
-      @for (_ of images(); track $index) {
-        <button (click)="onImageSelected($index)" class="h-2 w-2 rounded-full cursor-pointer transition-colors {{ $index === currentImageIndex() ? 'bg-primary' : 'bg-text/40' }}"></button>
-      }
+  @if (images().length > 1) {
+    <div class="absolute bottom-4 inset-x-0 flex justify-center">
+      <div class="px-3 py-2 bg-background/60 backdrop-blur rounded-full flex gap-2">
+        @for (_ of images(); track $index) {
+          <button (click)="onImageSelected($index)" class="h-2 w-2 rounded-full cursor-pointer transition-colors {{ $index === currentImageIndex() ? 'bg-primary' : 'bg-text/40' }}"></button>
+        }
+      </div>
     </div>
-  </div>
+  }
   <div class="absolute inset-6 pointer-events-none flex items-center justify-between">
     <button [disabled]="currentImageIndex() === 0" (click)="onImageSelected(currentImageIndex() - 1)" class="rounded-default h-8 w-8 flex items-center justify-center bg-background/60 backdrop-blur pointer-events-auto disabled:opacity-60 disabled:bg-background/20 transition-all">
       <ng-icon name="lucideChevronLeft" size="18" />

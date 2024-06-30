@@ -6,12 +6,13 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseArrayPipe,
   Patch,
   Post as PostRequest,
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { UserPostRelationType } from "common";
+import { UserPostRelation, UserPostRelationType } from "common";
 import { ApiResponse, Community, PostDto, PostVectorData } from "common";
 import { FormDataRequest } from "nestjs-form-data";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
@@ -464,6 +465,27 @@ export class PostController {
       data: posts.map(
         this.postFactoryService.createDto.bind(this.postFactoryService),
       ),
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Get("/voting_status")
+  public async getPostsVotingState(
+    @Query("posts", new ParseArrayPipe({ separator: "," })) posts: string[],
+    @Token() payload: JwtPayload,
+  ): ApiResponse<UserPostRelation[]> {
+    // validate all ids to be ObjectId
+    for (const postId of posts)
+      ParseObjectIdPipe.stringified().transform(postId, null);
+
+    const states = await this.postRepositoryService.getPostsVotingState(
+      posts,
+      payload.sub,
+    );
+
+    return {
+      data: states,
     };
   }
 }

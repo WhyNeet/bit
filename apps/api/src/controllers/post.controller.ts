@@ -425,7 +425,6 @@ export class PostController {
     @Query("posts", new ParseArrayPipe({ separator: "," })) posts: string[],
     @Token() payload: JwtPayload,
   ): ApiResponse<UserPostRelation[]> {
-    console.log("ids:", posts);
     // validate all ids to be ObjectId
     for (const postId of posts)
       ParseObjectIdPipe.stringified().transform(postId, null);

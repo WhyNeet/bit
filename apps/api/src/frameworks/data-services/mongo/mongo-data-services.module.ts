@@ -13,6 +13,10 @@ import {
   UserPostRelation,
   UserPostRelationSchema,
 } from "./model/relation/user-post.model";
+import {
+  UserUserRelation,
+  UserUserRelationSchema,
+} from "./model/relation/user-user.model";
 import { Token, TokenSchema } from "./model/token.model";
 import { User, UserSchema } from "./model/user.model";
 import { MongoDataServices } from "./mongo-data-services.service";
@@ -43,6 +47,7 @@ import { MongoDataServices } from "./mongo-data-services.service";
       { name: Comment.name, schema: CommentSchema },
       { name: UserCommunityRelation.name, schema: UserCommunityRelationSchema },
       { name: UserPostRelation.name, schema: UserPostRelationSchema },
+      { name: UserUserRelation.name, schema: UserUserRelationSchema },
     ]),
   ],
   providers: [

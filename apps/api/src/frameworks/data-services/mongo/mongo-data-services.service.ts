@@ -2,6 +2,7 @@ import { Injectable, type OnApplicationBootstrap } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import type { Model } from "mongoose";
 import type { IDataServices } from "src/core/abstracts/data-services.abstract";
+import { IGenericRepository } from "src/core/abstracts/generic-repository.abstract";
 import { Comment, CommentDocument } from "./model/comment.model";
 import { Community, CommunityDocument } from "./model/community.model";
 import { Post, PostDocument } from "./model/post.model";
@@ -13,6 +14,10 @@ import {
   UserPostRelation,
   UserPostRelationDocument,
 } from "./model/relation/user-post.model";
+import {
+  UserUserRelation,
+  UserUserRelationDocument,
+} from "./model/relation/user-user.model";
 import { Token, type TokenDocument } from "./model/token.model";
 import { User, type UserDocument } from "./model/user.model";
 import { MongoGenericRepository } from "./mongo-generic-repository";
@@ -29,6 +34,7 @@ export class MongoDataServices
 
   public userCommunityRelations: MongoGenericRepository<UserCommunityRelation>;
   public userPostRelations: MongoGenericRepository<UserPostRelation>;
+  public userUserRelations: IGenericRepository<UserUserRelation>;
 
   constructor(
     @InjectModel(User.name) private UserModel: Model<UserDocument>,
@@ -41,6 +47,8 @@ export class MongoDataServices
     private UserCommunityRelationModel: Model<UserCommunityRelationDocument>,
     @InjectModel(UserPostRelation.name)
     private UserPostRelationModel: Model<UserPostRelationDocument>,
+    @InjectModel(UserUserRelation.name)
+    private UserUserRelationModel: Model<UserUserRelationDocument>,
   ) {}
 
   onApplicationBootstrap() {
@@ -58,6 +66,9 @@ export class MongoDataServices
       );
     this.userPostRelations = new MongoGenericRepository<UserPostRelation>(
       this.UserPostRelationModel,
+    );
+    this.userUserRelations = new MongoGenericRepository<UserUserRelation>(
+      this.UserUserRelationModel,
     );
   }
 }

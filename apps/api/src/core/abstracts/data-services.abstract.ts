@@ -7,6 +7,7 @@ import {
   UserCommunityRelation,
   UserPostRelation,
 } from "common";
+import { UserUserRelation } from "common";
 import type { IGenericRepository } from "./generic-repository.abstract";
 
 export abstract class IDataServices {
@@ -18,4 +19,5 @@ export abstract class IDataServices {
 
   abstract userCommunityRelations: IGenericRepository<UserCommunityRelation>;
   abstract userPostRelations: IGenericRepository<UserPostRelation>;
+  abstract userUserRelations: IGenericRepository<UserUserRelation>;
 }

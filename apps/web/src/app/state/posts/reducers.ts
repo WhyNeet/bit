@@ -10,6 +10,7 @@ import {
   postLikeRemoved,
   postLiked,
   postUpdated,
+  postVotingStateFetched,
   postsFetching,
 } from "./actions";
 import { PostsState } from "./postsState.interface";
@@ -220,6 +221,19 @@ export const reducers = createReducer(
             ),
           )
         : null,
+    },
+  })),
+  on(postVotingStateFetched, (state, action) => ({
+    ...state,
+    home: {
+      ...state.home,
+      posts:
+        state.home.posts?.map((batch) =>
+          batch.map((post) => ({
+            ...post,
+            votingState: action.state.get(post.id)?.type ?? post.votingState,
+          })),
+        ) ?? null,
     },
   })),
 );

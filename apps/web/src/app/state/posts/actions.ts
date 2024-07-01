@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PostDto } from "common";
+import { PostDto, UserPostRelation } from "common";
 
 export const homePostsFetched = createAction(
   "[Posts] Home Posts Fetched",
@@ -44,4 +44,9 @@ export const postDisliked = createAction(
 export const postDislikeRemoved = createAction(
   "[Posts] Post Dislike Removed",
   props<{ id: string }>(),
+);
+
+export const postVotingStateFetched = createAction(
+  "[Posts] Voting State Fetched",
+  props<{ state: Map<string, UserPostRelation> }>(),
 );

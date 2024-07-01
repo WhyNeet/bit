@@ -10,9 +10,10 @@ import {
   OnInit,
   PLATFORM_ID,
   ViewChild,
+  output,
 } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { PostDto } from "common";
+import { PostDto, UserPostRelationType } from "common";
 import {
   Observable,
   Subject,
@@ -46,6 +47,11 @@ import { SkeletonComponent } from "../ui/skeleton/skeleton.component";
 export class PostListComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() posts!: Observable<PostDto[][] | null>;
   @Input() isLoading!: Observable<boolean>;
+
+  public onPostVote = output<{
+    postId: string;
+    votingState: UserPostRelationType | null;
+  }>();
 
   protected posts$!: Observable<PostDto[][] | null>;
   protected isLoading$!: Observable<boolean>;
@@ -106,5 +112,12 @@ export class PostListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isPlatformServer(this.platformId)) return;
 
     this.listEndObserver.disconnect();
+  }
+
+  protected onPostVoted(data: {
+    postId: string;
+    votingState: PostDto["votingState"];
+  }) {
+    this.onPostVote.emit(data);
   }
 }

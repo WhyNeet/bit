@@ -4,11 +4,12 @@ import {
   Component,
   Input,
   OnInit,
+  output,
   signal,
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
-import { CommunityDto, PostDto, UserDto } from "common";
+import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { PostsService } from "../../../features/posts/posts.service";
@@ -45,6 +46,11 @@ export class PostComponent implements OnInit {
 
   protected isEditing = signal(false);
 
+  public onVote = output<{
+    postId: string;
+    votingState: UserPostRelationType | null;
+  }>();
+
   @Input() post!: PostDto & { author: UserDto; community: CommunityDto };
   protected renderedContent!: string;
 
@@ -67,5 +73,9 @@ export class PostComponent implements OnInit {
   }: { title: string; content: string; files: File[]; images: File[] }) {
     this.postsService.updatePost(this.post.id, title, content, files, images);
     this.isEditing.set(false);
+  }
+
+  protected handleVote(state: PostDto["votingState"]) {
+    this.onVote.emit({ postId: this.post.id, votingState: state });
   }
 }

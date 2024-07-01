@@ -22,5 +22,5 @@
       <app-ui-post-gallery [images]="post.images" />
     }
 
-    <app-ui-post-footer (onEditClick)="handleEditClick()" [post]="post" />
+    <app-ui-post-footer (onVote)="handleVote($event)" (onEditClick)="handleEditClick()" [post]="post" />
 </div>

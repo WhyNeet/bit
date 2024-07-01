@@ -14,7 +14,7 @@ import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { Store, select } from "@ngrx/store";
-import { PostDto, UserDto } from "common";
+import { PostDto, UserDto, UserPostRelationType } from "common";
 import {
   Observable,
   Subject,
@@ -82,25 +82,28 @@ export class UserPageComponent {
 
     this.userPosts$ = toObservable(this.userPosts);
 
-    effect(() => {
-      if (this.userPostsLoading() || this.userPosts()) return;
+    effect(
+      () => {
+        if (this.userPostsLoading() || this.userPosts() || !this.user()) return;
 
-      this.userPostsLoading.set(true);
+        this.userPostsLoading.set(true);
 
-      this.postsService
-        .getUserPosts((this.user() as UserDto).id, ["author", "community"])
-        .pipe(
-          catchError((err) => {
-            this.isUserPostsError.set(true);
-            return throwError(() => err);
-          }),
-          take(1),
-        )
-        .subscribe((posts) => {
-          this.userPosts.update((prev) => [...(prev ?? []), posts]);
-          this.userPostsLoading.set(false);
-        });
-    });
+        this.postsService
+          .getUserPosts((this.user() as UserDto).id, ["author", "community"])
+          .pipe(
+            catchError((err) => {
+              this.isUserPostsError.set(true);
+              return throwError(() => err);
+            }),
+            take(1),
+          )
+          .subscribe((posts) => {
+            this.userPosts.update((prev) => [...(prev ?? []), posts]);
+            this.userPostsLoading.set(false);
+          });
+      },
+      { allowSignalWrites: true },
+    );
 
     this.userService
       .getUserById(this.userId)
@@ -155,5 +158,34 @@ export class UserPageComponent {
       .subscribe((posts) =>
         this.userPosts.update((prev) => [...(prev ?? []), posts]),
       );
+  }
+
+  protected handlePostVote(data: {
+    postId: string;
+    votingState: PostDto["votingState"];
+  }) {
+    this.userPosts.update((prev) => {
+      if (!prev) return null;
+
+      return prev.map((batch) =>
+        batch.map((post) => ({
+          ...post,
+          votingState:
+            post.id === data.postId ? data.votingState : post.votingState,
+          upvotes:
+            post.votingState === UserPostRelationType.Upvote
+              ? post.upvotes - 1
+              : data.votingState === UserPostRelationType.Upvote
+                ? post.upvotes + 1
+                : post.upvotes,
+          downvotes:
+            post.votingState === UserPostRelationType.Downvote
+              ? post.downvotes - 1
+              : data.votingState === UserPostRelationType.Downvote
+                ? post.downvotes + 1
+                : post.downvotes,
+        })),
+      );
+    });
   }
 }

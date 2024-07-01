@@ -3,7 +3,7 @@
         @for (batch of posts; track $index) {
             @if (batch.length > 0) {
                 @for (post of batch; track post.id) {
-                    <app-ui-post [post]="$any(post)" />
+                    <app-ui-post (onVote)="onPostVoted($event)" [post]="$any(post)" />
                 }
             } @else {
                 <div @label class="h-12 w-full flex items-center justify-center gap-4 text-text/80 font-display">

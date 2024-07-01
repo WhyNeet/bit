@@ -292,39 +292,6 @@ export class PostController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(OptionalJwtAuthGuard)
-  @Get("/:postId")
-  public async getPostById(
-    @Param("postId", ParseObjectIdPipe.stringified()) postId: string,
-    @IncludeFields() includeFields: string[],
-    @Token() payload?: JwtPayload,
-  ): ApiResponse<PostDto> {
-    const post = await this.postRepositoryService.getPostById(
-      postId,
-      includeFields,
-    );
-
-    if (!post) throw new PostException.PostDoesNotExist();
-
-    const dto = this.postFactoryService.createDto(post);
-
-    if (payload) {
-      const postId = dto.id;
-      const userId = payload.sub;
-
-      const state = await this.postRepositoryService.getPostVotingState(
-        postId,
-        userId,
-      );
-      dto.votingState = state ?? null;
-    }
-
-    return {
-      data: dto,
-    };
-  }
-
-  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @FormDataRequest()
   @Patch("/:postId")
@@ -430,23 +397,6 @@ export class PostController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  @Get("/:postId/voting_status")
-  public async getVotingStatus(
-    @Param("postId", ParseObjectIdPipe.stringified()) postId: string,
-    @Token() payload: JwtPayload,
-  ): ApiResponse<UserPostRelationType | null> {
-    const relationType = await this.postRepositoryService.getPostVotingState(
-      postId,
-      payload.sub,
-    );
-
-    return {
-      data: relationType ?? null,
-    };
-  }
-
-  @HttpCode(HttpStatus.OK)
   @Get("/user/:userId")
   public async getUserPosts(
     @Param("userId", ParseObjectIdPipe) userId: string,
@@ -475,6 +425,7 @@ export class PostController {
     @Query("posts", new ParseArrayPipe({ separator: "," })) posts: string[],
     @Token() payload: JwtPayload,
   ): ApiResponse<UserPostRelation[]> {
+    console.log("ids:", posts);
     // validate all ids to be ObjectId
     for (const postId of posts)
       ParseObjectIdPipe.stringified().transform(postId, null);
@@ -486,6 +437,56 @@ export class PostController {
 
     return {
       data: states,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Get("/:postId/voting_status")
+  public async getVotingStatus(
+    @Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+    @Token() payload: JwtPayload,
+  ): ApiResponse<UserPostRelationType | null> {
+    const relationType = await this.postRepositoryService.getPostVotingState(
+      postId,
+      payload.sub,
+    );
+
+    return {
+      data: relationType ?? null,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(OptionalJwtAuthGuard)
+  @Get("/:postId")
+  public async getPostById(
+    @Param("postId", ParseObjectIdPipe.stringified()) postId: string,
+    @IncludeFields() includeFields: string[],
+    @Token() payload?: JwtPayload,
+  ): ApiResponse<PostDto> {
+    const post = await this.postRepositoryService.getPostById(
+      postId,
+      includeFields,
+    );
+
+    if (!post) throw new PostException.PostDoesNotExist();
+
+    const dto = this.postFactoryService.createDto(post);
+
+    if (payload) {
+      const postId = dto.id;
+      const userId = payload.sub;
+
+      const state = await this.postRepositoryService.getPostVotingState(
+        postId,
+        userId,
+      );
+      dto.votingState = state ?? null;
+    }
+
+    return {
+      data: dto,
     };
   }
 }

@@ -28,7 +28,6 @@ export class PostRepositoryService {
       ? { community: { $in: communities } }
       : {};
     const authorQuery = users ? { author: { $in: users } } : {};
-    console.log(communityQuery, authorQuery);
     return await this.dataServices.posts.getAll(
       { ...communityQuery, ...authorQuery },
       { createdAt: "desc" },

@@ -2,7 +2,13 @@ import { isPlatformServer } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { Store, select } from "@ngrx/store";
-import { PostDto, UpdatePostDto, UserDto, validateFileId } from "common";
+import {
+  PostDto,
+  UpdatePostDto,
+  UserDto,
+  UserPostRelation,
+  validateFileId,
+} from "common";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import {
@@ -15,6 +21,7 @@ import {
   postLikeRemoved,
   postLiked,
   postUpdated,
+  postVotingStateFetched,
   postsFetching,
 } from "../../state/posts/actions";
 import { selectUser } from "../../state/user/selectors";
@@ -262,5 +269,32 @@ export class PostsService {
         },
       )
       .pipe(map((res) => (res as { data: PostDto[] }).data));
+  }
+
+  public getPostsVotingState(
+    postIds: string[],
+  ): Observable<Map<string, UserPostRelation>> {
+    const res = this.httpClient
+      .get(
+        `${environment.API_BASE_URL}/posts/voting_status?posts=${postIds.join(
+          ",",
+        )}`,
+        { withCredentials: true },
+      )
+      .pipe(
+        map((res) => (res as { data: UserPostRelation[] }).data),
+        map((data) =>
+          data.reduce((acc, val) => {
+            acc.set(val.post.toString(), val);
+            return acc;
+          }, new Map<string, UserPostRelation>()),
+        ),
+      );
+
+    res.subscribe((state) =>
+      this.store.dispatch(postVotingStateFetched({ state })),
+    );
+
+    return res;
   }
 }

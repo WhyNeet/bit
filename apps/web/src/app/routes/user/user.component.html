@@ -1,5 +1,5 @@
 <div class="pr-8 h-full">
-@if (user$ | async; as user) {
+@if (user(); as user) {
   <div class="h-full w-full flex gap-2">
     <div class="w-full h-full overflow-y-scroll scrollbar-none pt-16">
       <div class="w-full layout-block flex items-center gap-4">

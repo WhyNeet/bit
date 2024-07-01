@@ -6,6 +6,8 @@ import {
   Inject,
   PLATFORM_ID,
   Signal,
+  afterNextRender,
+  effect,
   signal,
 } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
@@ -47,49 +49,25 @@ import { selectUser } from "../../state/user/selectors";
 export class UserPageComponent {
   private userId: string;
   protected isCurrentUser: Signal<boolean | undefined>;
-  protected user$ = new Subject<UserDto | null>();
+  protected user = signal<UserDto | null>(null);
   protected isError = signal(false);
   protected isLoggedIn$: Observable<boolean>;
   private userPosts = signal<PostDto[][] | null>(null);
   protected userPosts$: Observable<PostDto[][] | null>;
-  protected userPostsLoading$ = new Subject<boolean>();
+  protected userPostsLoading = signal(false);
   protected isUserPostsError = signal(false);
+  protected userPostsLoading$ = toObservable(this.userPostsLoading);
 
   constructor(
     private store: Store,
     private activatedRoute: ActivatedRoute,
     protected userService: UserService,
-    // biome-ignore lint/complexity/noBannedTypes: Angular
-    @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
     private postsService: PostsService,
+    private cdr: ChangeDetectorRef,
   ) {
-    this.userPosts$ = toObservable(this.userPosts);
-
-    this.user$
-      .pipe(
-        filter((user) => !!user),
-        take(1),
-      )
-      .subscribe((user) => {
-        this.userPostsLoading$.next(true);
-
-        this.postsService
-          .getUserPosts((user as UserDto).id, ["author", "community"])
-          .pipe(
-            catchError((err) => {
-              this.isUserPostsError.set(true);
-              return throwError(() => err);
-            }),
-            take(1),
-          )
-          .subscribe((posts) => {
-            this.userPosts.update((prev) => [...(prev ?? []), posts]);
-            this.userPostsLoading$.next(false);
-          });
-      });
-
     this.userId = this.activatedRoute.snapshot.params["userId"];
+
     this.isCurrentUser = toSignal(
       this.store.pipe(
         select(selectUser),
@@ -102,7 +80,27 @@ export class UserPageComponent {
       map((user) => !!user),
     );
 
-    if (isPlatformServer(this.platformId)) return;
+    this.userPosts$ = toObservable(this.userPosts);
+
+    effect(() => {
+      if (this.userPostsLoading() || this.userPosts()) return;
+
+      this.userPostsLoading.set(true);
+
+      this.postsService
+        .getUserPosts((this.user() as UserDto).id, ["author", "community"])
+        .pipe(
+          catchError((err) => {
+            this.isUserPostsError.set(true);
+            return throwError(() => err);
+          }),
+          take(1),
+        )
+        .subscribe((posts) => {
+          this.userPosts.update((prev) => [...(prev ?? []), posts]);
+          this.userPostsLoading.set(false);
+        });
+    });
 
     this.userService
       .getUserById(this.userId)
@@ -112,7 +110,22 @@ export class UserPageComponent {
           return throwError(() => err);
         }),
       )
-      .subscribe((user) => this.user$.next(user));
+      .subscribe((user) => this.user.set(user));
+
+    afterNextRender(() => {
+      this.userPosts$
+        .pipe(
+          filter((posts) => !!posts),
+          take(1),
+        )
+        .subscribe((posts) =>
+          this.postsService
+            .getPostsVotingState(
+              (posts as PostDto[][])[0].map((post) => post.id),
+            )
+            .subscribe((res) => console.log("voting state:", res)),
+        );
+    });
   }
 
   protected logout() {

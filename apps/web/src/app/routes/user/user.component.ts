@@ -123,7 +123,17 @@ export class UserPageComponent {
             .getPostsVotingState(
               (posts as PostDto[][])[0].map((post) => post.id),
             )
-            .subscribe((res) => console.log("voting state:", res)),
+            .subscribe((res) =>
+              this.userPosts.update((posts) => {
+                if (!posts) return null;
+
+                posts[0] = posts[0].map((post) => ({
+                  ...post,
+                  votingState: res.get(post.id)?.type ?? post.votingState,
+                }));
+                return [...posts];
+              }),
+            ),
         );
     });
   }

@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { UserUserRelation } from "common";
+import { UserUserRelationType } from "common";
 import {
   UserCommunityRelation,
   UserCommunityRelationType,
@@ -31,6 +33,20 @@ export class RelationFactoryService {
 
     relation.user = userId;
     relation.post = postId;
+    relation.type = type;
+
+    return relation;
+  }
+
+  public createUserUserRelation(
+    fromUser: string,
+    toUser: string,
+    type: UserUserRelationType,
+  ): UserUserRelation {
+    const relation = new UserUserRelation();
+
+    relation.fromUser = fromUser;
+    relation.toUser = toUser;
     relation.type = type;
 
     return relation;

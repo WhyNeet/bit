@@ -1,10 +1,11 @@
 import { Module } from "@nestjs/common";
 import { DataServicesModule } from "src/frameworks/data-services/data-services.module";
+import { RelationFeatureModule } from "../relation/relation-feature.module";
 import { UserFactoryService } from "./user-factory.service";
 import { UserRepositoryService } from "./user-repository.service";
 
 @Module({
-  imports: [DataServicesModule],
+  imports: [DataServicesModule, RelationFeatureModule],
   providers: [UserFactoryService, UserRepositoryService],
   exports: [UserFactoryService, UserRepositoryService],
 })

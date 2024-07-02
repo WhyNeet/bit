@@ -6,7 +6,7 @@ import { Exception } from "src/frameworks/exception-handling/types/exception.int
 export class UserException {
   @CommonException(
     "User does not exist.",
-    "Uset with this identifier does not exist.",
+    "User with this identifier does not exist.",
     HttpStatus.BAD_REQUEST,
   )
   public static readonly UserDoesNotExist: Exception;

@@ -1,8 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "common";
+import { UserUserRelation } from "common";
+import { UserUserRelationType } from "common";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { CreateUserDto } from "src/core/dtos/user.dto";
 import { AuthException } from "../exception-handling/exceptions/auth.exception";
+import { RelationFactoryService } from "../relation/relation-factory.service";
 import { UserFactoryService } from "./user-factory.service";
 
 @Injectable()
@@ -10,6 +13,7 @@ export class UserRepositoryService {
   constructor(
     private dataServices: IDataServices,
     private userFactoryService: UserFactoryService,
+    private relationFactoryService: RelationFactoryService,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -50,5 +54,29 @@ export class UserRepositoryService {
 
   public deleteUser(id: string): Promise<User | null> {
     return this.dataServices.users.delete({ _id: id });
+  }
+
+  public async followUser(
+    followerId: string,
+    followingId: string,
+  ): Promise<UserUserRelation> {
+    const relation = this.relationFactoryService.createUserUserRelation(
+      followerId,
+      followingId,
+      UserUserRelationType.Follow,
+    );
+
+    return await this.dataServices.userUserRelations.create(relation);
+  }
+
+  public async unfollowUser(
+    followerId: string,
+    followingId: string,
+  ): Promise<UserUserRelation> {
+    return await this.dataServices.userUserRelations.delete({
+      fromUser: followerId,
+      toUser: followingId,
+      type: UserUserRelationType.Follow,
+    });
   }
 }

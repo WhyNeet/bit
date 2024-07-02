@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { User } from "common";
 import { UserUserRelation } from "common";
 import { UserUserRelationType } from "common";
+import { UserPostRelationType } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { CreateUserDto } from "src/core/dtos/user.dto";
@@ -96,5 +97,14 @@ export class UserRepositoryService {
       toUser: followingId,
       type: UserUserRelationType.Follow,
     });
+  }
+
+  public async getRelation(
+    fromUser: string,
+    toUser: string,
+    type?: UserUserRelationType,
+  ): Promise<UserUserRelation> {
+    const filter = type ? { fromUser, toUser, type } : { fromUser, toUser };
+    return await this.dataServices.userUserRelations.get(filter);
   }
 }

@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { UserUserRelationType } from "common";
 import { ApiResponse, User, UserDto } from "common";
 import { UserException } from "src/features/exception-handling/exceptions/user.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
@@ -77,6 +78,24 @@ export class UserController {
 
     return {
       data: null,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Get("/:userId/is_following")
+  public async isFollowingUser(
+    @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
+    @Token() payload: JwtPayload,
+  ): ApiResponse<boolean> {
+    const relation = await this.userRepositoryService.getRelation(
+      payload.sub,
+      userId,
+      UserUserRelationType.Follow,
+    );
+
+    return {
+      data: !!relation,
     };
   }
 }

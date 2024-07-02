@@ -5,6 +5,7 @@ export class User {
   name: string;
   bio?: string;
   password: string;
+  followers: number;
   createdAt: Date;
   updatedAt: Date;
 }

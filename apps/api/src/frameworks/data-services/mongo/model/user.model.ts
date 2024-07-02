@@ -22,6 +22,9 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({ default: 0 })
+  followers: number;
+
   createdAt: Date;
   updatedAt: Date;
 }

@@ -32,6 +32,7 @@ export class UserDto {
   username: string;
   name: string;
   bio?: string;
+  followers: number;
   createdAt: Date;
   updatedAt: Date;
 }

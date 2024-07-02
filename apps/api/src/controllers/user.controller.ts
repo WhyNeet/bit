@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -64,7 +65,7 @@ export class UserController {
   public async followUser(
     @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
     @Token() payload: JwtPayload,
-  ): ApiResponse<UserUserRelation> {
+  ): ApiResponse<null> {
     const followedUser = await this.userRepositoryService.getUserById(userId);
 
     if (!followedUser) throw new UserException.UserDoesNotExist();
@@ -75,7 +76,26 @@ export class UserController {
     );
 
     return {
-      data: relation,
+      data: null,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Post("/:userId/unfollow")
+  public async unfollowUser(
+    @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
+    @Token() payload: JwtPayload,
+  ): ApiResponse<null> {
+    const relation = await this.userRepositoryService.unfollowUser(
+      payload.sub,
+      userId,
+    );
+
+    if (!relation) throw new UserException.UserDoesNotExist();
+
+    return {
+      data: null,
     };
   }
 }

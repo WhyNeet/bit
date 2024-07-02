@@ -46,4 +46,28 @@ export class UserService {
       })
       .pipe(map((data) => (data as { data: UserDto }).data));
   }
+
+  public followUser(userId: string): Observable<null> {
+    return this.httpClient
+      .post(`${environment.API_BASE_URL}/users/${userId}/follow`, undefined, {
+        withCredentials: true,
+      })
+      .pipe(map((res) => (res as { data: null }).data));
+  }
+
+  public unfollowUser(userId: string): Observable<null> {
+    return this.httpClient
+      .post(`${environment.API_BASE_URL}/users/${userId}/unfollow`, undefined, {
+        withCredentials: true,
+      })
+      .pipe(map((res) => (res as { data: null }).data));
+  }
+
+  public isUserFollowed(userId: string): Observable<boolean> {
+    return this.httpClient
+      .get(`${environment.API_BASE_URL}/users/${userId}/is_following`, {
+        withCredentials: true,
+      })
+      .pipe(map((res) => (res as { data: boolean }).data));
+  }
 }

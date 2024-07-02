@@ -17,4 +17,11 @@ export class UserException {
     HttpStatus.BAD_REQUEST,
   )
   public static readonly UserCannotSelfFollow: Exception;
+
+  @CommonException(
+    "User is not followed.",
+    "Cannot unfollow this user.",
+    HttpStatus.BAD_REQUEST,
+  )
+  public static readonly UserIsNotFollowed: Exception;
 }

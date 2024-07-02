@@ -76,7 +76,7 @@ export class UserController {
       userId,
     );
 
-    if (!relation) throw new UserException.UserDoesNotExist();
+    if (!relation) throw new UserException.UserIsNotFollowed();
 
     return {
       data: null,

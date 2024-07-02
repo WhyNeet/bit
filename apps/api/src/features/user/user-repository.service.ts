@@ -42,13 +42,14 @@ export class UserRepositoryService {
   public async getUserById(id: string): Promise<User | null> {
     const cachedUser = await this.cachingServices.get<User>(`user:${id}`, true);
 
-    cachedUser.id = (cachedUser as unknown as { _id: string })._id;
-
-    if (cachedUser) return cachedUser;
+    if (cachedUser) {
+      cachedUser.id = (cachedUser as unknown as { _id: string })._id;
+      return cachedUser;
+    }
 
     const user = await this.dataServices.users.getById(id);
 
-    await this.cachingServices.set(`user:${id}`, user);
+    if (user) await this.cachingServices.set(`user:${id}`, user);
 
     return user;
   }
@@ -78,12 +79,26 @@ export class UserRepositoryService {
   public async followUser(
     followerId: string,
     followingId: string,
-  ): Promise<UserUserRelation> {
+  ): Promise<UserUserRelation | null> {
+    const existing = await this.dataServices.userUserRelations.get({
+      fromUser: followerId,
+      toUser: followingId,
+      type: UserUserRelationType.Follow,
+    });
+    if (existing) return null;
+
     const relation = this.relationFactoryService.createUserUserRelation(
       followerId,
       followingId,
       UserUserRelationType.Follow,
     );
+
+    const user = await this.dataServices.users.update(
+      { _id: followingId },
+      { $inc: { followers: 1 } },
+    );
+    user.followers += 1;
+    await this.cachingServices.set(`user:${followingId}`, user);
 
     return await this.dataServices.userUserRelations.create(relation);
   }
@@ -92,11 +107,22 @@ export class UserRepositoryService {
     followerId: string,
     followingId: string,
   ): Promise<UserUserRelation> {
-    return await this.dataServices.userUserRelations.delete({
+    const res = await this.dataServices.userUserRelations.delete({
       fromUser: followerId,
       toUser: followingId,
       type: UserUserRelationType.Follow,
     });
+
+    if (!res) return res;
+
+    const user = await this.dataServices.users.update(
+      { _id: followingId },
+      { $inc: { followers: -1 } },
+    );
+    user.followers -= 1;
+    await this.cachingServices.set(`user:${followingId}`, user);
+
+    return res;
   }
 
   public async getRelation(

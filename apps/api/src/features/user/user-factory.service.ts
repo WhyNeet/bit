@@ -23,6 +23,7 @@ export class UserFactoryService {
     userDto.email = isFull ? user.email : undefined;
     userDto.bio = user.bio;
     userDto.name = user.name;
+    userDto.followers = user.followers;
     userDto.createdAt = user.createdAt;
     userDto.updatedAt = user.updatedAt;
 

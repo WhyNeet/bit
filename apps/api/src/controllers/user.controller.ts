@@ -51,6 +51,8 @@ export class UserController {
     const followedUser = await this.userRepositoryService.getUserById(userId);
 
     if (!followedUser) throw new UserException.UserDoesNotExist();
+    if (followedUser.id === payload.sub)
+      throw new UserException.UserCannotSelfFollow();
 
     const relation = await this.userRepositoryService.followUser(
       payload.sub,

@@ -10,4 +10,11 @@ export class UserException {
     HttpStatus.BAD_REQUEST,
   )
   public static readonly UserDoesNotExist: Exception;
+
+  @CommonException(
+    "User cannot self-follow.",
+    "Only another user can be followed.",
+    HttpStatus.BAD_REQUEST,
+  )
+  public static readonly UserCannotSelfFollow: Exception;
 }

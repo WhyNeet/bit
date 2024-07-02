@@ -1,6 +1,5 @@
 import {
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -8,9 +7,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { UserUserRelation } from "common";
 import { ApiResponse, User, UserDto } from "common";
-import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { UserException } from "src/features/exception-handling/exceptions/user.exception";
 import { ParseObjectIdPipe } from "src/features/pipes/parse-objectid.pipe";
 import { UserFactoryService } from "src/features/user/user-factory.service";
@@ -25,7 +22,6 @@ export class UserController {
   constructor(
     private userRepositoryService: UserRepositoryService,
     private userFactoryService: UserFactoryService,
-    private cachingServices: ICachingServices,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -35,24 +31,9 @@ export class UserController {
     @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
     @Token() payload?: JwtPayload,
   ): ApiResponse<UserDto> {
-    const cachedUser = await this.cachingServices.get<User>(
-      `user:${userId}`,
-      true,
-    );
-
-    if (cachedUser)
-      return {
-        data: this.userFactoryService.createDto(
-          cachedUser,
-          payload?.sub === (cachedUser as unknown as { _id: string })._id,
-        ),
-      };
-
     const user = await this.userRepositoryService.getUserById(userId);
 
     if (!user) throw new UserException.UserDoesNotExist();
-
-    await this.cachingServices.set(`user:${userId}`, user);
 
     return {
       data: this.userFactoryService.createDto(user, payload?.sub === user.id),

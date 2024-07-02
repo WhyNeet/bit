@@ -6,7 +6,7 @@ export enum UserUserRelationType {
 }
 
 export class UserUserRelation {
-  user_a: string | User;
-  user_b: string | User;
+  fromUser: string | User;
+  toUser: string | User;
   type: UserUserRelationType;
 }

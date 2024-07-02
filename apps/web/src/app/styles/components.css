@@ -1,15 +1,19 @@
 input.input {
-    @apply px-4 py-2 rounded-default bg-text/10 focus:border-primary border border-text/5 outline-none transition-colors
+  @apply px-4 py-2 rounded-default bg-text/10 focus:border-primary border border-text/5 outline-none transition-colors
 }
 
 button.primary {
-    @apply px-4 py-2 rounded-default bg-primary hover:bg-primary/90 font-medium font-display transition-colors text-background
+  @apply px-4 py-2 rounded-default bg-primary hover:bg-primary/90 font-medium font-display transition-colors text-background
+}
+
+button.secondary {
+  @apply px-4 py-2 rounded-default bg-secondary hover:bg-secondary/90 font-medium font-display transition-colors
 }
 
 button.primary:active {
-    @apply bg-primary/80
+  @apply bg-primary/80
 }
 
 button.primary[disabled] {
-    @apply bg-primary/60
+  @apply bg-primary/60
 }

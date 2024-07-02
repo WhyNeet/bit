@@ -57,6 +57,7 @@ export class UserPageComponent {
   protected userPostsLoading = signal(false);
   protected isUserPostsError = signal(false);
   protected userPostsLoading$ = toObservable(this.userPostsLoading);
+  protected isFollowing = signal(false);
 
   constructor(
     private store: Store,
@@ -64,7 +65,6 @@ export class UserPageComponent {
     protected userService: UserService,
     private authService: AuthService,
     private postsService: PostsService,
-    private cdr: ChangeDetectorRef,
   ) {
     this.userId = this.activatedRoute.snapshot.params["userId"];
 
@@ -116,6 +116,10 @@ export class UserPageComponent {
       .subscribe((user) => this.user.set(user));
 
     afterNextRender(() => {
+      this.userService
+        .isUserFollowed(this.userId)
+        .subscribe((isFollowed) => this.isFollowing.set(isFollowed));
+
       this.userPosts$
         .pipe(
           filter((posts) => !!posts),
@@ -187,5 +191,15 @@ export class UserPageComponent {
         })),
       );
     });
+  }
+
+  protected handleFollowClick() {
+    this.isFollowing.set(true);
+    this.userService.followUser(this.userId).subscribe();
+  }
+
+  protected handleUnfollowClick() {
+    this.isFollowing.set(false);
+    this.userService.unfollowUser(this.userId).subscribe();
   }
 }

@@ -133,4 +133,22 @@ export class UserRepositoryService {
     const filter = type ? { fromUser, toUser, type } : { fromUser, toUser };
     return await this.dataServices.userUserRelations.get(filter);
   }
+
+  public async getFollowers(userId: string): Promise<User[]> {
+    const relations = await this.dataServices.userUserRelations.getAll(
+      { toUser: userId },
+      undefined,
+      10,
+      0,
+    );
+    const ids = relations.map((rel) => rel.fromUser);
+    const users = await this.dataServices.users.getAll(
+      { _id: { $in: ids } },
+      undefined,
+      10,
+      0,
+    );
+
+    return users;
+  }
 }

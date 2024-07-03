@@ -100,4 +100,18 @@ export class UserController {
       data: !!relation,
     };
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Get("/:userId/followers")
+  public async getUserFollowers(
+    @Param("userId", ParseObjectIdPipe.stringified()) userId: string,
+  ): ApiResponse<UserDto[]> {
+    const users = await this.userRepositoryService.getFollowers(userId);
+
+    return {
+      data: users.map(
+        this.userFactoryService.createDto.bind(this.userFactoryService),
+      ),
+    };
+  }
 }

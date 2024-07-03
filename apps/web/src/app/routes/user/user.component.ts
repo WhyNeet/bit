@@ -57,7 +57,8 @@ export class UserPageComponent {
   protected userPostsLoading = signal(false);
   protected isUserPostsError = signal(false);
   protected userPostsLoading$ = toObservable(this.userPostsLoading);
-  protected isFollowing = signal(false);
+  protected isFollowing = signal<boolean | null>(null);
+  protected followers = signal<UserDto[] | null>(null);
 
   constructor(
     private store: Store,

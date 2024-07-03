@@ -70,4 +70,12 @@ export class UserService {
       })
       .pipe(map((res) => (res as { data: boolean }).data));
   }
+
+  public getUserFollowers(userId: string): Observable<UserDto[]> {
+    return this.httpClient
+      .get(`${environment.API_BASE_URL}/users/${userId}/followers`, {
+        withCredentials: true,
+      })
+      .pipe(map((res) => (res as { data: UserDto[] }).data));
+  }
 }

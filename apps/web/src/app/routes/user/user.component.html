@@ -39,6 +39,19 @@
       </div>
       <div class="layout-block h-fit">
         <h2 class="font-display font-semibold text-lg">{{ user.followers }} followers</h2>
+        @if (followers(); as followers) {
+          @for (follower of followers; track follower.id) {
+            <a routerLink="/user/{{ follower.id }}" class="p-2 rounded-default flex gap-2 hover:bg-text/5 transition-colors">
+              <app-ui-avatar [src]="userService.getUserAvatarUrl(follower.id)" [size]="22" />
+              <div class="font-semibold font-display">{{ follower.name }}</div>
+            </a>
+          }
+        } @else {
+        <div class="h-12 w-full flex items-center gap-4 text-text/60 font-display">
+          <app-ui-progress-spinner class="h-6 w-6 text-primary" />
+          Loading followers...
+        </div>
+        }
       </div >
     </aside>
   </div>

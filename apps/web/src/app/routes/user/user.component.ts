@@ -11,7 +11,7 @@ import {
   signal,
 } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { Store, select } from "@ngrx/store";
 import { PostDto, UserDto, UserPostRelationType } from "common";
@@ -41,6 +41,7 @@ import { selectUser } from "../../state/user/selectors";
     NgIcon,
     AvatarComponent,
     PostListComponent,
+    RouterLink,
   ],
   styleUrl: "./user.component.css",
   templateUrl: "./user.component.html",
@@ -102,6 +103,17 @@ export class UserPageComponent {
             this.userPosts.update((prev) => [...(prev ?? []), posts]);
             this.userPostsLoading.set(false);
           });
+      },
+      { allowSignalWrites: true },
+    );
+
+    effect(
+      () => {
+        if (!this.user()) return;
+
+        this.userService
+          .getUserFollowers((this.user() as UserDto).id)
+          .subscribe((followers) => this.followers.set(followers));
       },
       { allowSignalWrites: true },
     );

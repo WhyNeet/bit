@@ -12,7 +12,7 @@
         @if (isCurrentUser()) {
           <button (click)="logout()" class="secondary">Log out</button>
         } @else {
-          @if (isLoggedIn$ | async) {
+          @if (isLoggedIn()) {
             @if (isFollowing() != null) {
               @if (isFollowing()) {
                 <button (click)="handleUnfollowClick()" class="secondary">Unfollow</button>

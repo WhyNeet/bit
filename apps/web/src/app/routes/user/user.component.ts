@@ -1,10 +1,7 @@
-import { CommonModule, isPlatformServer } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  Inject,
-  PLATFORM_ID,
   Signal,
   afterNextRender,
   effect,
@@ -15,15 +12,7 @@ import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { Store, select } from "@ngrx/store";
 import { PostDto, UserDto, UserPostRelationType } from "common";
-import {
-  Observable,
-  Subject,
-  catchError,
-  filter,
-  map,
-  take,
-  throwError,
-} from "rxjs";
+import { Observable, catchError, filter, map, take, throwError } from "rxjs";
 import { PostListComponent } from "../../components/post-list/post-list.component";
 import { AvatarComponent } from "../../components/ui/avatar/avatar.component";
 import { ProgressSpinnerComponent } from "../../components/ui/progress-spinner/progress-spinner.component";
@@ -52,7 +41,7 @@ export class UserPageComponent {
   protected isCurrentUser: Signal<boolean | undefined>;
   protected user = signal<UserDto | null>(null);
   protected isError = signal(false);
-  protected isLoggedIn$: Observable<boolean>;
+  protected isLoggedIn: Signal<boolean | undefined>;
   private userPosts = signal<PostDto[][] | null>(null);
   protected userPosts$: Observable<PostDto[][] | null>;
   protected userPostsLoading = signal(false);
@@ -77,9 +66,11 @@ export class UserPageComponent {
       ),
     );
 
-    this.isLoggedIn$ = this.store.pipe(
-      select(selectUser),
-      map((user) => !!user),
+    this.isLoggedIn = toSignal(
+      this.store.pipe(
+        select(selectUser),
+        map((user) => !!user),
+      ),
     );
 
     this.userPosts$ = toObservable(this.userPosts);
@@ -181,6 +172,8 @@ export class UserPageComponent {
     postId: string;
     votingState: PostDto["votingState"];
   }) {
+    if (!this.isLoggedIn()) return;
+
     this.userPosts.update((prev) => {
       if (!prev) return null;
 

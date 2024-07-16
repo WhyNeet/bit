@@ -23,5 +23,13 @@
   - Change the directory to `<project_root>/apps/web`
   - Run `pnpm start` to start the web app development server
   - It will run on port `4200`
-## Running in production
-Not implemented yet
+## Running in Docker on a local machine
+1. Build the images
+  - Run `sudo make build_images`
+2. Start the local services
+  - Run `sudo make start_services`
+3. Run the images
+  - Run `sudo make run_images`
+4. Access the application
+  - API is exposed on port `8080`
+  - Web application is exposed on port `4200`

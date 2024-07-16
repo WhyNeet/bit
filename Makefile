@@ -4,5 +4,5 @@ start_services:
 	localstack start -d
 	awslocal s3api create-bucket --bucket testing-bucket --region us-east-1
 build_images:
-  sudo docker build -f Dockerfile.web -t whyneet/bit-web .
-  sudo docker build -f Dockerfile.api -t whyneet/bit-api .
+	sudo docker build -f Dockerfile.web -t whyneet/bit-web .
+	sudo docker build -f Dockerfile.api -t whyneet/bit-api .

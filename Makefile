@@ -11,4 +11,4 @@ build_api_image:
 build_web_image:
 	docker build -f Dockerfile.web -t whyneet/bit-web .
 run_api_image:
-	docker run -p 8080:8080 --env-file .env.api.docker.example -e PORT=8080 --network=bridge whyneet/bit-api
+	docker run -p 8080:8080 --env-file .env.api.docker.example -e PORT=8080 --network=host --name bit-api whyneet/bit-api

@@ -15,6 +15,22 @@ export class ConfigurationLoader {
     return () => conf;
   }
 
+  public static osenv(): () => Configuration {
+    const replaceList = ["db_", "tokens_", "storage_", "env_dev"];
+    const env: Configuration = { ...process.env };
+
+    for (const key of Object.keys(env)) {
+      if (!replaceList.some((prefix) => key.startsWith(prefix))) continue;
+
+      const value = Number.isNaN(+env[key]) ? env[key] : +env[key];
+
+      env[key.replaceAll("_", ".")] = value;
+      delete env[key];
+    }
+
+    return () => env;
+  }
+
   private static load(fileName: string, devOnly?: boolean): Configuration {
     if (process.env.NODE_ENV === "production" && devOnly) return {};
 
@@ -25,6 +41,6 @@ export class ConfigurationLoader {
     const filePath = path.join(LOCATION, fileName);
     const content = fs.readFileSync(filePath, { encoding: "utf-8" });
 
-    return yaml.load(content) as Record<string, unknown>;
+    return yaml.load(content) as Configuration;
   }
 }

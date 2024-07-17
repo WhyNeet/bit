@@ -136,7 +136,7 @@ export class UserRepositoryService {
 
   public async getFollowers(userId: string): Promise<User[]> {
     const relations = await this.dataServices.userUserRelations.getAll(
-      { toUser: userId },
+      { toUser: userId, type: UserUserRelationType.Follow },
       undefined,
       10,
       0,
@@ -150,5 +150,20 @@ export class UserRepositoryService {
     );
 
     return users;
+  }
+
+  public async getFollowingIds(
+    userId: string,
+    skip = 0,
+    limit = 0,
+  ): Promise<string[]> {
+    const relations = await this.dataServices.userUserRelations.getAll(
+      { fromUser: userId, type: UserUserRelationType.Follow },
+      undefined,
+      limit,
+      skip,
+    );
+
+    return relations.map((user) => user.toUser.toString());
   }
 }

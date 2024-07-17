@@ -230,6 +230,7 @@ export class PostController {
       pageData.page ?? 0,
       pageData.perPage ?? 20,
       undefined,
+      undefined,
       includeFields,
     );
 
@@ -253,7 +254,7 @@ export class PostController {
     @Token() payload: JwtPayload,
     @Pagination() pageData: PageData,
   ): ApiResponse<PostDto[]> {
-    const posts = await this.postRepositoryService.getLatestPosts(
+    const posts = await this.postRepositoryService.getHomePosts(
       pageData.page ?? 0,
       pageData.perPage ?? 20,
       payload.sub,
@@ -388,8 +389,8 @@ export class PostController {
       pageData.page,
       pageData.perPage,
       undefined,
-      include,
       [userId],
+      include,
     );
 
     return {

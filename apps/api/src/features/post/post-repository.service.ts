@@ -5,6 +5,7 @@ import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { UpdatePostDto } from "src/core/dtos/post.dto";
 import { CommunityRepositoryService } from "../community/community-repository.service";
 import { RelationFactoryService } from "../relation/relation-factory.service";
+import { UserRepositoryService } from "../user/user-repository.service";
 import { PostFactoryService } from "./post-factory.service";
 
 @Injectable()
@@ -15,18 +16,18 @@ export class PostRepositoryService {
     private relationFactoryService: RelationFactoryService,
     private cachingServices: ICachingServices,
     private communityRepositoryService: CommunityRepositoryService,
+    private userRepositoryService: UserRepositoryService,
   ) {}
 
   public async createPost(post: Post): Promise<Post> {
     return await this.dataServices.posts.create(post);
   }
 
-  public async getLatestPosts(
+  public async getHomePosts(
     page: number,
     perPage: number,
     userId: string,
     populate?: string[],
-    users?: string[],
   ): Promise<Post[]> {
     const cachedAllowedCommunities = await this.cachingServices.sget<string>(
       `userCommunities:${userId}`,
@@ -42,12 +43,41 @@ export class PostRepositoryService {
     if (!cachedAllowedCommunities.length && communities.length)
       await this.cachingServices.sadd(`userCommunities:${userId}`, communities);
 
+    const cachedFollowedUsers = await this.cachingServices.sget<string>(
+      `userFollowing:${userId}`,
+    );
+
+    const users =
+      cachedFollowedUsers.length > 0
+        ? cachedFollowedUsers
+        : await this.userRepositoryService.getFollowingIds(userId);
+
     const communityQuery = communities
-      ? { community: { $in: communities } }
-      : {};
-    const authorQuery = users ? { author: { $in: users } } : {};
+      ? [{ community: { $in: communities } }]
+      : [];
+    const authorQuery = users ? [{ author: { $in: users } }] : [];
     return await this.dataServices.posts.getAll(
-      { ...communityQuery, ...authorQuery },
+      { $or: [...communityQuery, ...authorQuery] },
+      { createdAt: "desc" },
+      perPage,
+      perPage * page,
+      populate,
+    );
+  }
+
+  public async getLatestPosts(
+    page: number,
+    perPage: number,
+    communities?: string[],
+    users?: string[],
+    populate?: string[],
+  ): Promise<Post[]> {
+    const communityQuery = communities
+      ? [{ community: { $in: communities } }]
+      : [];
+    const authorQuery = users ? [{ author: { $in: users } }] : [];
+    return await this.dataServices.posts.getAll(
+      { $or: [...communityQuery, ...authorQuery] },
       { createdAt: "desc" },
       perPage,
       perPage * page,

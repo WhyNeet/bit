@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { CachingServicesModule } from "src/frameworks/caching-services/caching-services.module";
 import { DataServicesModule } from "src/frameworks/data-services/data-services.module";
 import { CommunityFeatureModule } from "../community/community-feature.module";
 import { RelationFeatureModule } from "../relation/relation-feature.module";
@@ -12,6 +13,7 @@ import { PostRepositoryService } from "./post-repository.service";
     UserFeatureModule,
     CommunityFeatureModule,
     RelationFeatureModule,
+    CachingServicesModule,
   ],
   providers: [PostFactoryService, PostRepositoryService],
   exports: [PostFactoryService, PostRepositoryService],

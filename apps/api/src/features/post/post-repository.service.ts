@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { Post, PostDto, UserPostRelation, UserPostRelationType } from "common";
+import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import { IDataServices } from "src/core/abstracts/data-services.abstract";
 import { UpdatePostDto } from "src/core/dtos/post.dto";
+import { CommunityRepositoryService } from "../community/community-repository.service";
 import { RelationFactoryService } from "../relation/relation-factory.service";
 import { PostFactoryService } from "./post-factory.service";
 
@@ -11,6 +13,8 @@ export class PostRepositoryService {
     private dataServices: IDataServices,
     private postFactoryService: PostFactoryService,
     private relationFactoryService: RelationFactoryService,
+    private cachingServices: ICachingServices,
+    private communityRepositoryService: CommunityRepositoryService,
   ) {}
 
   public async createPost(post: Post): Promise<Post> {
@@ -20,10 +24,24 @@ export class PostRepositoryService {
   public async getLatestPosts(
     page: number,
     perPage: number,
-    communities?: string[],
+    userId: string,
     populate?: string[],
     users?: string[],
   ): Promise<Post[]> {
+    const cachedAllowedCommunities = await this.cachingServices.sget<string>(
+      `userCommunities:${userId}`,
+    );
+
+    const communities =
+      cachedAllowedCommunities.length > 0
+        ? cachedAllowedCommunities
+        : (
+            await this.communityRepositoryService.getUserCommunities(userId)
+          ).map((c) => c.community.toString());
+
+    if (!cachedAllowedCommunities.length && communities.length)
+      await this.cachingServices.sadd(`userCommunities:${userId}`, communities);
+
     const communityQuery = communities
       ? { community: { $in: communities } }
       : {};

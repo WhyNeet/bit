@@ -253,31 +253,12 @@ export class PostController {
     @Token() payload: JwtPayload,
     @Pagination() pageData: PageData,
   ): ApiResponse<PostDto[]> {
-    const cachedAllowedCommunities = await this.cachingServices.sget<string>(
-      `userCommunities:${payload.sub}`,
-    );
-
-    const allowedCommunities =
-      cachedAllowedCommunities.length > 0
-        ? cachedAllowedCommunities
-        : (
-            await this.communityRepositoryService.getUserCommunities(
-              payload.sub,
-            )
-          ).map((c) => c.community.toString());
-
     const posts = await this.postRepositoryService.getLatestPosts(
       pageData.page ?? 0,
       pageData.perPage ?? 20,
-      allowedCommunities,
+      payload.sub,
       includeFields,
     );
-
-    if (!cachedAllowedCommunities.length && allowedCommunities.length)
-      await this.cachingServices.sadd(
-        `userCommunities:${payload.sub}`,
-        allowedCommunities,
-      );
 
     const dto: PostDto[] = posts.map(
       this.postFactoryService.createDto.bind(this.postFactoryService),

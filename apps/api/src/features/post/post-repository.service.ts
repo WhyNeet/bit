@@ -56,8 +56,9 @@ export class PostRepositoryService {
       ? [{ community: { $in: communities } }]
       : [];
     const authorQuery = users ? [{ author: { $in: users } }] : [];
+    const orQuery = [...communityQuery, ...authorQuery];
     return await this.dataServices.posts.getAll(
-      { $or: [...communityQuery, ...authorQuery] },
+      orQuery.length ? { $or: orQuery } : undefined,
       { createdAt: "desc" },
       perPage,
       perPage * page,
@@ -76,8 +77,9 @@ export class PostRepositoryService {
       ? [{ community: { $in: communities } }]
       : [];
     const authorQuery = users ? [{ author: { $in: users } }] : [];
+    const orQuery = [...communityQuery, ...authorQuery];
     return await this.dataServices.posts.getAll(
-      { $or: [...communityQuery, ...authorQuery] },
+      orQuery.length ? { $or: orQuery } : undefined,
       { createdAt: "desc" },
       perPage,
       perPage * page,

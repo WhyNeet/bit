@@ -17,6 +17,13 @@ export const routes: Routes = [
       import("./routes/user/user.component").then((m) => m.UserPageComponent),
   },
   {
+    path: "community/:communityId",
+    loadComponent: () =>
+      import("./routes/community/community.component").then(
+        (m) => m.CommunityPageComponent,
+      ),
+  },
+  {
     path: "",
     redirectTo: "home",
     pathMatch: "full",

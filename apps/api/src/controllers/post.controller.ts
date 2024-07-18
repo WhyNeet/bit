@@ -401,6 +401,28 @@ export class PostController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get("/community/:communityId")
+  public async getCommunityPosts(
+    @Param("communityId", ParseObjectIdPipe) communityId: string,
+    @Pagination() pageData: PageData,
+    @IncludeFields() include: string[],
+  ): ApiResponse<PostDto[]> {
+    const posts = await this.postRepositoryService.getLatestPosts(
+      pageData.page,
+      pageData.perPage,
+      [communityId],
+      undefined,
+      include,
+    );
+
+    return {
+      data: posts.map(
+        this.postFactoryService.createDto.bind(this.postFactoryService),
+      ),
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @Get("/voting_status")
   public async getPostsVotingState(

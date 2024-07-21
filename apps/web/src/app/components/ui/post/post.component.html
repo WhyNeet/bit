@@ -4,7 +4,7 @@
         <div>
           <a routerLink="/user/{{ post.author.id }}">{{ "@" }}{{ post.author.username }}</a>
           @if (post.community) {
-            for {{ post.community.name }}
+            for <a routerLink="/community/{{ post.community.id }}">{{ post.community.name }}</a>
           }
         </div>
         <span class="h-1 w-1 rounded-full bg-text/60"></span>

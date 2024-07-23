@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { CommunityDto } from "common";
+import { CommunityDto, PostDto } from "common";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 
@@ -26,6 +26,21 @@ export class CommunityService {
       )
       .pipe(
         map((res) => (res as { data: CommunityDto }).data),
+        catchError((err) => {
+          return throwError(() => err);
+        }),
+      );
+  }
+
+  public getCommunityPosts(id: string, include: string[] = []) {
+    return this.httpClient
+      .get(
+        `${environment.API_BASE_URL}/communities/${id}?include=${include.join(
+          ",",
+        )}`,
+      )
+      .pipe(
+        map((res) => (res as { data: PostDto[] }).data),
         catchError((err) => {
           return throwError(() => err);
         }),

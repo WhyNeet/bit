@@ -10,6 +10,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { UserCommunityRelation } from "common";
 import { ApiResponse, CommunityDto } from "common";
 import { ICachingServices } from "src/core/abstracts/caching-services.abstract";
 import {
@@ -90,6 +91,23 @@ export class CommunityController {
 
     return {
       data: null,
+    };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Get("/:communityId/membership")
+  public async isCommunityMember(
+    @Param("communityId", ParseObjectIdPipe.stringified()) communityId: string,
+    @Token() payload: JwtPayload,
+  ): ApiResponse<UserCommunityRelation> {
+    const relation = await this.communityRepositoryService.getMember(
+      communityId,
+      payload.sub,
+    );
+
+    return {
+      data: relation,
     };
   }
 

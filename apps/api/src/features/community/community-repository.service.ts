@@ -126,6 +126,17 @@ export class CommunityRepositoryService {
     return relation;
   }
 
+  public async getMember(
+    communityId: string,
+    memberId: string,
+  ): Promise<UserCommunityRelation | null> {
+    return await this.dataServices.userCommunityRelations.get({
+      community: communityId,
+      user: memberId,
+      type: UserCommunityRelationType.Member,
+    });
+  }
+
   public async deleteCommunity(id: string): Promise<Community | null> {
     return await this.dataServices.communities.delete({ _id: id });
   }

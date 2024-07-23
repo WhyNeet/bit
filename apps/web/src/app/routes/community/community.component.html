@@ -1,1 +1,68 @@
-community page
+<div class="pr-8 h-full">
+  @if (community(); as community) {
+    <div class="h-full w-full flex gap-2">
+      <div class="w-full h-full overflow-y-scroll scrollbar-none pt-16">
+        <div class="w-full layout-block flex items-center gap-4">
+          <app-ui-avatar [src]="communityService.getCommunityIconUrl(community.id)" [size]="48" [weight]="1.3" />
+          <div>
+            <h1 class="text-lg font-display font-semibold">{{ community.name }}</h1>
+            <div class="font-display text-text/80">created by {{ "@" }}{{ community.owner.name }}</div>
+          </div>
+          <span class="flex-1"></span >
+          @if (isLoggedIn()) {
+            <!-- @if (isFollowing() != null) {
+              @if (isFollowing()) {
+                <button (click)="handleJoinClick()" class="secondary">Unfollow</button>
+              } @else {
+                <button (click)="handleLeaveClick()" class="primary">Follow</button>
+              }
+            } -->
+            member state
+          }
+        </div>
+        <div class="mt-4 relative">
+          <h2 class="font-display font-semibold text-lg mb-4">Posts</h2>
+          <!-- <app-posts-list (onPostVote)="handlePostVote($event)" [posts]="userPosts$" [isLoading]="userPostsLoading$" [fetchMore]="fetchMorePosts.bind(this)" /> -->
+        </div >
+      </div >
+      <aside class="min-w-96 mt-16 flex flex-col gap-2">
+        <div class="layout-block h-fit">
+          <h2 class="font-display font-semibold text-lg">Description</h2>
+          @if (community.description) {
+            <p class="text-text/80">{{ community.description }}</p>
+          } @else {
+            <p class="font-display text-text/60">No description provided.</p>
+          }
+        </div>
+        <div class="layout-block h-fit">
+          <h2 class="font-display font-semibold text-lg">{{ community.members }} members</h2>
+          <!-- @if (followers(); as followers) {
+            @for (follower of followers; track follower.id) {
+              <a routerLink="/user/{{ follower.id }}" class="p-2 rounded-default flex gap-2 hover:bg-text/5 transition-colors">
+                <app-ui-avatar [src]="userService.getUserAvatarUrl(follower.id)" [size]="22" />
+                <div class="font-semibold font-display">{{ follower.name }}</div>
+              </a>
+            }
+          } @else {
+          <div class="h-12 w-full flex items-center gap-4 text-text/60 font-display">
+            <app-ui-progress-spinner class="h-6 w-6 text-primary" />
+            Loading followers...
+          </div>
+          } -->
+        </div >
+      </aside>
+    </div>
+  } @else {
+    @if (isError()) {
+      <div class="h-full w-full flex items-center justify-center gap-2 text-error font-display">
+        <ng-icon size="24" name="lucideAlertCircle" />
+        Community does not exist.
+      </div>
+    } @else {
+      <div class="h-full w-full flex items-center justify-center gap-4 text-text/60 font-display">
+        <app-ui-progress-spinner class="h-6 w-6 text-primary" />
+        Loading community...
+      </div>
+    }
+  }
+</div>

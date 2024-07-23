@@ -20,7 +20,7 @@ export class CommunityService {
   ): Observable<CommunityDto> {
     return this.httpClient
       .get(
-        `${environment.API_BASE_URL}/community/${id}?include=${include.join(
+        `${environment.API_BASE_URL}/communities/${id}?include=${include.join(
           ",",
         )}`,
       )

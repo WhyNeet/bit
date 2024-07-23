@@ -14,9 +14,16 @@ export class CommunityService {
     return `${environment.API_BASE_URL}/media/community/${id}/icon`;
   }
 
-  public getCommunity(id: string): Observable<CommunityDto> {
+  public getCommunity(
+    id: string,
+    include: string[] = [],
+  ): Observable<CommunityDto> {
     return this.httpClient
-      .get(`${environment.API_BASE_URL}/community/${id}`)
+      .get(
+        `${environment.API_BASE_URL}/community/${id}?include=${include.join(
+          ",",
+        )}`,
+      )
       .pipe(
         map((res) => (res as { data: CommunityDto }).data),
         catchError((err) => {

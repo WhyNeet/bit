@@ -35,9 +35,9 @@ export class CommunityService {
   public getCommunityPosts(id: string, include: string[] = []) {
     return this.httpClient
       .get(
-        `${environment.API_BASE_URL}/communities/${id}?include=${include.join(
-          ",",
-        )}`,
+        `${
+          environment.API_BASE_URL
+        }/posts/community/${id}?include=${include.join(",")}`,
       )
       .pipe(
         map((res) => (res as { data: PostDto[] }).data),

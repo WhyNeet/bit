@@ -46,4 +46,20 @@ export class CommunityService {
         }),
       );
   }
+
+  public joinCommunity(id: string) {
+    return this.httpClient.post(
+      `${environment.API_BASE_URL}/communities/${id}/join`,
+      undefined,
+      { withCredentials: true },
+    );
+  }
+
+  public leaveCommunity(id: string) {
+    return this.httpClient.post(
+      `${environment.API_BASE_URL}/communities/${id}/leave`,
+      undefined,
+      { withCredentials: true },
+    );
+  }
 }

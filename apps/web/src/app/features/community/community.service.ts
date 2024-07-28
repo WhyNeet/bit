@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { CommunityDto, PostDto } from "common";
+import { CommunityDto, PostDto, UserCommunityRelation } from "common";
 import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 
@@ -50,6 +50,14 @@ export class CommunityService {
           return throwError(() => err);
         }),
       );
+  }
+
+  public getMembershipState(id: string) {
+    return this.httpClient
+      .get(`${environment.API_BASE_URL}/community/${id}/membership`, {
+        withCredentials: true,
+      })
+      .pipe(map((res) => (res as { data: UserCommunityRelation }).data));
   }
 
   public joinCommunity(id: string) {

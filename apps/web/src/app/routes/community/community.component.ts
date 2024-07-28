@@ -44,6 +44,7 @@ export class CommunityPageComponent {
   protected communityPosts$: Observable<PostDto[][] | null>;
   protected communityPostsLoading$: Observable<boolean>;
   protected isError = signal(false);
+  protected isMember = signal<boolean | null>(null);
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -81,13 +82,23 @@ export class CommunityPageComponent {
 
     effect(
       () => {
-        if (this.community())
-          this.communityService
-            // biome-ignore lint/style/noNonNullAssertion: checked above
-            .getCommunityPosts(this.community()!.id, ["author", "community"])
-            .subscribe((posts) =>
-              this.communityPosts.update((prev) => [...(prev ?? []), posts]),
-            );
+        if (!this.community()) return;
+
+        // this.communityService
+        //   // biome-ignore lint/style/noNonNullAssertion: checked above
+        //   .getCommunityPosts(this.community()!.id, ["author"]).pipe(map(posts => posts.map(post => {
+        //     // biome-ignore lint/style/noNonNullAssertion: checked above
+        //     post.community = this.community()!
+        //     return post
+        //   })))
+        //   .subscribe((posts) =>
+        //     this.communityPosts.update((prev) => [...(prev ?? []), posts]),
+        //   );
+
+        this.communityService
+          // biome-ignore lint/style/noNonNullAssertion: checked above
+          .getMembershipState(this.community()!.id)
+          .subscribe((state) => this.isMember.set(!!state));
       },
       { allowSignalWrites: true },
     );
@@ -95,11 +106,18 @@ export class CommunityPageComponent {
 
   protected fetchMorePosts(page: number, perPage: number) {
     this.communityService
-      .getCommunityPosts(this.communityId, ["owner"], page, perPage)
+      .getCommunityPosts(this.communityId, ["author"], page, perPage)
       .pipe(
         catchError((err) => {
           return throwError(() => err);
         }),
+        map((posts) =>
+          posts.map((post) => {
+            // biome-ignore lint/style/noNonNullAssertion: not null here
+            post.community = this.community()!;
+            return post;
+          }),
+        ),
         take(1),
       )
       .subscribe((posts) =>
@@ -138,9 +156,7 @@ export class CommunityPageComponent {
     });
   }
 
-  protected handleJoinClick() {
-    // TODO
-  }
+  protected handleJoinClick() {}
 
   protected handleLeaveClick() {
     // TODO

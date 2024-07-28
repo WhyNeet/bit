@@ -10,14 +10,13 @@
           </div>
           <span class="flex-1"></span >
           @if (isLoggedIn()) {
-            <!-- @if (isFollowing() != null) {
-              @if (isFollowing()) {
-                <button (click)="handleJoinClick()" class="secondary">Unfollow</button>
+            @if (isMember() != null) {
+              @if (isMember()) {
+                <button (click)="handleLeaveClick()" class="secondary">Leave</button>
               } @else {
-                <button (click)="handleLeaveClick()" class="primary">Follow</button>
+                <button (click)="handleJoinClick()" class="primary">Join</button>
               }
-            } -->
-            members state
+            }
           }
         </div>
         <div class="mt-4 relative">

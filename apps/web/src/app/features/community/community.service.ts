@@ -42,7 +42,9 @@ export class CommunityService {
       .get(
         `${
           environment.API_BASE_URL
-        }/posts/community/${id}?include=${include.join(",")}`,
+        }/posts/community/${id}?include=${include.join(
+          ",",
+        )}&page=${page}&perPage=${perPage}`,
       )
       .pipe(
         map((res) => (res as { data: PostDto[] }).data),
@@ -54,7 +56,7 @@ export class CommunityService {
 
   public getMembershipState(id: string) {
     return this.httpClient
-      .get(`${environment.API_BASE_URL}/community/${id}/membership`, {
+      .get(`${environment.API_BASE_URL}/communities/${id}/membership`, {
         withCredentials: true,
       })
       .pipe(map((res) => (res as { data: UserCommunityRelation }).data));

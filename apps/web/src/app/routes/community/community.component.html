@@ -17,12 +17,12 @@
                 <button (click)="handleLeaveClick()" class="primary">Follow</button>
               }
             } -->
-            member state
+            members state
           }
         </div>
         <div class="mt-4 relative">
           <h2 class="font-display font-semibold text-lg mb-4">Posts</h2>
-          <!-- <app-posts-list (onPostVote)="handlePostVote($event)" [posts]="userPosts$" [isLoading]="userPostsLoading$" [fetchMore]="fetchMorePosts.bind(this)" /> -->
+          <app-posts-list (onPostVote)="handlePostVote($event)" [posts]="communityPosts$" [isLoading]="communityPostsLoading$" [fetchMore]="fetchMorePosts.bind(this)" />
         </div >
       </div >
       <aside class="min-w-96 mt-16 flex flex-col gap-2">

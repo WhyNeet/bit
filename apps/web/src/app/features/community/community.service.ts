@@ -32,7 +32,12 @@ export class CommunityService {
       );
   }
 
-  public getCommunityPosts(id: string, include: string[] = []) {
+  public getCommunityPosts(
+    id: string,
+    include: string[] = [],
+    page = 0,
+    perPage = 25,
+  ) {
     return this.httpClient
       .get(
         `${

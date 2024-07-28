@@ -156,9 +156,15 @@ export class CommunityPageComponent {
     });
   }
 
-  protected handleJoinClick() {}
+  protected handleJoinClick() {
+    this.communityService
+      .joinCommunity(this.communityId)
+      .subscribe(() => this.isMember.set(true));
+  }
 
   protected handleLeaveClick() {
-    // TODO
+    this.communityService
+      .leaveCommunity(this.communityId)
+      .subscribe(() => this.isMember.set(false));
   }
 }

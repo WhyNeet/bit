@@ -7,7 +7,7 @@ import {
   signal,
 } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NgIcon } from "@ng-icons/core";
 import { Store, select } from "@ngrx/store";
 import { CommunityDto, PostDto, UserDto, UserPostRelationType } from "common";
@@ -28,6 +28,7 @@ export type FullCommunity = CommunityDto & { owner: UserDto };
     NgIcon,
     AvatarComponent,
     PostListComponent,
+    RouterLink,
   ],
   templateUrl: "./community.component.html",
   styleUrl: "./community.component.css",
@@ -81,8 +82,8 @@ export class CommunityPageComponent {
     effect(
       () => {
         if (this.community())
-          // biome-ignore lint/style/noNonNullAssertion: checked above
           this.communityService
+            // biome-ignore lint/style/noNonNullAssertion: checked above
             .getCommunityPosts(this.community()!.id, ["author", "community"])
             .subscribe((posts) =>
               this.communityPosts.update((prev) => [...(prev ?? []), posts]),
